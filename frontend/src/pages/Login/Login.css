@@ -1,5 +1,5 @@
 /* Center the form on the page */
-.register-container {
+.login-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,7 +8,7 @@
 }
 
 /* Form styling */
-.register-form {
+.login-form {
     width: 100%;
     max-width: 400px;
     background: white;
@@ -69,8 +69,8 @@
 
 }
 
-/* Login link Styling*/
-.login-link{
+/* Register link Styling*/
+.register-link{
     font-size: 14px;
     text-align: left;
     color: #585858;
@@ -82,7 +82,7 @@
 }
 
 /* Register button styling */
-.register-button {
+.login-button {
     width: 100%;
     padding: 12px;
     background-color: #198754;
@@ -94,7 +94,7 @@
     transition: background-color 0.3s;
 }
 
-.register-button:hover {
+.login-button:hover {
     background-color: #006b3a;
 }
 
