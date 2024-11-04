@@ -1,0 +1,90 @@
+/* Center the form on the page */
+.register-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #e8fff8;
+}
+
+/* Form styling */
+.register-form {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Title styling */
+.form-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Form group styling */
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Label styling */
+.form-group label {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Input styling */
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+/* Disclaimer Styling*/
+.disclaimer-text{
+    font-size: 14px;
+    text-align: left;
+    color: #808080;
+    font-family: "Arial", "sans-serif";
+
+}
+
+/* Register button styling */
+.register-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #198754;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.register-button:hover {
+    background-color: #006b3a;
+}
+
+/* Success and error messages */
+.error-message {
+    color: #d9534f;
+    font-size: 14px;
+    text-align: center;
+}
+
+.success-message {
+    color: #5cb85c;
+    font-size: 14px;
+    text-align: center;
+}

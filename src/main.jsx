@@ -10,5 +10,3 @@ createRoot(document.getElementById('root')).render(
     </BrowserRouter>
    </StrictMode>
 )
-
-//this is a comment
