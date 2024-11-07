@@ -15,9 +15,9 @@ function SearchResultsListItem({result, resetSearchResults}) {
     }
 
     return (
-        <div className="result-item" onClick={handleClick}>
+        <button className="result-item" onClick={handleClick}>
             {result.display_name}
-        </div>
+        </button>
     );
 }
 

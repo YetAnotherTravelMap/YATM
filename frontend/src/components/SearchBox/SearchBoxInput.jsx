@@ -18,10 +18,9 @@ const useDebouncedValue = (inputValue, delay) => {
     return debouncedValue;
 };
 
-function SearchBoxInput({setSearchResult}) {
+function SearchBoxInput({searchInput, setSearchInput, setSearchResult}) {
 
-    const [input, setInput] = useState("");
-    const debouncedInput = useDebouncedValue(input, 500);
+    const debouncedInput = useDebouncedValue(searchInput, 500);
 
     useEffect(() => {
         if (debouncedInput) {
@@ -41,8 +40,8 @@ function SearchBoxInput({setSearchResult}) {
     return (<input
             className="search-input"
             placeholder="Type to search..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
         />);
 }
 
