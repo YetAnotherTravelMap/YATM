@@ -36,7 +36,8 @@ let pins = [
 
 export function Map() {
     return (
-        <MapContainer center={[45.384, -75.697]} zoom={5} zoomControl={false}>
+        <MapContainer center={[45.384, -75.697]} zoom={5} zoomControl={false} maxBounds={[[-90, -180], [90, 180]]} minZoom={3}
+                      maxZoom={19} bounceAtZoomLimits={false} maxBoundsViscosity={true} >
             <ZoomControl position="topright"/>
             <Control prepend position='topleft'>
                 <SearchBox/>
