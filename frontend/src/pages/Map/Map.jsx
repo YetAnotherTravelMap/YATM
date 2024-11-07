@@ -1,9 +1,11 @@
 import "./mapStyles.css"
 import "leaflet/dist/leaflet.css"
 
-import { MapContainer, Marker, Popup } from 'react-leaflet'
+import {MapContainer, Marker, Popup, ZoomControl} from 'react-leaflet'
 import {MapLibreTileLayer} from "../../components/MapLibreTileLayer/MapLibreTileLayer.ts";
 import mapStyle from "../../assets/MapStyles/WorldNavigationMap_Esri.json"
+import SearchBox from "../../components/SearchBox/SearchBox.jsx";
+import Control from "react-leaflet-custom-control";
 
 let pins = [
     {
@@ -34,10 +36,13 @@ let pins = [
 
 export function Map() {
     return (
-        <MapContainer center={[45.384, -75.697]} zoom={5}>
-
+        <MapContainer center={[45.384, -75.697]} zoom={5} zoomControl={false}>
+            <ZoomControl position="topright"/>
+            <Control prepend position='topleft'>
+                <SearchBox/>
+            </Control>
             <MapLibreTileLayer
-                // attribution=''
+                attribution='Esri, TomTom, Garmin, FAO, NOAA, USGS, &copy; OpenStreetMap contributors, and the GIS User Community'
                 url={mapStyle}
             />
 
