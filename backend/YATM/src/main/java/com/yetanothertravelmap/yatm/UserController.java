@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/user")
 public class UserController {
 
@@ -19,12 +20,15 @@ public class UserController {
         return userService.getUserByUsername(username);
     }
 
-    @PostMapping
-    public void createUser(@RequestBody User user){
-        User existingUser = userService.getUserByUsername(user.getUsername());
 
+    @PostMapping
+    public User createUser(@RequestBody User user){
+        User existingUser = userService.getUserByUsername(user.getUsername());
         if(existingUser!=null){
-            userService.saveUser(user);
+            return null;
+        }
+        else{
+            return userService.saveUser(user);
         }
     }
 }

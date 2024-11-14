@@ -15,9 +15,9 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public void saveUser(User user){
+    public User saveUser(User user){
         user.setHash(encoder.encode(user.getHash()));
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public User getUserByUsername(String username){
