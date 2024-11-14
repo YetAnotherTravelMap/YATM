@@ -41,6 +41,21 @@ public class User {
         this.profilePicture = profilePicture;
     }
 
+    public User(String firstName, String lastName, String hash, String username, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.hash = hash;
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(){}
+
+    @Override
+    public String toString(){
+        return "[User: " + username + "\nFirst Name: " + firstName + "\nLast Name: " + lastName + "\nEmail: " + email + "\nHash: " + hash+"]";
+    }
+
     public String getFirstName() {
         return firstName;
     }

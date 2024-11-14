@@ -34,8 +34,8 @@ public class Pin {
     @OneToOne
     private Icon iconId;
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PinCategory> pinCategories = new HashSet<>();
+    @ManyToMany
+    private Set<PinCategory> pinCategories;
 
     public long getPinId() {
         return pinId;

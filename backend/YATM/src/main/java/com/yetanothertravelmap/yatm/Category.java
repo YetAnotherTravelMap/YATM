@@ -50,6 +50,7 @@ public class Category {
     @ManyToOne
     private long mapId;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PinCategory> pinCategories = new HashSet<>();
+    @ManyToMany
+    private Set<PinCategory> pinCategories;
+
 }
