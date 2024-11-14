@@ -5,13 +5,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class AccountService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public UserService(UserRepository userRepository){
+    public AccountService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
@@ -22,5 +22,8 @@ public class UserService {
 
     public User getUserByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 }
