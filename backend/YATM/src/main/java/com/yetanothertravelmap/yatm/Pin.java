@@ -15,6 +15,8 @@ public class Pin {
         this.iconId = iconId;
     }
 
+    public Pin(){}
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long pinId;
@@ -34,8 +36,8 @@ public class Pin {
     @OneToOne
     private Icon iconId;
 
-    @OneToMany(mappedBy = "pin", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PinCategory> pinCategories = new HashSet<>();
+    @ManyToMany
+    private Set<PinCategory> pinCategories;
 
     public long getPinId() {
         return pinId;

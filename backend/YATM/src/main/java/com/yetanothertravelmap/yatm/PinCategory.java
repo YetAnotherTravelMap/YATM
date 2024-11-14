@@ -1,8 +1,6 @@
 package com.yetanothertravelmap.yatm;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 @Entity
 public class PinCategory {
@@ -18,6 +16,10 @@ public class PinCategory {
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Id
+    @GeneratedValue
+    private long id;
 
     public PinCategory(){
 

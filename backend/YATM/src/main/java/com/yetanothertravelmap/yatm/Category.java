@@ -2,15 +2,16 @@ package com.yetanothertravelmap.yatm;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Category {
-    public Category(String name, long mapId) {
+    public Category(String name, Map map){
         this.name = name;
-        this.mapId = mapId;
+        this.map = map;
     }
+
+    public Category(){}
 
     public long getId() {
         return id;
@@ -28,17 +29,6 @@ public class Category {
         this.name = name;
     }
 
-    public long getMapId() {
-        return mapId;
-    }
-
-    public void setMapId(long mapId) {
-        this.mapId = mapId;
-    }
-
-    public Category(String name){
-        this.name = name;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -48,8 +38,11 @@ public class Category {
     private String name;
 
     @ManyToOne
-    private long mapId;
+    @JoinColumn(name = "map_id", nullable = false)
+    private Map map;
 
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PinCategory> pinCategories = new HashSet<>();
+    @ManyToMany
+    private Set<PinCategory> pinCategories;
+
+
 }
