@@ -4,27 +4,26 @@ import jakarta.persistence.*;
 
 @Entity
 public class Map {
-    public Map(String title, long userId) {
+    public Map(String title, User user) {
         this.title = title;
-        this.userId = userId;
+        this.user = user;
     }
 
+    public Map(){}
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long mapId;
 
     @Column
     private String title;
 
     @ManyToOne
-    private long userId;
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public long getMapId(){
+        return mapId;
     }
 
     public String getTitle() {

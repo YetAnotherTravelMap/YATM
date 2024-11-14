@@ -9,10 +9,12 @@ import java.sql.Blob;
 
 @Entity
 public class Icon {
-    public Icon(String iconName, Blob image) {
+    public Icon(String iconName, byte[] image) {
         this.iconName = iconName;
         this.image = image;
     }
+
+    public Icon(){}
 
     @Id
     @GeneratedValue
@@ -22,13 +24,13 @@ public class Icon {
     private String iconName;
 
     @Column
-    private Blob image;
+    private byte[] image;
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(Blob image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 

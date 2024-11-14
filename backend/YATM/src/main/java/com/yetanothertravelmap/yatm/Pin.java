@@ -15,6 +15,8 @@ public class Pin {
         this.iconId = iconId;
     }
 
+    public Pin(){}
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long pinId;

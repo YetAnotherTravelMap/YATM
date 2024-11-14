@@ -1,13 +1,12 @@
 package com.yetanothertravelmap.yatm;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.sql.Blob;
+import java.util.Set;
 
 @Entity
+@Table(name = "app_user")
 public class User {
 
     @Id
@@ -30,9 +29,13 @@ public class User {
     private String email;
 
     @Column
-    private Blob profilePicture;
+    private byte[] profilePicture;
 
-    public User(String firstName, String lastName, String hash, String username, String email, Blob profilePicture) {
+    @OneToMany(mappedBy = "user")
+    private Set<Map> maps;
+
+
+    public User(String firstName, String lastName, String hash, String username, String email, byte[] profilePicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.hash = hash;
@@ -96,11 +99,11 @@ public class User {
         this.email = email;
     }
 
-    public Blob getProfilePicture() {
+    public byte[] getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(Blob profilePicture) {
+    public void setProfilePicture(byte[] profilePicture) {
         this.profilePicture = profilePicture;
     }
 }
