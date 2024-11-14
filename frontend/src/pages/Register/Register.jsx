@@ -4,9 +4,11 @@ import './Register.css';
 import {Link} from "react-router-dom";
 
 export function Register() {
+    const [firstName, setFirstName] = useState('firstname');
+    const [lastName, setLastName] = useState('lastname');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
-    const [password1, setPassword1] = useState('');
+    const [hash, setPassword1] = useState('');
     const [password2, setPassword2] = useState('');
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
@@ -15,10 +17,10 @@ export function Register() {
         event.preventDefault();
 
         try {
-            const response = await fetch('backend.api/register', {
+            const response = await fetch('http://localhost:8080/api/user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password1 })
+                body: JSON.stringify({firstName, lastName, hash, username, email })
             });
 
             if (!response.ok) {
@@ -31,7 +33,7 @@ export function Register() {
         }
     };
 
-    const passwordsMatch = password1 && password2 && password1 === password2
+    const passwordsMatch = hash && password2 && hash === password2
 
     return (
         <div className="register-container">
@@ -68,7 +70,7 @@ export function Register() {
                         <label>Password</label>
                         <input
                             type="password"
-                            value={password1}
+                            value={hash}
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                             onChange={(e) => setPassword1(e.target.value)}
                             required
