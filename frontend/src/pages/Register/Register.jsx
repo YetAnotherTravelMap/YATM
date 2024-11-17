@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Register.css';
 import {Link} from "react-router-dom";
 
@@ -12,21 +12,40 @@ export function Register() {
     const [password2, setPassword2] = useState('');
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    useEffect(() => {
+        if (success) {
+            // Redirect to login page after 2 seconds
+            const timer = setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+
+            // Cleanup timeout if component unmounts before 2 seconds
+            return () => clearTimeout(timer);
+        }
+    }, [success]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8080/api/user', {
+            const response = await fetch('/api/user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({firstName, lastName, hash, username, email })
             });
 
+
             if (!response.ok) {
+                if(response.status === 409) {
+                    const tempErrorMessage = await response.text();
+                    throw new Error(tempErrorMessage);
+                }
                 throw new Error('Registration failed');
             }
 
+            setErrorMessage('');
             setSuccess(true); // Set success state to true on successful registration
         } catch (error) {
             setError(error.message);
@@ -37,7 +56,6 @@ export function Register() {
 
     return (
         <div className="register-container">
-            {error && <p style = {{color : 'red'}}>{error}</p>}
             {success ? (
                 <p className={"success-message"}>Registration successful! Redirecting to login...</p>
             ) : (
@@ -87,6 +105,7 @@ export function Register() {
                             required
                             className="input-field"
                         />
+                        {error && <p style = {{color : 'red'}}>{error}</p>}
                         {!passwordsMatch && password2 && (
                             <p className="error-message">Passwords do not match</p>
                         )}
