@@ -1,18 +1,17 @@
 package com.yetanothertravelmap.yatm;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
+//@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/api/user")
 public class AccountController {
 
     private final AccountService accountService;
 
-    @Autowired
+
     public AccountController(AccountService accountService){
         this.accountService = accountService;
     }

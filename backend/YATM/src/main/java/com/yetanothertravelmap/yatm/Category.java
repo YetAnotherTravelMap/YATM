@@ -42,7 +42,9 @@ public class Category {
     private Map map;
 
     @ManyToMany
-    private Set<PinCategory> pinCategories;
+    Set<Pin> pins;
+//    @ManyToMany
+//    private Set<PinCategory> pinCategories;
 
 
 }

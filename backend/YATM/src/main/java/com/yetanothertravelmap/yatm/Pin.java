@@ -7,12 +7,12 @@ import java.util.Set;
 
 @Entity
 public class Pin {
-    public Pin(String name, double latitude, double longitude, String description, Icon iconId) {
+    public Pin(String name, double latitude, double longitude, String description, Icon icon) {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
         this.description = description;
-        this.iconId = iconId;
+        this.icon = icon;
     }
 
     public Pin(){}
@@ -34,10 +34,34 @@ public class Pin {
     private String description;
 
     @OneToOne
-    private Icon iconId;
+    private Icon icon;
+
+    @ManyToOne
+    @JoinColumn(name = "map_id", nullable = false)
+    private Map map;
 
     @ManyToMany
-    private Set<PinCategory> pinCategories;
+    @JoinTable(
+            name = "Pin_Category",
+            joinColumns = @JoinColumn(name = "pin_id"),
+            inverseJoinColumns = @JoinColumn(name = "id"))
+    public Set<Category> categories;
+
+    public Set<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
 
     public long getPinId() {
         return pinId;
@@ -80,11 +104,11 @@ public class Pin {
     }
 
     public Icon getIcon() {
-        return iconId;
+        return icon;
     }
 
-    public void setIcon(Icon iconId) {
-        this.iconId = iconId;
+    public void setIcon(Icon icon) {
+        this.icon = icon;
     }
 
     
