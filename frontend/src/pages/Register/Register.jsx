@@ -30,7 +30,7 @@ export function Register() {
         event.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:8080/api/user', {
+            const response = await fetch('/api/user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({firstName, lastName, hash, username, email })
