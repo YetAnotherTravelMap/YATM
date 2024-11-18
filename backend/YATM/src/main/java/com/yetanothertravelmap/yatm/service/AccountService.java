@@ -22,9 +22,9 @@ public class AccountService {
     }
 
     public User getUserByUsername(String username){
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
     public User getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElse(null);
     }
 }

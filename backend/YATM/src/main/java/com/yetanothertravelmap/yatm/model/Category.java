@@ -13,6 +13,25 @@ public class Category {
 
     public Category(){}
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "map_id", nullable = false)
+    private Map map;
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
     public long getId() {
         return id;
     }
@@ -28,23 +47,5 @@ public class Category {
     public void setName(String name) {
         this.name = name;
     }
-
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @ManyToOne
-    @JoinColumn(name = "map_id", nullable = false)
-    private Map map;
-
-    @ManyToMany
-    Set<Pin> pins;
-//    @ManyToMany
-//    private Set<PinCategory> pinCategories;
-
 
 }

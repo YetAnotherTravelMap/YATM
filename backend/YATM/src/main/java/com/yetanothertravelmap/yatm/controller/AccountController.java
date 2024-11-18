@@ -13,7 +13,6 @@ public class AccountController {
 
     private final AccountService accountService;
 
-
     public AccountController(AccountService accountService){
         this.accountService = accountService;
     }
@@ -22,7 +21,6 @@ public class AccountController {
     public User getUserByUsername(@RequestParam(value = "username") String username){
         return accountService.getUserByUsername(username);
     }
-
 
     @PostMapping
     public ResponseEntity<?> createUser(@RequestBody User user){
