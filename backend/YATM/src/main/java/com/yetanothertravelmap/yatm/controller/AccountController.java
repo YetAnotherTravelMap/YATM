@@ -1,5 +1,7 @@
-package com.yetanothertravelmap.yatm;
+package com.yetanothertravelmap.yatm.controller;
 
+import com.yetanothertravelmap.yatm.service.AccountService;
+import com.yetanothertravelmap.yatm.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

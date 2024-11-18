@@ -1,5 +1,7 @@
-package com.yetanothertravelmap.yatm;
+package com.yetanothertravelmap.yatm.service;
 
+import com.yetanothertravelmap.yatm.model.User;
+import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

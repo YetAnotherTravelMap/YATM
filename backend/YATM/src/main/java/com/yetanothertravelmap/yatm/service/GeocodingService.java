@@ -1,6 +1,6 @@
-package com.yetanothertravelmap.yatm.services;
+package com.yetanothertravelmap.yatm.service;
 
-import com.yetanothertravelmap.yatm.records.GeocodingRecord;
+import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;

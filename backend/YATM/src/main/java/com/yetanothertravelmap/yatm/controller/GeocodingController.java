@@ -1,7 +1,7 @@
-package com.yetanothertravelmap.yatm.controllers;
+package com.yetanothertravelmap.yatm.controller;
 
-import com.yetanothertravelmap.yatm.records.GeocodingRecord;
-import com.yetanothertravelmap.yatm.services.GeocodingService;
+import com.yetanothertravelmap.yatm.model.GeocodingRecord;
+import com.yetanothertravelmap.yatm.service.GeocodingService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

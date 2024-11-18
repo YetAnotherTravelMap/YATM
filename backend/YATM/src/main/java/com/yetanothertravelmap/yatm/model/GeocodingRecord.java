@@ -1,4 +1,4 @@
-package com.yetanothertravelmap.yatm.records;
+package com.yetanothertravelmap.yatm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

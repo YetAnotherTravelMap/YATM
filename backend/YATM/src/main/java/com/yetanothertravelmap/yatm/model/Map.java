@@ -1,4 +1,4 @@
-package com.yetanothertravelmap.yatm;
+package com.yetanothertravelmap.yatm.model;
 
 import jakarta.persistence.*;
 
