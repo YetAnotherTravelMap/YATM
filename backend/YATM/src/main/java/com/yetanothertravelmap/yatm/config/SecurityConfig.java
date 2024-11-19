@@ -6,6 +6,7 @@ import com.yetanothertravelmap.yatm.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,12 +29,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
-//    private final JpaUserDetailsService myUserDetailsService;
-//
-//    public SecurityConfig(JpaUserDetailsService myUserDetailsService) {
-//        this.myUserDetailsService = myUserDetailsService;
-//    }
-
     @Value("${jwt.key}")
     private String jwtKey;
 
@@ -42,6 +37,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
                         .requestMatchers("/api/auth/token").hasRole("USER")
                         .anyRequest().hasAuthority("SCOPE_READ")
                 )
