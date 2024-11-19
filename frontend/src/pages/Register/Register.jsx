@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
 import './Register.css';
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import useAuth from "../../hooks/UseAuth.jsx";
 
 export function Register() {
     const [firstName, setFirstName] = useState('firstname');
@@ -13,6 +14,15 @@ export function Register() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+
+    const { authed } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (authed) {
+            navigate('/');
+        }
+    }, [authed, navigate]);
 
     useEffect(() => {
         if (success) {

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import useAuth from './../../hooks/UseAuth.jsx'
 import './Login.css';
@@ -11,8 +11,14 @@ export function Login() {
     const [error, setError] = useState(false);
 
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, authed } = useAuth();
     const { state } = useLocation();
+
+    useEffect(() => {
+        if (authed) {
+            navigate('/');
+        }
+    }, [authed, navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -27,7 +33,7 @@ export function Login() {
 
     return (
         <div className="login-container">
-            {error && <p style = {{color : 'red'}}>{error}</p>}
+            {error && <p className={"login-error-message"}>{error}</p>}
             {success ? (
                 <p className={"success-message"}>Login successful!</p>
             ) : (

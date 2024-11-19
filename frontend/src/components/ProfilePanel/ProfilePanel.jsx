@@ -5,20 +5,18 @@ import "./ProfilePanel.css"
 
 function ProfilePanel() {
     const [isVisible, setIsVisible] = useState(false);
-    const [user, setUserData] = useState({firstname: "Unknown", lastname: "User", email: "-"});
+    const [user, setUserData] = useState({username: "-", email: "-"});
 
-    const { logout } = useAuth();
+    const { logout, authAxios } = useAuth();
     const navigate = useNavigate();
-    const { authAxios } = useAuth();
 
     useEffect(() => {
         const fetchUserData = async () => {
             const response = await authAxios.get('/api/user');
-            console.log(response.data);
-            setUserData(response.data); // Store the JSON data
+            setUserData(response.data);
         };
         fetchUserData();
-    }, []);
+    }, [authAxios]);
 
     const handleLogout = async (event) => {
         event.preventDefault();
@@ -30,14 +28,13 @@ function ProfilePanel() {
         <div className={`profile-panel-container ${isVisible ? "show" : ""}`}>
             {/* Profile initials */}
             <div className={`profile-initials ${isVisible ? "show" : ""}`} onClick={() => setIsVisible(true)}>
-                {user.firstname.at(0).toUpperCase()}
-                {user.lastname.at(0).toUpperCase()}
+                {user.username.at(0).toUpperCase()}
             </div>
 
             {/* Conditionally render profile details with transition effect */}
             <div className={`profile-details ${isVisible ? "show" : ""}`}>
                 <button className="close-button" onClick={() => setIsVisible(false)}> &times; </button>
-                <p className="profile-username">{user.firstname} {user.lastname}</p>
+                <p className="profile-username">{user.username}</p>
                 <p className="profile-email">{user.email}</p>
                 <Link to="profile" id="profile-button">Manage Profile</Link>
                 <button id="logout-button" onClick={handleLogout}> Logout </button>

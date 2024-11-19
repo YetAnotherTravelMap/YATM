@@ -36,7 +36,7 @@ function SearchBoxInput({searchInput, setSearchInput, setSearchResult}) {
         } else {
             setSearchResult([]);
         }
-    }, [debouncedInput]);
+    }, [authAxios, debouncedInput, setSearchResult]);
 
     return (<input
             className="search-input"

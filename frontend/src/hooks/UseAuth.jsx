@@ -1,13 +1,12 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {useLocation, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import axios from "axios";
-import log from "eslint-plugin-react/lib/util/log.js";
 
 const authContext = createContext();
 
 function useAuth() {
     const [authed, setAuthed] = useState(localStorage.getItem('jwt') !== null);
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
 
     const navigate = useNavigate();
 
@@ -45,7 +44,7 @@ function useAuth() {
         );
 
         return instance;
-    }, [token]);
+    }, [navigate, token]);
 
     return {
         authed, authAxios, login(username, password) {
