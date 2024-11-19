@@ -1,7 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {useLocation, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import axios from "axios";
-import log from "eslint-plugin-react/lib/util/log.js";
 
 const authContext = createContext();
 

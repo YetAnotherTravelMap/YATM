@@ -7,14 +7,12 @@ function ProfilePanel() {
     const [isVisible, setIsVisible] = useState(false);
     const [user, setUserData] = useState({firstname: "Unknown", lastname: "User", email: "-"});
 
-    const { logout } = useAuth();
+    const { logout, authAxios } = useAuth();
     const navigate = useNavigate();
-    const { authAxios } = useAuth();
 
     useEffect(() => {
         const fetchUserData = async () => {
             const response = await authAxios.get('/api/user');
-            console.log(response.data);
             setUserData(response.data); // Store the JSON data
         };
         fetchUserData();
