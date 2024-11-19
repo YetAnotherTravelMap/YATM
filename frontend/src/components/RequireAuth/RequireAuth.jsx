@@ -5,7 +5,7 @@ import useAuth from './../../hooks/UseAuth'
 export function RequireAuth({ children }) {
     const { authed } = useAuth();
     const location = useLocation();
-    
+
     return authed === true ? (
         children
     ) : (
