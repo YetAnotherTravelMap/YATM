@@ -1,0 +1,104 @@
+.profile-panel-container {
+    background-color: transparent;
+    width: 60px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    text-align: center;
+    font-size: 14px;
+    transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease;
+}
+
+.profile-panel-container.show {
+    border: 1px solid #86abcb;
+    box-shadow: 1px 1px 8px #86abcb;
+    width: 250px;
+    background: #f4f4f4;
+}
+
+.profile-initials {
+    background: #212cdf;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 22px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 100%;
+    cursor: pointer;
+}
+
+.profile-initials.show {
+    cursor: default;
+}
+
+.profile-details {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+}
+
+.profile-details.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.profile-username {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.profile-email {
+    font-weight: lighter;
+    font-size: 14px;
+}
+
+#profile-button {
+    margin: 10px 0 5px 0;
+    color: #212cdf;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    display: inline-block;
+}
+
+#profile-button:hover {
+    border-color: #212cdf;
+}
+
+#logout-button {
+    margin: 10px 0 5px 10px;
+    color: #83042f;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    display: inline-block;
+    background-color: transparent;
+}
+
+#logout-button:hover {
+    border-color: #83042f;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.close-button:hover {
+    color: #333;
+}

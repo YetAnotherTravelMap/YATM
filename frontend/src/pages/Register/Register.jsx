@@ -36,7 +36,6 @@ export function Register() {
                 body: JSON.stringify({firstName, lastName, hash, username, email })
             });
 
-
             if (!response.ok) {
                 if(response.status === 409) {
                     const tempErrorMessage = await response.text();

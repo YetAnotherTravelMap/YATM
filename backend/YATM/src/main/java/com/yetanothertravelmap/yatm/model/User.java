@@ -1,8 +1,7 @@
-package com.yetanothertravelmap.yatm;
+package com.yetanothertravelmap.yatm.model;
 
 import jakarta.persistence.*;
 
-import java.sql.Blob;
 import java.util.Set;
 
 @Entity
@@ -31,6 +30,9 @@ public class User {
     @Column
     private byte[] profilePicture;
 
+    @Column
+    private String roles;
+
     @OneToMany(mappedBy = "user")
     private Set<Map> maps;
 
@@ -42,6 +44,7 @@ public class User {
         this.username = username;
         this.email = email;
         this.profilePicture = profilePicture;
+        this.roles = "READ,ROLE_USER";
     }
 
     public User(String firstName, String lastName, String hash, String username, String email) {
@@ -50,9 +53,12 @@ public class User {
         this.hash = hash;
         this.username = username;
         this.email = email;
+        this.roles = "READ,ROLE_USER";
     }
 
-    public User(){}
+    public User(){
+        this.roles = "READ,ROLE_USER";
+    }
 
     @Override
     public String toString(){
@@ -105,5 +111,21 @@ public class User {
 
     public void setProfilePicture(byte[] profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getRoles() {
+        return roles;
+    }
+
+    public void setRoles(String roles) {
+        this.roles = roles;
+    }
+
+    public Set<Map> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(Set<Map> maps) {
+        this.maps = maps;
     }
 }

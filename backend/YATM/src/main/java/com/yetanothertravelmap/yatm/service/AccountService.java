@@ -1,5 +1,7 @@
-package com.yetanothertravelmap.yatm;
+package com.yetanothertravelmap.yatm.service;
 
+import com.yetanothertravelmap.yatm.model.User;
+import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +22,9 @@ public class AccountService {
     }
 
     public User getUserByUsername(String username){
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username).orElse(null);
     }
     public User getUserByEmail(String email){
-        return userRepository.findByEmail(email);
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
