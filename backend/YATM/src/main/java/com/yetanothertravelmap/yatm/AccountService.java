@@ -1,6 +1,5 @@
 package com.yetanothertravelmap.yatm;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,7 +9,7 @@ public class AccountService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    @Autowired
+
     public AccountService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
