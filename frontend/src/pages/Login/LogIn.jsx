@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
+import {Link, useLocation, useNavigate} from "react-router-dom";
+import useAuth from './../../hooks/UseAuth.jsx'
 import './Login.css';
-import {Link} from "react-router-dom";
 
 export function Login() {
     const [username, setUsername] = useState('');
@@ -9,25 +10,20 @@ export function Login() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
 
+    const navigate = useNavigate();
+    const { login } = useAuth();
+    const { state } = useLocation();
+
     const handleSubmit = async (event) => {
         event.preventDefault();
+        login(username, password).then(() => {
+            setSuccess(true);
+            const storedRedirectUrl = localStorage.getItem('redirectUrl')
+            localStorage.removeItem('redirectUrl')
+            navigate(state?.path || storedRedirectUrl || "/");
 
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password })
-            });
-
-            if (!response.ok) {
-                throw new Error('Login failed');
-            }
-
-            setSuccess(true); // Set success state to true on successful login
-        } catch (error) {
-            setError(error.message);
-        }
-    };
+        }).catch(error => setError("Incorrect username or password."));
+};
 
     return (
         <div className="login-container">

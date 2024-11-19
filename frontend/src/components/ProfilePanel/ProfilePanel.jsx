@@ -1,15 +1,30 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import useAuth from "./../../hooks/UseAuth"
 import "./ProfilePanel.css"
-import {Link} from "react-router-dom";
 
 function ProfilePanel() {
     const [isVisible, setIsVisible] = useState(false);
+    const [user, setUserData] = useState({firstname: "Unknown", lastname: "User", email: "-"});
 
-    const user = {
-        firstname: "Daniel",
-        lastname: "Adkjfhasb",
-        email: "testuser@gmail.com",
-    }
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+    const { authAxios } = useAuth();
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const response = await authAxios.get('/api/user');
+            console.log(response.data);
+            setUserData(response.data); // Store the JSON data
+        };
+        fetchUserData();
+    }, []);
+
+    const handleLogout = async (event) => {
+        event.preventDefault();
+        logout();
+        navigate("/login");
+    };
 
     return (
         <div className={`profile-panel-container ${isVisible ? "show" : ""}`}>
@@ -25,6 +40,7 @@ function ProfilePanel() {
                 <p className="profile-username">{user.firstname} {user.lastname}</p>
                 <p className="profile-email">{user.email}</p>
                 <Link to="profile" id="profile-button">Manage Profile</Link>
+                <button id="logout-button" onClick={handleLogout}> Logout </button>
             </div>
         </div>
     );

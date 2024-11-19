@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import axios from 'axios';
 import "./SearchBoxInput.css"
+import useAuth from "../../hooks/UseAuth.jsx";
 
 const useDebouncedValue = (inputValue, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(inputValue);
@@ -21,10 +21,11 @@ const useDebouncedValue = (inputValue, delay) => {
 function SearchBoxInput({searchInput, setSearchInput, setSearchResult}) {
 
     const debouncedInput = useDebouncedValue(searchInput, 500);
+    const { authAxios } = useAuth();
 
     useEffect(() => {
         if (debouncedInput) {
-            axios.get('/api/geocoding', {
+            authAxios.get('/api/geocoding', {
                 params: {
                     q: debouncedInput
                 }

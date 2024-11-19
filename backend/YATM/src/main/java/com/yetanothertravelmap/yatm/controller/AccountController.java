@@ -5,6 +5,10 @@ import com.yetanothertravelmap.yatm.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.HashMap;
+
+import java.security.Principal;
+import java.util.Map;
 
 @RestController
 //@CrossOrigin(origins = "http://localhost:5173")
@@ -18,8 +22,15 @@ public class AccountController {
     }
 
     @GetMapping
-    public User getUserByUsername(@RequestParam(value = "username") String username){
-        return accountService.getUserByUsername(username);
+    public Map<String, Object> getUserByUsername(Principal principal){
+        User user = accountService.getUserByUsername(principal.getName());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("firstname", user.getFirstName());
+        response.put("lastname", user.getLastName());
+        response.put("email", user.getEmail());
+        response.put("username", user.getUsername());
+        return response;
     }
 
     @PostMapping
