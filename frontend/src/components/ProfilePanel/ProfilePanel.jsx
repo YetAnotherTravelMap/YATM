@@ -16,7 +16,7 @@ function ProfilePanel() {
             setUserData(response.data);
         };
         fetchUserData();
-    }, []);
+    }, [authAxios]);
 
     const handleLogout = async (event) => {
         event.preventDefault();

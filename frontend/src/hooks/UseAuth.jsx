@@ -6,7 +6,7 @@ const authContext = createContext();
 
 function useAuth() {
     const [authed, setAuthed] = useState(localStorage.getItem('jwt') !== null);
-    const [token, setToken] = useState("");
+    const [token, setToken] = useState(localStorage.getItem('jwt'));
 
     const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ function useAuth() {
         );
 
         return instance;
-    }, [token]);
+    }, [navigate, token]);
 
     return {
         authed, authAxios, login(username, password) {
