@@ -9,6 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.io.File;
+import java.nio.file.Files;
+
 @SpringBootApplication
 public class YatmApplication {
 
@@ -24,7 +27,9 @@ public class YatmApplication {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder) {
         return args -> {
-            users.save(new User("Test1", "User", encoder.encode("pass1"), "test1", "test@email.com"));
+            File profilePictureFile = new File("C:/Users/Daniel/Downloads/socks.jpg");
+            byte[] profilePictureBytes = Files.readAllBytes(profilePictureFile.toPath());
+            users.save(new User("Test1", "User", encoder.encode("pass1"), "test1", "test@email.com",profilePictureBytes));
             users.save(new User("Test2", "User", encoder.encode("pass2"), "test2", "test2@email.com"));
         };
     }

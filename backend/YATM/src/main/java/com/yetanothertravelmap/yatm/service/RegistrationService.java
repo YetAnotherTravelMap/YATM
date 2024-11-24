@@ -6,17 +6,25 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService {
+public class RegistrationService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-    public AccountService(UserRepository userRepository){
+
+    public RegistrationService(UserRepository userRepository){
         this.userRepository = userRepository;
     }
 
-    public boolean changePassword(User user, String password){
-        user.setHash(encoder.encode(password));
-        return true;
+    public User saveUser(User user){
+        user.setHash(encoder.encode(user.getHash()));
+        return userRepository.save(user);
+    }
+
+    public User getUserByUsername(String username){
+        return userRepository.findByUsername(username).orElse(null);
+    }
+    public User getUserByEmail(String email){
+        return userRepository.findByEmail(email).orElse(null);
     }
 }
