@@ -1,0 +1,21 @@
+.pin-creation-panel-container {
+    background-color: transparent;
+    width: 60px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    text-align: center;
+    font-size: 14px;
+    margin-right: calc(50vw - 125px);
+    transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease;
+}
+
+.pin-creation-panel-container.show {
+    border: 1px solid #86abcb;
+    box-shadow: 1px 1px 8px #86abcb;
+    width: 250px;
+    background: #f4f4f4;
+}

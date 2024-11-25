@@ -26,6 +26,7 @@ public class YatmApplication {
         return args -> {
             users.save(new User("Test1", "User", encoder.encode("pass1"), "test1", "test@email.com"));
             users.save(new User("Test2", "User", encoder.encode("pass2"), "test2", "test2@email.com"));
+            users.save(new User("1", "1", encoder.encode("1"), "1", "1@email.com"));
         };
     }
 
