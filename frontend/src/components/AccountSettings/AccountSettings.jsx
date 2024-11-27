@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./AccountSettings.css";
+import axios from "axios";
 
 function AccountSettings({ toggleSettingsPanel, logout, user}) {
     const [profilePicture, setProfilePicture] = useState(null);
@@ -14,20 +15,20 @@ function AccountSettings({ toggleSettingsPanel, logout, user}) {
     };
 
 
-    // Handle password change (does not work due to authAxios I think)
-    const handlePasswordChange = async () => {
+    const handlePasswordChange = async (event) => {
+        event.preventDefault();
         if (password === reenterPassword) {
             try {
-                const response = await fetch('/api/user/change-password', {
-                    method: "POST",
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({user, password})
-                })
+                await axios.post('/api/user/change-password', {user, password},
+                    {headers:{
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+                    }})
             } catch (error) {
                 console.error(error);
             }
         } else {
-            alert("Passwords do not match!");
+            alert("Passwords do not match");
         }
     };
 

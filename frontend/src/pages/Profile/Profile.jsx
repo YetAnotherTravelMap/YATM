@@ -11,8 +11,9 @@ import useAuth from "./../../hooks/UseAuth"
 
 export function Profile(){
     const [user, setUserData] = useState({username: "-", email: "-"});
-
     const [settingsVisible, setSettingsVisible] = useState(false);
+    const [pins, setPins] = useState([]);
+
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
     }
@@ -30,6 +31,21 @@ export function Profile(){
     const profilePictureSrc = user.profilePicture
         ? `data:image/png;base64,${user.profilePicture}`
         : null;
+
+    const getPins = async () => {
+        try {
+            const pinsResponse = await authAxios.get(`/api/user/maps/${user.mapIdArray[1]}/pins`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+                }
+            });
+            setPins(pinsResponse.data);
+            console.log(pinsResponse.data);
+        } catch (error) {
+            console.error('Error fetching pins:', error);
+        }
+    };
 
     return (
         <div className="profile-page">
@@ -55,6 +71,7 @@ export function Profile(){
                 <button className="settings-button" onClick={toggleSettingsPanel}>
                 <img src={cogIcon} alt="cog" className="cog-icon"/>Account Settings
                 </button>
+                <button className="get-pins-button" onClick={getPins}>Get pins</button>
             </div>
 
             {/* Stats section */}
