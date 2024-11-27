@@ -1,5 +1,6 @@
 package com.yetanothertravelmap.yatm.controller;
 
+import com.yetanothertravelmap.yatm.dto.ChangePasswordRequest;
 import com.yetanothertravelmap.yatm.service.AccountService;
 import com.yetanothertravelmap.yatm.service.RegistrationService;
 import com.yetanothertravelmap.yatm.model.User;
@@ -33,6 +34,7 @@ public class AccountController {
         response.put("email", user.getEmail());
         response.put("username", user.getUsername());
         response.put("profilePicture", user.getProfilePicture());
+        response.put("mapIdArray", user.getMapIds());
         return response;
     }
 
@@ -52,7 +54,10 @@ public class AccountController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody User user, String password){
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request){
+        User user = request.getUser();
+        String password = request.getPassword();
+
         return ResponseEntity.ok(accountService.changePassword(user, password));
     }
 }
