@@ -2,20 +2,95 @@
     background-color: transparent;
     width: 60px;
     padding: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*align-items: center;*/
     border-radius: 5px;
     border: 1px solid transparent;
-    text-align: center;
+    /*text-align: center;*/
     font-size: 14px;
-    margin-right: calc(50vw - 125px);
+    margin-right: calc(50vw - 200px);
     transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease;
 }
 
 .pin-creation-panel-container.show {
     border: 1px solid #86abcb;
     box-shadow: 1px 1px 8px #86abcb;
-    width: 250px;
+    width: 400px;
     background: #f4f4f4;
+}
+
+#mainCategory {
+    /*appearance: none;*/
+    width: 100%;
+
+    /*font-size: 1.15rem;*/
+    padding: 0.675em 6em 0.675em 1em;
+    /*background-color: #fff;*/
+    border: 1px solid #6b6f71;
+    border-radius: 5px;
+    color: #000;
+    cursor: pointer;
+}
+
+#description {
+    width: 100%;
+    height: 100px;
+    padding: 10px 10px;
+    box-sizing: border-box;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    font-size: 16px;
+    resize: none;
+}
+
+.rmsc {
+    --rmsc-main: #4285f4 !important;
+    --rmsc-hover: #f1f3f5 !important;
+    --rmsc-selected: #e2e6ea !important;
+    --rmsc-border: #6b6f71 !important;
+    --rmsc-gray: #aaa !important;
+    --rmsc-bg: #fff !important;
+    --rmsc-p: 10px; /* Spacing */
+    --rmsc-radius: 5px; /* Radius */
+    --rmsc-h: 38px; /* Height */
+}
+
+.multi-select {
+    width: 100%;
+}
+
+#create-pin-button {
+    margin-left: auto;
+    text-align: center;
+    color: #053e01;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    display: inline-block;
+    background-color: transparent;
+}
+
+#create-pin-button:hover {
+    border-color: #053e01;
+}
+
+#cancel-pin {
+    margin-left: auto;
+    text-align: center;
+    color: #670d0d;
+    text-decoration: none;
+    padding: 8px 16px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+    display: inline-block;
+    background-color: transparent;
+}
+
+#cancel-pin:hover {
+    border-color: #670d0d;
 }
