@@ -1,12 +1,15 @@
 package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.ChangePasswordRequest;
+import com.yetanothertravelmap.yatm.dto.ChangeProfilePictureRequest;
 import com.yetanothertravelmap.yatm.service.AccountService;
 import com.yetanothertravelmap.yatm.service.RegistrationService;
 import com.yetanothertravelmap.yatm.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.HashMap;
 
 import java.security.Principal;
@@ -35,6 +38,7 @@ public class AccountController {
         response.put("username", user.getUsername());
         response.put("profilePicture", user.getProfilePicture());
         response.put("mapIdArray", user.getMapIds());
+        response.put("userId", user.getId());
         return response;
     }
 
@@ -59,5 +63,20 @@ public class AccountController {
         String password = request.getPassword();
 
         return ResponseEntity.ok(accountService.changePassword(user, password));
+    }
+
+    @PostMapping("/change-profile-picture")
+    public ResponseEntity<?> changeProfilePicture(@RequestParam ChangeProfilePictureRequest request){
+        long userId = request.getUserId();
+        MultipartFile profilePicture = request.getProfilePicture();
+
+        boolean success = accountService.changeProfilePicture(userId, profilePicture);
+
+        if(success){
+            return ResponseEntity.ok("Profile picture changed successfully");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update profile picture");
+        }
     }
 }
