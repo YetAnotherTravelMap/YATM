@@ -57,13 +57,13 @@ export function Profile(){
             {/* Top Section */}
             <div className="top-section">
             <div className="profile-info">
-                    {profilePictureSrc ? (
-                        <img src={profilePictureSrc} alt="Profile" className="profile-pic"/>
-                    ) : (
-                        <div className="profile-initials">
-                            {user.username.at(0).toUpperCase()}
-                        </div>
-                    )}
+                {profilePictureSrc ? (
+                    <img src={profilePictureSrc} alt="Profile" className="profile-pic" />
+                ) : (
+                    <div className="profile-initials">
+                        {user.username.at(0).toUpperCase()}
+                    </div>
+                )}
                     <div className="user-details">
                         <h2>{user.username}</h2>
                         <p>{user.email}</p>

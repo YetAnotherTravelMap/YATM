@@ -35,10 +35,24 @@
 }
 
 .profile-pic {
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    margin-right: 20px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Profile initials bubble styling */
+.profile-initials {
+    width: 50px; /* Consistent width */
+    height: 50px; /* Consistent height */
+    background: #212cdf; /* Background color for initials */
+    color: white; /* Text color */
+    font-size: 22px; /* Text size */
+    display: flex; /* Center content */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    border-radius: 50%; /* Make it circular */
 }
 
 .icons{
@@ -53,6 +67,7 @@
 
 .user-details {
     display: flex;
+    padding-left: 10px;
     flex-direction: column;
 }
 
@@ -114,19 +129,6 @@
     align-items: center;
 }
 
-.profile-initials {
-    background: #212cdf;
-    color: white;
-    padding: 10px;
-    margin-right: 20px;
-    font-size: 22px;
-    width: 50px;
-    height: 50px;
-    text-align: center;
-    border-radius: 100%;
-    cursor: pointer;
-    align-content: center;
-}
 
 button {
     padding: 10px 20px;
