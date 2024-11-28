@@ -18,6 +18,10 @@ function ProfilePanel() {
         fetchUserData();
     }, [authAxios]);
 
+    const profilePictureSrc = user.profilePicture
+        ? `data:image/png;base64,${user.profilePicture}`
+        : null;
+
     const handleLogout = async (event) => {
         event.preventDefault();
         logout();

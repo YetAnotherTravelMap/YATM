@@ -34,7 +34,7 @@ export function Profile(){
 
     const getPins = async () => {
         try {
-            const pinsResponse = await authAxios.get(`/api/user/maps/${user.mapIdArray[1]}/pins`, {
+            const pinsResponse = await authAxios.get(`/api/user/maps/${user.mapIdArray[0]}/pins`, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('jwt')
@@ -52,10 +52,11 @@ export function Profile(){
             {/* Header Menu */}
             <header className="header-menu">
                 <button className="menu-button" onClick={() => window.location.href = '/'}>Back to Map</button>
+                <button className="get-pins-button" onClick={getPins}>Get pins</button>
             </header>
             {/* Top Section */}
             <div className="top-section">
-                <div className="profile-info">
+            <div className="profile-info">
                     {profilePictureSrc ? (
                         <img src={profilePictureSrc} alt="Profile" className="profile-pic"/>
                     ) : (
@@ -71,7 +72,6 @@ export function Profile(){
                 <button className="settings-button" onClick={toggleSettingsPanel}>
                 <img src={cogIcon} alt="cog" className="cog-icon"/>Account Settings
                 </button>
-                <button className="get-pins-button" onClick={getPins}>Get pins</button>
             </div>
 
             {/* Stats section */}
@@ -105,12 +105,12 @@ export function Profile(){
                         <option value="json">JSON</option>
                         <option value="xml">XML</option>
                     </select>
-                    <button>Export</button>
+                    <button className="profile-page-button">Export</button>
                 </div>
                 <div className="import-container">
                     <h3>Import Travel Data</h3>
                     <input type="file" accept=".kml,.json,.xml" />
-                    <button>Import</button>
+                    <button className="profile-page-button">Import</button>
                 </div>
             </div>
             {settingsVisible && (
