@@ -67,6 +67,10 @@
     cursor: pointer;
 }
 
+.settings-button:hover{
+    background-color: #0e5738;
+}
+
 /* Stats section */
 .stats-section {
     display: flex;
@@ -133,7 +137,7 @@ button {
     border: none;
     cursor: pointer;
 }
-button:hover {
+.profile-page-button:hover {
     background-color: #0e5738;
 }
 
@@ -165,7 +169,7 @@ input[type="file"] {
 }
 
 /* Close button */
-.close-button {
+.close-settings-button {
     position: absolute;
     top: 10px;
     right: 10px;
