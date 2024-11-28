@@ -31,9 +31,16 @@ function ProfilePanel() {
     return (
         <div className={`profile-panel-container ${isVisible ? "show" : ""}`}>
             {/* Profile initials */}
-            <div className={`profile-initials ${isVisible ? "show" : ""}`} onClick={() => setIsVisible(true)}>
-                {user.username.at(0).toUpperCase()}
+            <div className={`profile-initials-container ${isVisible ? "show" : ""}`} onClick={() => setIsVisible(true)}>
+                {profilePictureSrc ? (
+                    <img src={profilePictureSrc} alt="Profile" className="profile-pic"/>
+                ) : (
+                    <div className="profile-initials">
+                        {user.username.at(0).toUpperCase()}
+                    </div>
+                )}
             </div>
+
 
             {/* Conditionally render profile details with transition effect */}
             <div className={`profile-details ${isVisible ? "show" : ""}`}>
@@ -41,7 +48,7 @@ function ProfilePanel() {
                 <p className="profile-username">{user.username}</p>
                 <p className="profile-email">{user.email}</p>
                 <Link to="profile" id="profile-button">Manage Profile</Link>
-                <button id="logout-button" onClick={handleLogout}> Logout </button>
+                <button id="logout-button" onClick={handleLogout}> Logout</button>
             </div>
         </div>
     );

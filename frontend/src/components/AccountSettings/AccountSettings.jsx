@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import "./AccountSettings.css";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 function AccountSettings({ toggleSettingsPanel, logout, user }) {
     const [profilePicture, setProfilePicture] = useState(null);
     const [password, setPassword] = useState("");
     const [reenterPassword, setReenterPassword] = useState("");
     const [passwordChanged, setPasswordChanged] = useState(false);
+
+    const navigate = useNavigate();
 
     const handlePasswordChange = async (event) => {
         event.preventDefault();
@@ -54,7 +57,7 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
                             if (profilePicture) {
                                 const formData = new FormData();
                                 formData.append("userId", user.userId);
-                                formData.append("file", profilePicture);
+                                formData.append("profilePicture", profilePicture);
 
                                 try {
                                     const response = await axios.post(
@@ -69,7 +72,7 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
                                     );
 
                                     if (response.status === 200) {
-                                        alert("Profile picture updated successfully!");
+                                        window.location.reload();
                                     }
                                 } catch (error) {
                                     console.error("Error uploading profile picture:", error);
