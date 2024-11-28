@@ -17,6 +17,7 @@
     "react-dom": "^18.3.1",
     "react-leaflet": "^4.2.1",
     "react-leaflet-custom-control": "^1.4.0",
+    "react-multi-select-component": "^4.3.4",
     "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
