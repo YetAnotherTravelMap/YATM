@@ -31,10 +31,10 @@ public class YatmApplication {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder, PinRepository pinRepository, MapRepository mapRepository) {
         return args -> {
-            File profilePictureFile = new File("C:/Users/Daniel/Downloads/socks.jpg");
-            byte[] profilePictureBytes = Files.readAllBytes(profilePictureFile.toPath());
+//            File profilePictureFile = new File("C:/Users/Daniel/Downloads/socks.jpg");
+//            byte[] profilePictureBytes = Files.readAllBytes(profilePictureFile.toPath());
 
-            User user1 = new User(encoder.encode("pass1"), "test1", "test@email.com", profilePictureBytes);
+            User user1 = new User(encoder.encode("pass1"), "test1", "test@email.com");
 
             users.save(user1);
             users.save(new User(encoder.encode("pass2"), "test2", "test2@email.com"));

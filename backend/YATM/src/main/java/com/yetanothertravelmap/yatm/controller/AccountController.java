@@ -66,9 +66,7 @@ public class AccountController {
     }
 
     @PostMapping("/change-profile-picture")
-    public ResponseEntity<?> changeProfilePicture(@RequestParam ChangeProfilePictureRequest request){
-        long userId = request.getUserId();
-        MultipartFile profilePicture = request.getProfilePicture();
+    public ResponseEntity<?> changeProfilePicture(@RequestParam long userId, @RequestParam MultipartFile profilePicture){
 
         boolean success = accountService.changeProfilePicture(userId, profilePicture);
 
