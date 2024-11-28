@@ -6,7 +6,7 @@ import useAuth from "../../hooks/UseAuth.jsx";
 
 
 // eslint-disable-next-line react/prop-types
-function PinCreationPanel({ pos, isVisible, setIsVisible }) {
+function PinCreationPanel({ pos, isVisible, setIsVisible, notifyPinUpdate }) {
 
     const [mainCategory, setMainCategory] = useState("been");
     const [selectedSubCategories, setSelectedSubCategories] = useState([]);
@@ -48,6 +48,7 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
         console.log(pin)
         resetPanel()
         await authAxios.post("/api/pin", pin);
+        notifyPinUpdate()
     }
 
     function resetPanel() {
@@ -95,7 +96,7 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
             />
 
             <button id="create-pin-button" onClick={handleCreatePin}> Create Pin</button>
-            <button id="cancel-pin" onClick={handleCreatePin}> Cancel</button>
+            <button id="cancel-pin" onClick={resetPanel}> Cancel</button>
 
         </div>
     );
