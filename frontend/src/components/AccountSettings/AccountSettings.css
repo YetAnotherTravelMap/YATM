@@ -33,6 +33,18 @@
     background-color: #0e5738;
 }
 
+.password-change-error {
+    color: #d9534f;
+    font-size: 14px;
+    text-align: center;
+}
+
+.password-change-success {
+    color: #198653FF;
+    font-size: 14px;
+    text-align: center;
+}
+
 .logout-button {
     background-color: #dc3545;
 }
