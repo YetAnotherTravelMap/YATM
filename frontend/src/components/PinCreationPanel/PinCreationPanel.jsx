@@ -1,5 +1,5 @@
 import {Link,} from "react-router-dom";
-import "./PinCreationPanel.css"
+import classes from "./PinCreationPanel.module.css"
 import {useEffect, useState} from "react";
 import { MultiSelect } from "react-multi-select-component";
 import useAuth from "../../hooks/UseAuth.jsx";
@@ -60,14 +60,14 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
 
     return (
         isVisible &&
-        <div className={`pin-creation-panel-container ${isVisible ? "show" : ""}`}>
+        <div className={`${classes["pin-creation-panel-container"]} ${isVisible ? classes.show : ""}`}>
 
             <h3>{locationName}</h3>
 
             <label htmlFor="mainCategory">Main Category:</label>
             <select
                 name="mainCategory"
-                id="mainCategory"
+                id={classes["mainCategory"]}
                 value={mainCategory}
                 onChange={(e) => setMainCategory(e.target.value)}
             >
@@ -88,14 +88,14 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
 
             <label htmlFor="description">Description:</label>
             <textarea
-                id="description"
+                id={classes["description"]}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter a short description here..."
             />
 
-            <button id="create-pin-button" onClick={handleCreatePin}> Create Pin</button>
-            <button id="cancel-pin" onClick={handleCreatePin}> Cancel</button>
+            <button id={classes["create-pin-button"]} onClick={handleCreatePin}> Create Pin</button>
+            <button id={classes["cancel-pin"]} onClick={handleCreatePin}> Cancel</button>
 
         </div>
     );

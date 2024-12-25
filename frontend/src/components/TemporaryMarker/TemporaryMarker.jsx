@@ -1,4 +1,4 @@
-import "./TemporaryMarker.css"
+import classes from "./TemporaryMarker.module.css"
 import {Marker, useMapEvents} from "react-leaflet";
 
 // eslint-disable-next-line react/prop-types

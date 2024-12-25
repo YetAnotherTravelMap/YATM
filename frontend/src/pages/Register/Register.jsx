@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState, useEffect } from 'react';
-import './Register.css';
+import classes from './Register.module.css';
 import {Link, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/UseAuth.jsx";
 
@@ -64,14 +64,14 @@ export function Register() {
     const passwordsMatch = hash && password2 && hash === password2
 
     return (
-        <div className="register-container">
+        <div className={classes["register-container"]}>
             {success ? (
-                <p className={"success-message"}>Registration successful! Redirecting to login...</p>
+                <p className={classes["success-message"]}>Registration successful! Redirecting to login...</p>
             ) : (
-                <form className={"register-form"} onSubmit={handleSubmit}>
-                    <h1 className={"form-mini-title"}>Register</h1>
-                    <h2 className={"form-title"}>Welcome!</h2>
-                    <div className="form-group">
+                <form className={classes["register-form"]} onSubmit={handleSubmit}>
+                    <h1 className={classes["form-mini-title"]}>Register</h1>
+                    <h2 className={classes["form-title"]}>Welcome!</h2>
+                    <div className={classes["form-group"]}>
                         <label>Username</label>
                         <input
                             type="text"
@@ -79,10 +79,10 @@ export function Register() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className={classes["form-group"]}>
                         <label>Email</label>
                         <input
                             type="text"
@@ -90,10 +90,10 @@ export function Register() {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className={classes["form-group"]}>
                         <label>Password</label>
                         <input
                             type="password"
@@ -101,10 +101,10 @@ export function Register() {
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                             onChange={(e) => setPassword1(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className={classes["form-group"]}>
                         <label>Re-enter Password</label>
                         <input
                             type="password"
@@ -112,16 +112,16 @@ export function Register() {
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                             onChange={(e) => setPassword2(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                         {error && <p style = {{color : 'red'}}>{error}</p>}
                         {!passwordsMatch && password2 && (
-                            <p className="error-message">Passwords do not match</p>
+                            <p className={classes["error-message"]}>Passwords do not match</p>
                         )}
                     </div>
-                    <button type="submit" className={"register-button"} disabled = {!passwordsMatch}>Register</button>
-                    <div className={"disclaimer-text"}>
-                        Already have an account? <Link to="/login" className="login-link">Log in</Link>
+                    <button type="submit" className={classes["register-button"]} disabled = {!passwordsMatch}>Register</button>
+                    <div className={classes["disclaimer-text"]}>
+                        Already have an account? <Link to="/login" className={classes["login-link"]}>Log in</Link>
                     </div>
                 </form>
             )}

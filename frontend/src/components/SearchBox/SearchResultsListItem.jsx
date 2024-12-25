@@ -1,6 +1,6 @@
-import './SearchResultsListItem.css'
 import {useMap} from "react-leaflet";
 import L from "leaflet";
+import classes from './SearchResultsListItem.module.css'
 
 function SearchResultsListItem({result, resetSearchResults}) {
     const map = useMap()
@@ -15,7 +15,7 @@ function SearchResultsListItem({result, resetSearchResults}) {
     }
 
     return (
-        <button className="result-item" onClick={handleClick}>
+        <button className={classes["result-item"]} onClick={handleClick}>
             {result.display_name}
         </button>
     );

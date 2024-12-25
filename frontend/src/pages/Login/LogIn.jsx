@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from 'react';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import useAuth from './../../hooks/UseAuth.jsx'
-import './Login.css';
+import classes from './Login.module.css';
 
 export function Login() {
     const [username, setUsername] = useState('');
@@ -32,15 +32,15 @@ export function Login() {
 };
 
     return (
-        <div className="login-container">
-            {error && <p className={"login-error-message"}>{error}</p>}
+        <div className={classes["login-container"]}>
+            {error && <p className={classes["login-error-message"]}>{error}</p>}
             {success ? (
-                <p className={"success-message"}>Login successful!</p>
+                <p className={classes["success-message"]}>Login successful!</p>
             ) : (
-                <form className={"login-form"} onSubmit={handleSubmit}>
-                    <h1 className={"form-mini-title"}>Login</h1>
-                    <h2 className={"form-title"}>Welcome Back!</h2>
-                    <div className="form-group">
+                <form className={classes["login-form"]} onSubmit={handleSubmit}>
+                    <h1 className={classes["form-mini-title"]}>Login</h1>
+                    <h2 className={classes["form-title"]}>Welcome Back!</h2>
+                    <div className={classes["form-group"]}>
                         <label>Username</label>
                         <input
                             type="text"
@@ -48,10 +48,10 @@ export function Login() {
                             placeholder={"traveller1"}
                             onChange={(e) => setUsername(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                     </div>
-                    <div className="form-group">
+                    <div className={classes["form-group"]}>
                         <label>Password</label>
                         <input
                             type="password"
@@ -59,12 +59,12 @@ export function Login() {
                             placeholder="&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;&#9679;"
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className="input-field"
+                            className={classes["input-field"]}
                         />
                     </div>
-                    <button type="submit" className={"login-button"}>Log in</button>
-                    <div className={"disclaimer-text"}>
-                        Don't have an account? <Link to="/Register" className="register-link">Register</Link>
+                    <button type="submit" className={classes["login-button"]}>Log in</button>
+                    <div className={classes["disclaimer-text"]}>
+                        Don&apos;t have an account? <Link to="/Register" className={classes["register-link"]}>Register</Link>
                     </div>
                 </form>
             )}
