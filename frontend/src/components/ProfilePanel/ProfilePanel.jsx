@@ -31,11 +31,11 @@ function ProfilePanel() {
     return (
         <div className={`${classes['profile-panel-container']} ${isVisible ? classes.show : ""}`}>
             {/* Profile initials */}
-            <div className={`profile-initials-container ${isVisible ? "show" : ""}`} onClick={() => setIsVisible(true)}>
+            <div className={`${classes["profile-initials-container"]} ${isVisible ? classes.show : ""}`} onClick={() => setIsVisible(true)}>
                 {profilePictureSrc ? (
-                    <img src={profilePictureSrc} alt="Profile" className="profile-pic"/>
+                    <img src={profilePictureSrc} alt="Profile" className={classes["profile-pic"]}/>
                 ) : (
-                    <div className="profile-initials">
+                    <div className={classes["profile-initials"]}>
                         {user.username.at(0).toUpperCase()}
                     </div>
                 )}

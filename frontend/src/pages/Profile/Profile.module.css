@@ -1,3 +1,13 @@
+button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #198653;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
 /* Header Menu*/
 .profile-page {
     display: grid;
@@ -85,8 +95,8 @@
 .settings-button:hover{
     background-color: #0e5738;
 }
-
 /* Stats section */
+
 .stats-section {
     display: flex;
     justify-content: space-around;
@@ -113,8 +123,8 @@
     margin: 5px 0 0;
     font-size: 1.5em;
 }
-
 /* Import/Export Section */
+
 .import-export-section {
     display: flex;
     justify-content: space-around;
@@ -122,22 +132,12 @@
     padding: 100px;
 }
 
+
 .export-container,
 .import-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-
-button {
-    padding: 10px 20px;
-    margin-top: 10px;
-    background-color: #198653;
-    border-radius: 5px;
-    color: white;
-    border: none;
-    cursor: pointer;
 }
 .profile-page-button:hover {
     background-color: #0e5738;

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import "./AccountSettings.css";
+import classes from "./AccountSettings.module.css";
 import axios from "axios";
 import {useNavigate} from "react-router-dom";
 
@@ -36,15 +36,15 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
     const passwordsMatch = password && reenterPassword && password === reenterPassword;
 
     return (
-        <div className="settings">
-            <div className="settings-content">
-                <button className="close-settings-button" onClick={toggleSettingsPanel}>
+        <div className={classes.settings}>
+            <div className={classes["settings-content"]}>
+                <button className={classes["close-settings-button"]} onClick={toggleSettingsPanel}>
                     &times;
                 </button>
                 <h2>Account Settings</h2>
 
                 {/* Change Profile Picture */}
-                <div className="settings-section">
+                <div className={classes["settings-section"]}>
                     <h3>Change Profile Picture</h3>
                     <input
                         type="file"
@@ -87,7 +87,7 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
                 </div>
 
                 {/* Change Password */}
-                <div className="settings-section">
+                <div className={classes["settings-section"]}>
                     <h3>Change Password</h3>
                     <input
                         type="password"
@@ -108,16 +108,16 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
                         }}
                     />
                     {!passwordsMatch && reenterPassword && (
-                        <p className="password-change-error">Passwords do not match</p>
+                        <p className={classes["password-change-error"]}>Passwords do not match</p>
                     )}
                     {passwordChanged && (
-                        <p className="password-change-success">Password Changed</p>
+                        <p className={classes["password-change-success"]}>Password Changed</p>
                     )}
                     <button onClick={handlePasswordChange}>Update Password</button>
                 </div>
 
                 {/* Logout Button */}
-                <button className="logout-button" onClick={logout}>
+                <button className={`${classes["logout-button"]} ${classes.button}`} onClick={logout}>
                     Logout
                 </button>
             </div>
