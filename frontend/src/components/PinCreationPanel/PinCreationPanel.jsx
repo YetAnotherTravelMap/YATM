@@ -1,7 +1,6 @@
-import {Link,} from "react-router-dom";
 import classes from "./PinCreationPanel.module.css"
 import {useEffect, useState} from "react";
-import { MultiSelect } from "react-multi-select-component";
+import MultiSelect from "../MultiSelect/MultiSelect.jsx";
 import useAuth from "../../hooks/UseAuth.jsx";
 
 
@@ -15,10 +14,10 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
     const { authAxios } = useAuth();
 
     const subCategories = [
-        { label: "SubCategory1", value: "1" },
-        { label: "SubCategory2", value: "2" },
-        { label: "SubCategory3", value: "3" },
-        { label: "SubCategory4", value: "4" },
+        "SubCategory1",
+        "SubCategory2",
+        "SubCategory3",
+        "SubCategory4",
     ];
 
     useEffect(() => {
@@ -62,9 +61,13 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
         isVisible &&
         <div className={`${classes["pin-creation-panel-container"]} ${isVisible ? classes.show : ""}`}>
 
-            <h3>{locationName}</h3>
+            <h3 className={classes["pin-creation-panel-header"]}>Create New Pin:</h3>
 
-            <label htmlFor="mainCategory">Main Category:</label>
+            <label htmlFor="pinName" className={classes["pin-creation-panel-label"]}>Pin Name:</label>
+            <input type="text" id="pinName" className={classes["pin-creation-panel-pin-name"]} name="pinName"
+                   value={locationName} onChange={e => setLocationName(e.target.value)}/>
+
+            <label htmlFor="mainCategory" className={classes["pin-creation-panel-label"]}>Main Category:</label>
             <select
                 name="mainCategory"
                 id={classes["mainCategory"]}
@@ -76,26 +79,25 @@ function PinCreationPanel({ pos, isVisible, setIsVisible }) {
                 <option value="want2go">Want2Go</option>
             </select>
 
-            <label htmlFor="subCategory">Subcategory:</label>
+            <label htmlFor="subCategory" className={classes["pin-creation-panel-label"]}>Subcategory:</label>
             <MultiSelect
-                id="subCategory"
-                options={subCategories}
-                value={selectedSubCategories}
-                onChange={setSelectedSubCategories}
-                labelledBy="Select subcategory"
-                isCreatable={true}
+                allOptions={subCategories}
+                selectedOptions={selectedSubCategories}
+                setSelectedOptions={setSelectedSubCategories}
+                optionTypeName="Sub-category"
             />
 
-            <label htmlFor="description">Description:</label>
+            <label htmlFor="description" className={classes["pin-creation-panel-label"]}>Description:</label>
             <textarea
-                id={classes["description"]}
+                id="description"
+                className={classes["pin-creation-panel-description"]}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Enter a short description here..."
             />
 
             <button id={classes["create-pin-button"]} onClick={handleCreatePin}> Create Pin</button>
-            <button id={classes["cancel-pin"]} onClick={handleCreatePin}> Cancel</button>
+            <button id={classes["cancel-pin"]} onClick={resetPanel}> Cancel</button>
 
         </div>
     );
