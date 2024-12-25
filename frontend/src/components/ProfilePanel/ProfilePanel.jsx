@@ -18,6 +18,10 @@ function ProfilePanel() {
         fetchUserData();
     }, [authAxios]);
 
+    const profilePictureSrc = user.profilePicture
+        ? `data:image/png;base64,${user.profilePicture}`
+        : null;
+
     const handleLogout = async (event) => {
         event.preventDefault();
         logout();
@@ -27,9 +31,16 @@ function ProfilePanel() {
     return (
         <div className={`${classes['profile-panel-container']} ${isVisible ? classes.show : ""}`}>
             {/* Profile initials */}
-            <div className={`${classes["profile-initials"]} ${isVisible ? classes.show : ""}`} onClick={() => setIsVisible(true)}>
-                {user.username.at(0).toUpperCase()}
+            <div className={`profile-initials-container ${isVisible ? "show" : ""}`} onClick={() => setIsVisible(true)}>
+                {profilePictureSrc ? (
+                    <img src={profilePictureSrc} alt="Profile" className="profile-pic"/>
+                ) : (
+                    <div className="profile-initials">
+                        {user.username.at(0).toUpperCase()}
+                    </div>
+                )}
             </div>
+
 
             {/* Conditionally render profile details with transition effect */}
             <div className={`${classes["profile-details"]} ${isVisible ? classes.show : ""}`}>

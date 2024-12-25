@@ -5,8 +5,6 @@ import {Link, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/UseAuth.jsx";
 
 export function Register() {
-    const [firstName, setFirstName] = useState('firstname');
-    const [lastName, setLastName] = useState('lastname');
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [hash, setPassword1] = useState('');
@@ -43,7 +41,7 @@ export function Register() {
             const response = await fetch('/api/user', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({firstName, lastName, hash, username, email })
+                body: JSON.stringify({ hash, username, email })
             });
 
             if (!response.ok) {

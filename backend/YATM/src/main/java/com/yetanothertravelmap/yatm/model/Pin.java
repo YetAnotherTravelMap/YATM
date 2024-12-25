@@ -14,6 +14,13 @@ public class Pin {
         this.icon = icon;
     }
 
+    public Pin(String name, double latitude, double longitude, String description) {
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.description = description;
+    }
+
     public Pin(){}
 
     @Id
