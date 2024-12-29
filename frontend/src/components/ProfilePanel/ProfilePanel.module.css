@@ -1,7 +1,7 @@
 .profile-panel-container {
     background-color: transparent;
     width: 60px;
-    padding: 10px;
+    padding: 0 10px 0 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -9,10 +9,11 @@
     border: 1px solid transparent;
     text-align: center;
     font-size: 14px;
-    transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease;
+    transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease, padding 0.1s ease;
 }
 
 .profile-panel-container.show {
+    padding: 10px;
     border: 1px solid #86abcb;
     box-shadow: 1px 1px 8px #86abcb;
     width: 250px;
@@ -59,11 +60,13 @@
 .profile-details {
     opacity: 0;
     visibility: hidden;
+    display: none;
     transition: opacity 0.3s ease;
 }
 
 .profile-details.show {
     opacity: 1;
+    display: block;
     visibility: visible;
 }
 

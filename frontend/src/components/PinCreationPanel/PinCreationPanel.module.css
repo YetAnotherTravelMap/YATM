@@ -1,23 +1,29 @@
-.pin-creation-panel-container {
-    background-color: transparent;
-    width: 60px;
-    padding: 10px;
-    /*display: flex;*/
-    /*flex-direction: column;*/
-    /*align-items: center;*/
-    border-radius: 5px;
-    border: 1px solid transparent;
-    /*text-align: center;*/
-    font-size: 14px;
-    margin-right: calc(50vw - 200px);
-    transition: width 0.3s ease, background-color 0.1s ease, border 0.1s ease, box-shadow 0.1s ease;
-}
-
 .pin-creation-panel-container.show {
     border: 1px solid #86abcb;
     box-shadow: 1px 1px 8px #86abcb;
     width: 400px;
+    margin-right: calc(50vw - 200px);
     background: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+    .pin-creation-panel-container.show {
+        width: 300px;
+        margin-right: calc(50vw - 150px);
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pin-creation-panel-container.show {
+        width: 90%; /* Ensures it fits within smaller screens */
+        margin-right: auto;
+        margin-left: auto;
+        font-size: 12px;
+    }
 }
 
 .pin-creation-panel-label {
