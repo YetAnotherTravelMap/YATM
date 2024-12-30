@@ -1,5 +1,6 @@
 import {useEffect, useState} from "react";
 import classes from "./MultiSelect.module.css"
+import CategoryTag from "../CategoryTag/CategoryTag.jsx";
 
 // eslint-disable-next-line react/prop-types
 function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTypeName}) {
@@ -44,18 +45,10 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
     return (
         <>
             <div>
-                {/* eslint-disable-next-line react/prop-types */}
-                {selectedOptions.map(option => (<div key={option} className={classes["selected-option"]}>
-                        {option}
-                        <span
-                            className={classes["selected-option-close-btn"]}
-                            onClick={() => removeOption(option)}
-                        >
-                        &times;
-                    </span>
-                    </div>))}
-                {!isInputVisible && (
-                    <div className={classes["selected-option"]} onClick={() => setIsInputVisible(true)}> + </div>)}
+                {selectedOptions.map(option => (
+                    <CategoryTag key={option} value={option} onClose={() => removeOption(option)}/>
+                ))}
+                {!isInputVisible && <CategoryTag key="+" value={" + "} onClick={() => setIsInputVisible(true)}/>}
             </div>
             {isInputVisible && (<div className={classes["multi-select-input-container"]}>
                     <input

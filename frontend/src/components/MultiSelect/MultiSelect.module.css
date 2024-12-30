@@ -61,24 +61,3 @@
 
 
 
-.selected-option {
-    display: inline-flex;
-    align-items: center;
-    background-color: #555555;
-    color: white;
-    padding: 0 12px;
-    border-radius: 25px;
-    margin: 3px;
-}
-
-.selected-option-close-btn {
-    margin-left: 5px;
-    cursor: pointer;
-    font-size: 18px;
-    color: white;
-    transition: opacity 0.3s ease;
-}
-
-.selected-option-close-btn:hover {
-    opacity: 0.7;
-}

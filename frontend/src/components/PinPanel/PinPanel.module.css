@@ -7,22 +7,15 @@
     padding: 10px;
     border-radius: 5px;
     font-size: 14px;
+    position: absolute;
+    right: 100%;
+    bottom: 100%
 }
 
 @media (max-width: 768px) {
     .pin-creation-panel-container.show {
         width: 300px;
         margin-right: calc(50vw - 150px);
-        font-size: 13px;
-    }
-}
-
-@media (max-width: 480px) {
-    .pin-creation-panel-container.show {
-        width: 90%; /* Ensures it fits within smaller screens */
-        margin-right: auto;
-        margin-left: auto;
-        font-size: 12px;
     }
 }
 
