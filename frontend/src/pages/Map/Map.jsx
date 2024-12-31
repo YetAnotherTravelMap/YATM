@@ -1,7 +1,7 @@
 import "./Map.css"
 import "leaflet/dist/leaflet.css"
 
-import {MapContainer, Marker, Popup, useMapEvents} from 'react-leaflet'
+import {MapContainer, Marker, Popup} from 'react-leaflet'
 import {MapLibreTileLayer} from "../../components/MapLibreTileLayer/MapLibreTileLayer.ts";
 import mapStyle from "../../assets/MapStyles/WorldNavigationMap_Esri_S.json"
 import SearchBox from "../../components/SearchBox/SearchBox.jsx";
@@ -40,7 +40,7 @@ export function Map() {
 
     return (<MapContainer center={[45.384, -75.697]} zoom={5} zoomControl={false} maxBounds={[[-90, -180], [90, 180]]}
                           minZoom={3}
-                          maxZoom={19} bounceAtZoomLimits={false} maxBoundsViscosity={true}>
+                          maxZoom={19} bounceAtZoomLimits={false} maxBoundsViscosity={1}>
             <Control prepend position='topleft'>
                 <SearchBox/>
             </Control>

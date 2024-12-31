@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import SearchBoxInput from "./SearchBoxInput.jsx";
 import classes from "./SearchBox.module.css"
 import SearchResultsList from "./SearchResultsList.jsx";
-import axios from "axios";
 
 function SearchBox() {
 

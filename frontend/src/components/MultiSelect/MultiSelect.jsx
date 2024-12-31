@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
-import classes from "./MultiSelect.module.css"
+import {useState} from "react";
 import CategoryTag from "../CategoryTag/CategoryTag.jsx";
+import classes from "./MultiSelect.module.css"
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTypeName}) {
 
     const [inputValue, setInputValue] = useState('');
@@ -76,6 +76,13 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
             </div>
         </>
     );
+}
+
+MultiSelect.propTypes = {
+    allOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
+    setSelectedOptions: PropTypes.func.isRequired,
+    optionTypeName: PropTypes.string.isRequired,
 }
 
 export default MultiSelect;

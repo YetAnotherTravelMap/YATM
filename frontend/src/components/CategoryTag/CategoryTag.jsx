@@ -1,6 +1,6 @@
 import classes from "./CategoryTag.module.css"
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 function CategoryTag({ value, onClose, onClick }) {
 
     return (
@@ -16,6 +16,12 @@ function CategoryTag({ value, onClose, onClick }) {
             }
         </div>
     );
+}
+
+CategoryTag.propTypes = {
+    value: PropTypes.string.isRequired,
+    onClose: PropTypes.func,
+    onClick: PropTypes.func,
 }
 
 export default CategoryTag;

@@ -1,7 +1,8 @@
-import classes from "./TemporaryMarker.module.css"
-import {Marker, useMapEvents} from "react-leaflet";
+import {Marker} from "react-leaflet";
 import {Icon} from "leaflet";
 import tempPinIconImg from '../../assets/PinIcons/TempPin.png';
+import PropTypes from "prop-types";
+import classes from "./TemporaryMarker.module.css"
 
 const tempPinIcon = new Icon({
     iconUrl: tempPinIconImg,
@@ -9,8 +10,7 @@ const tempPinIcon = new Icon({
     iconAnchor: [13, 40],
 })
 
-// eslint-disable-next-line react/prop-types
-function TemporaryMarker({ pos, setPos, isVisible, setIsVisible }) {
+function TemporaryMarker({ pos, setPos, isVisible }) {
 
     return (
         isVisible &&
@@ -26,6 +26,12 @@ function TemporaryMarker({ pos, setPos, isVisible, setIsVisible }) {
             }}
         />
     );
+}
+
+TemporaryMarker.propTypes = {
+    pos: PropTypes.arrayOf(PropTypes.number).isRequired,
+    setPos: PropTypes.func.isRequired,
+    isVisible: PropTypes.bool.isRequired,
 }
 
 export default TemporaryMarker;

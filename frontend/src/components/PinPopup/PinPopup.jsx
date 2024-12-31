@@ -1,7 +1,7 @@
 import classes from "./PipPopup.module.css"
 import CategoryTag from "../CategoryTag/CategoryTag.jsx";
+import PropTypes from "prop-types";
 
-// eslint-disable-next-line react/prop-types
 function PinPopup({pin, onEditRequest, canEditPin}) {
 
     return (<>
@@ -26,6 +26,20 @@ function PinPopup({pin, onEditRequest, canEditPin}) {
 
         {canEditPin && <button className={classes["edit-button"]} onClick={onEditRequest}>Edit</button>}
     </>);
+}
+
+PinPopup.propTypes = {
+    pin: PropTypes.shape({
+        pinId: PropTypes.number,
+        latitude: PropTypes.number,
+        longitude: PropTypes.number,
+        mainCategory: PropTypes.string,
+        categories: PropTypes.array,
+        name: PropTypes.string,
+        description: PropTypes.string,
+    }).isRequired,
+    onEditRequest: PropTypes.func.isRequired,
+    canEditPin: PropTypes.bool.isRequired,
 }
 
 export default PinPopup;

@@ -5,6 +5,7 @@ import useAuth from "../../hooks/UseAuth.jsx";
 import TemporaryMarker from "../TemporaryMarker/TemporaryMarker.jsx";
 import PinPanelState from "./PinPanelState.js";
 import {useMapEvents} from "react-leaflet";
+import PropTypes from "prop-types";
 
 
 function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
@@ -128,7 +129,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
 
     return (
         <div>
-            <TemporaryMarker pos={tempMarkerPos} setPos={setTempMarkerPos} isVisible={isTempMarkerVisible} setIsVisible={setIsTempMarkerVisible}/>
+            <TemporaryMarker pos={tempMarkerPos} setPos={setTempMarkerPos} isVisible={isTempMarkerVisible}/>
             {!isInvisible &&
                 <div className={`${classes["pin-creation-panel-container"]} ${!isInvisible ? classes.show : ""}`}>
 
@@ -174,6 +175,21 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
             }
         </div>
     );
+}
+
+PinPanel.propTypes = {
+    panelState: PropTypes.number.isRequired,
+    setPanelState: PropTypes.func.isRequired,
+    pinDetailsToUpdate: PropTypes.shape({
+        pinId: PropTypes.number,
+        latitude: PropTypes.number,
+        longitude: PropTypes.number,
+        mainCategory: PropTypes.string,
+        categories: PropTypes.array,
+        name: PropTypes.string,
+        description: PropTypes.string,
+    }),
+    notifyPinUpdate: PropTypes.func.isRequired
 }
 
 export default PinPanel;

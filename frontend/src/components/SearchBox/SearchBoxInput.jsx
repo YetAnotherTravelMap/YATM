@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import classes from "./SearchBoxInput.module.css"
 import useAuth from "../../hooks/UseAuth.jsx";
+import PropTypes from "prop-types";
 
 const useDebouncedValue = (inputValue, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(inputValue);
@@ -44,6 +45,12 @@ function SearchBoxInput({searchInput, setSearchInput, setSearchResult}) {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
         />);
+}
+
+SearchBoxInput.propTypes = {
+    searchInput: PropTypes.string.isRequired,
+    setSearchInput: PropTypes.func.isRequired,
+    setSearchResult: PropTypes.func.isRequired,
 }
 
 export default SearchBoxInput;

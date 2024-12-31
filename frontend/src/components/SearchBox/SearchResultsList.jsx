@@ -1,6 +1,6 @@
-import React from 'react';
 import classes from './SearchResultsList.module.css'
 import SearchResultsListItem from "./SearchResultsListItem.jsx";
+import PropTypes from "prop-types";
 
 function SearchResultsList({results, resetSearchResults}) {
     return (
@@ -10,6 +10,13 @@ function SearchResultsList({results, resetSearchResults}) {
             ))}
         </div>
     );
+}
+
+SearchResultsList.propTypes = {
+    results: PropTypes.arrayOf(PropTypes.shape({
+        place_id: PropTypes.number.isRequired,
+    })).isRequired,
+    resetSearchResults: PropTypes.func.isRequired,
 }
 
 export default SearchResultsList;
