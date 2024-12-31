@@ -24,8 +24,7 @@ function PinPopup({pin, onEditRequest, canEditPin}) {
         <small>Latitude: {pin.latitude.toFixed(6)}, Longitude: {pin.longitude.toFixed(6)}</small>
         <br/>
 
-        {canEditPin && <button onClick={onEditRequest}>Edit
-        </button>}
+        {canEditPin && <button className={classes["edit-button"]} onClick={onEditRequest}>Edit</button>}
     </>);
 }
 
