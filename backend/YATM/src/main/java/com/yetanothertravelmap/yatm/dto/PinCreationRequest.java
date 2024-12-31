@@ -1,5 +1,7 @@
 package com.yetanothertravelmap.yatm.dto;
 
+import com.yetanothertravelmap.yatm.enums.MainCategory;
+
 import java.util.List;
 
 public class PinCreationRequest {
@@ -7,7 +9,7 @@ public class PinCreationRequest {
     private Double latitude;
     private Double longitude;
     private String description;
-    private String mainCategory;
+    private MainCategory mainCategory;
     private List<String> subCategories;
 
     public String getName() {
@@ -42,12 +44,12 @@ public class PinCreationRequest {
         this.description = description;
     }
 
-    public String getMainCategory() {
+    public MainCategory getMainCategory() {
         return mainCategory;
     }
 
     public void setMainCategory(String mainCategory) {
-        this.mainCategory = mainCategory;
+        this.mainCategory = MainCategory.valueOf(mainCategory.toUpperCase());
     }
 
     public List<String> getSubCategories() {

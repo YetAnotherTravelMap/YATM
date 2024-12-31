@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.service;
 
 import com.yetanothertravelmap.yatm.dto.PinCreationRequest;
+import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.Map;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.repository.MapRepository;
@@ -8,19 +9,23 @@ import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 @Service
 public class PinService {
-    PinRepository pinRepository;
-    UserRepository userRepository;
-    MapRepository mapRepository;
+    private final PinRepository pinRepository;
+    private final UserRepository userRepository;
+    private final MapRepository mapRepository;
 
-    public PinService(PinRepository pinRepository, UserRepository userRepository, MapRepository mapRepository) {
+    CategoryService categoryService;
+
+    public PinService(PinRepository pinRepository, UserRepository userRepository, MapRepository mapRepository, CategoryService categoryService) {
         this.pinRepository = pinRepository;
         this.userRepository = userRepository;
         this.mapRepository = mapRepository;
+        this.categoryService = categoryService;
     }
 
     public Optional<Set<Pin>> getPins(Long mapId) {
@@ -28,16 +33,23 @@ public class PinService {
     }
 
     public void createPin(PinCreationRequest pinRequest, Long mapId) {
-        Pin newPin = new Pin();
-        newPin.setName(pinRequest.getName());
-        newPin.setLatitude(pinRequest.getLatitude());
-        newPin.setLongitude(pinRequest.getLongitude());
-        newPin.setDescription(pinRequest.getDescription());
-
-        Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
+       Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
         if (mapOptional.isPresent()) {
+            Pin newPin = new Pin();
+            newPin.setName(pinRequest.getName());
+            newPin.setLatitude(pinRequest.getLatitude());
+            newPin.setLongitude(pinRequest.getLongitude());
+            newPin.setDescription(pinRequest.getDescription());
+
             Map map = mapOptional.get();
             newPin.setMap(map);
+
+            Set<Category> subCategories = new HashSet<>();
+            for (String categoryName: pinRequest.getSubCategories()){
+                Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, map);
+                subCategories.add(newCategory);
+            }
+            newPin.setCategories(subCategories);
             pinRepository.save(newPin);
         }
     }

@@ -21,17 +21,6 @@ public class MapService {
         this.mapRepository = mapRepository;
     }
 
-    public Set<Pin> getPinsByMap(Long mapId){
-        Set<Pin> pinsWithMap = pinService.getPins(mapId).get();
-        Set<Pin> pinWithoutMap = new HashSet<>();
-
-        for (Pin pin : pinsWithMap){
-            pinWithoutMap.add(new Pin(pin.getName(), pin.getLatitude(), pin.getLongitude(), pin.getDescription(), pin.getIcon()));
-        }
-
-        return pinWithoutMap;
-    }
-
     public boolean isUserAuthorizedForMap(Long mapId, String username) {
         Optional<Map> map = mapRepository.findById(mapId);
         if(map.isEmpty()){

@@ -30,8 +30,7 @@ public class MapController {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-//        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
-        Set<Pin> pins = mapService.getPinsByMap(mapId);
+        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
         return ResponseEntity.ok(pins);
     }
 

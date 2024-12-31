@@ -1,5 +1,6 @@
 package com.yetanothertravelmap.yatm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -14,7 +15,7 @@ public class Category {
     public Category(){}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(nullable = false)
@@ -22,6 +23,7 @@ public class Category {
 
     @ManyToOne
     @JoinColumn(name = "map_id", nullable = false)
+    @JsonIgnore
     private Map map;
 
     public Map getMap() {

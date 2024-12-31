@@ -87,7 +87,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
             latitude: tempMarkerPos[0],
             longitude: tempMarkerPos[1],
             mainCategory,
-            selectedSubCategories,
+            subCategories: selectedSubCategories,
             description
         };
         console.log(pin)
@@ -128,9 +128,9 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                         value={mainCategory}
                         onChange={(e) => setMainCategory(e.target.value)}
                     >
-                        <option value="been">Been</option>
-                        <option value="favourite">Favourite</option>
-                        <option value="want2go">Want2Go</option>
+                        <option value="Been">Been</option>
+                        <option value="Favourite">Favourite</option>
+                        <option value="Want2Go">Want2Go</option>
                     </select>
 
                     <label htmlFor="subCategory" className={classes["pin-creation-panel-label"]}>Subcategory:</label>

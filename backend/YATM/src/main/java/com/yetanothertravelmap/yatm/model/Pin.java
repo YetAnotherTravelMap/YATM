@@ -1,5 +1,6 @@
 package com.yetanothertravelmap.yatm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -24,7 +25,7 @@ public class Pin {
     public Pin(){}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long pinId;
 
     @Column(nullable = false)
@@ -44,6 +45,7 @@ public class Pin {
 
     @ManyToOne
     @JoinColumn(name = "map_id", nullable = false)
+    @JsonIgnore
     private Map map;
 
     @ManyToMany
