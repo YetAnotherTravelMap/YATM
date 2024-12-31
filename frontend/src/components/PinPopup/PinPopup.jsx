@@ -7,11 +7,15 @@ function PinPopup({pin, onEditRequest, canEditPin}) {
     return (<>
             <h2>{pin.name}</h2>
             <br/>
-            <h3>Categories: </h3>
-            {/*<CategoryTag value={pin.mainCategory}/>*/}
-            <div>
-                {pin.categories.map(category => (<CategoryTag value={category.name} key={category.id}/>))}
-            </div>
+            {pin.categories.length > 0 && (
+                <div>
+                    <h3>Categories: </h3>
+                    <CategoryTag value={pin.mainCategory}/>
+                    <div>
+                        {pin.categories.map(category => (<CategoryTag value={category.name} key={category.id}/>))}
+                    </div>
+                </div>
+            )}
             <br/>
             <h3>Description: </h3>
             <div>{pin.description}</div>

@@ -40,6 +40,7 @@ public class PinService {
             newPin.setLatitude(pinRequest.getLatitude());
             newPin.setLongitude(pinRequest.getLongitude());
             newPin.setDescription(pinRequest.getDescription());
+            newPin.setMainCategory(pinRequest.getMainCategory());
 
             Map map = mapOptional.get();
             newPin.setMap(map);

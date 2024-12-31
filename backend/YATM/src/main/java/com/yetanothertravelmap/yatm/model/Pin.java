@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.yetanothertravelmap.yatm.enums.MainCategory;
 import jakarta.persistence.*;
 
 import java.util.Set;
@@ -39,6 +40,9 @@ public class Pin {
 
     @Column
     private String description;
+
+    @Column
+    private String mainCategory;
 
     @OneToOne
     private Icon icon;
@@ -117,6 +121,18 @@ public class Pin {
 
     public void setIcon(Icon icon) {
         this.icon = icon;
+    }
+
+    public String getMainCategory() {
+        return mainCategory;
+    }
+
+    public void setMainCategory(String mainCategory) {
+        this.mainCategory = mainCategory;
+    }
+
+    public void setMainCategory(MainCategory mainCategory) {
+        this.mainCategory = mainCategory.name;
     }
 
     
