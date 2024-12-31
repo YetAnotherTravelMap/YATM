@@ -56,6 +56,7 @@ public class YatmApplication {
             users.save(user2);
 
             Pin myPin = new Pin("pinName", 45.3832, -75.6974, "Carleton University");
+            myPin.setMainCategory("Been");
             myPin.setMap(userMap);
             pinRepository.save(myPin);
         };

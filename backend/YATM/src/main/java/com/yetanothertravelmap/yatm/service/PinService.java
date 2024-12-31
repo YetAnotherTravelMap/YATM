@@ -1,6 +1,6 @@
 package com.yetanothertravelmap.yatm.service;
 
-import com.yetanothertravelmap.yatm.dto.PinCreationRequest;
+import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.Map;
 import com.yetanothertravelmap.yatm.model.Pin;
@@ -32,7 +32,7 @@ public class PinService {
         return pinRepository.findByMap_MapId(mapId);
     }
 
-    public void createPin(PinCreationRequest pinRequest, Long mapId) {
+    public boolean createPin(PinRequest pinRequest, Long mapId) {
        Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
         if (mapOptional.isPresent()) {
             Pin newPin = new Pin();
@@ -52,6 +52,29 @@ public class PinService {
             }
             newPin.setCategories(subCategories);
             pinRepository.save(newPin);
+            return true;
         }
+        return false;
     }
+
+    public boolean updatePin(PinRequest pinRequest) {
+        Optional<Pin> pinOptional = pinRepository.findByPinId(pinRequest.getId());
+        if (pinOptional.isPresent()) {
+            Pin pin = pinOptional.get();
+            pin.setName(pinRequest.getName());
+            pin.setDescription(pinRequest.getDescription());
+            pin.setMainCategory(pinRequest.getMainCategory());
+
+            Set<Category> subCategories = new HashSet<>();
+            for (String categoryName: pinRequest.getSubCategories()){
+                Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, pin.getMap());
+                subCategories.add(newCategory);
+            }
+            pin.setCategories(subCategories);
+            pinRepository.save(pin);
+            return true;
+        }
+        return false;
+    }
+
 }

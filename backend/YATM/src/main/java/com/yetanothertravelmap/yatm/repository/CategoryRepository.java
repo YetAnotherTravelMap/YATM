@@ -9,4 +9,5 @@ import java.util.Set;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
     Optional<Category> findByNameAndMap_MapId(String name, Long mapId);
+    Optional<Set<Category>> findByMap_MapId(Long mapId);
 }

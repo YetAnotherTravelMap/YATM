@@ -5,8 +5,8 @@ import com.yetanothertravelmap.yatm.model.Map;
 import com.yetanothertravelmap.yatm.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CategoryService {
@@ -14,6 +14,10 @@ public class CategoryService {
 
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
+    }
+
+    public Optional<Set<Category>> getCategories(Long mapId) {
+        return categoryRepository.findByMap_MapId(mapId);
     }
 
     public Category findOrCreateByCategoryName(String categoryName, Map map) {

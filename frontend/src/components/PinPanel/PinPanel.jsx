@@ -16,18 +16,14 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
     const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
     const [isTempMarkerVisible, setIsTempMarkerVisible] = useState(isInPinCreationState);
 
-    const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "been");
-    const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories : []);
+    const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
+    const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
     const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
+
+    const [subCategories, setSubCategories] = useState([]);
     const {authAxios} = useAuth();
 
-    const subCategories = [
-        "SubCategory1",
-        "SubCategory2",
-        "SubCategory3",
-        "SubCategory4",
-    ];
 
     const map = useMapEvents({
         click(e) {
@@ -43,14 +39,25 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         },
     });
 
+    const fetchCategories = async () => {
+        const userResponse = await authAxios.get('/api/user');
+        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+        setSubCategories(categoriesResponse.data.map(category => category.name));
+        console.log(categoriesResponse.data);
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, [authAxios]);
+
     useEffect(() => {
         if(panelState === PinPanelState.INVISIBLE) {
             return;
         }
         const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT
 
-        setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "been");
-        setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories : []);
+        setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
+        setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
         setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
     }, [panelState, authAxios, pinDetailsToUpdate]);
@@ -74,11 +81,11 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
     async function handleSubmit() {
         if(panelState === PinPanelState.PIN_CREATION) {
             await handlePinCreation();
-            notifyPinUpdate()
         }else if (panelState === PinPanelState.PIN_EDIT) {
             await handlePinUpdate();
-            notifyPinUpdate()
         }
+        notifyPinUpdate()
+        fetchCategories()
     }
 
     async function handlePinCreation() {
@@ -97,7 +104,17 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
     }
 
     async function handlePinUpdate() {
-
+        const pin = {
+            id: pinDetailsToUpdate.pinId,
+            name,
+            mainCategory,
+            subCategories: selectedSubCategories,
+            description
+        };
+        console.log(pin)
+        const userResponse = await authAxios.get('/api/user');
+        await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, pin);
+        resetPanel()
     }
 
     function resetPanel() {

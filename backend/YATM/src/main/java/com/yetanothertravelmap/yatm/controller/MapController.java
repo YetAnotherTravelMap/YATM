@@ -1,7 +1,9 @@
 package com.yetanothertravelmap.yatm.controller;
 
-import com.yetanothertravelmap.yatm.dto.PinCreationRequest;
+import com.yetanothertravelmap.yatm.dto.PinRequest;
+import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.Pin;
+import com.yetanothertravelmap.yatm.service.CategoryService;
 import com.yetanothertravelmap.yatm.service.MapService;
 import com.yetanothertravelmap.yatm.service.PinService;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -19,10 +20,21 @@ public class MapController {
 
     private final MapService mapService;
     private final PinService pinService;
+    private final CategoryService categoryService;
 
-    public MapController(MapService mapService, PinService pinService) {
+    public MapController(MapService mapService, PinService pinService, CategoryService categoryService) {
         this.mapService = mapService;
         this.pinService = pinService;
+        this.categoryService = categoryService;
+    }
+
+    @GetMapping("/{mapId}/categories")
+    public ResponseEntity<Set<Category>> getCategoriesByMapId(@PathVariable Long mapId, Principal principal) {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        Set<Category> categories = categoryService.getCategories(mapId).orElse(new HashSet<>());
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{mapId}/pins")
@@ -35,12 +47,29 @@ public class MapController {
     }
 
     @PostMapping("/{mapId}/pins")
-    public ResponseEntity<Pin> createPin(@RequestBody PinCreationRequest pinRequest, @PathVariable Long mapId, Principal principal) {
+    public ResponseEntity<Pin> createPin(@RequestBody PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        pinService.createPin(pinRequest, mapId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        boolean isSuccessful = pinService.createPin(pinRequest, mapId);
+        if (isSuccessful) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }}
+
+    @PutMapping("/{mapId}/pins")
+    public ResponseEntity<Pin> updatePin(@RequestBody PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        boolean isSuccessful = pinService.updatePin(pinRequest);
+        if (isSuccessful) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

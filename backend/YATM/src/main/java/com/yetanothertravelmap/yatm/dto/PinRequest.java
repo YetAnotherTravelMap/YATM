@@ -4,13 +4,22 @@ import com.yetanothertravelmap.yatm.enums.MainCategory;
 
 import java.util.List;
 
-public class PinCreationRequest {
+public class PinRequest {
+    private Long id;
     private String name;
     private Double latitude;
     private Double longitude;
     private String description;
     private MainCategory mainCategory;
     private List<String> subCategories;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
