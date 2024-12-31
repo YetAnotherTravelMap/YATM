@@ -7,10 +7,10 @@ import PinPanelState from "./PinPanelState.js";
 import {useMapEvents} from "react-leaflet";
 
 
-function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
+function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
 
-    const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT
-    const isInPinCreationState = panelState === PinPanelState.PIN_CREATION && !!pinDetailsToUpdate
+    const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT && !!pinDetailsToUpdate
+    const isInPinCreationState = panelState === PinPanelState.PIN_CREATION
     const isInvisible = panelState === PinPanelState.INVISIBLE
 
     const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
@@ -18,7 +18,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "been");
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories : []);
-    const [locationName, setLocationName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
     const {authAxios} = useAuth();
 
@@ -51,7 +51,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
 
         setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "been");
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories : []);
-        setLocationName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
     }, [panelState, authAxios, pinDetailsToUpdate]);
 
@@ -64,29 +64,45 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
                     lon: lon,
                 }
             });
-            setLocationName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road)
+            setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road)
             console.log(response.data);
         };
         fetchPinLocationName();
     }, [tempMarkerPos, authAxios]);
 
 
-    async function handleCreatePin() {
+    async function handleSubmit() {
+        if(panelState === PinPanelState.PIN_CREATION) {
+            await handlePinCreation();
+            notifyPinUpdate()
+        }else if (panelState === PinPanelState.PIN_EDIT) {
+            await handlePinUpdate();
+            notifyPinUpdate()
+        }
+    }
+
+    async function handlePinCreation() {
         const pin = {
-            locationName,
-            tempMarkerPos,
+            name,
+            latitude: tempMarkerPos[0],
+            longitude: tempMarkerPos[1],
             mainCategory,
             selectedSubCategories,
             description
         };
         console.log(pin)
+        const userResponse = await authAxios.get('/api/user');
+        await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, pin);
         resetPanel()
-        await authAxios.post("/api/pin", pin);
+    }
+
+    async function handlePinUpdate() {
+
     }
 
     function resetPanel() {
         setIsTempMarkerVisible(false)
-        setLocationName("")
+        setName("")
         setMainCategory("been");
         setSelectedSubCategories([]);
         setDescription("")
@@ -103,7 +119,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
 
                     <label htmlFor="pinName" className={classes["pin-creation-panel-label"]}>Pin Name:</label>
                     <input type="text" id="pinName" className={classes["pin-creation-panel-pin-name"]} name="pinName"
-                           value={locationName} onChange={e => setLocationName(e.target.value)}/>
+                           value={name} onChange={e => setName(e.target.value)}/>
 
                     <label htmlFor="mainCategory" className={classes["pin-creation-panel-label"]}>Main Category:</label>
                     <select
@@ -134,7 +150,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate}) {
                         placeholder="Enter a short description here..."
                     />
 
-                    <button id={classes["create-pin-button"]} onClick={handleCreatePin}> {isInPinCreationState ? "Create" : "Update"} Pin</button>
+                    <button id={classes["create-pin-button"]} onClick={handleSubmit}> {isInPinCreationState ? "Create" : "Update"} Pin</button>
                     <button id={classes["cancel-pin"]} onClick={resetPanel}> Cancel</button>
 
                 </div>

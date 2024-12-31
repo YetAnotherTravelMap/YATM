@@ -35,21 +35,25 @@ public class YatmApplication {
 //            byte[] profilePictureBytes = Files.readAllBytes(profilePictureFile.toPath());
 
             User user1 = new User(encoder.encode("pass1"), "test1", "test@email.com");
-
             users.save(user1);
-            users.save(new User(encoder.encode("pass2"), "test2", "test2@email.com"));
+            User user2 = new User(encoder.encode("pass2"), "test2", "test2@email.com");
+            users.save(user2);
 
             Map userMap = new Map("Travel Map", user1);
             Map userMap1 = new Map("Travel Map2", user1);
             Map userMap2 = new Map("Travel Map3", user1);
+            Map userMap3 = new Map("Travel Map4", user2);
 
             mapRepository.save(userMap);
             mapRepository.save(userMap1);
             mapRepository.save(userMap2);
+            mapRepository.save(userMap3);
             user1.getMaps().add(userMap);
             user1.getMaps().add(userMap1);
             user1.getMaps().add(userMap2);
+            user2.getMaps().add(userMap3);
             users.save(user1);
+            users.save(user2);
 
             Pin myPin = new Pin("pinName", 45.3832, -75.6974, "Carleton University");
             myPin.setMap(userMap);
