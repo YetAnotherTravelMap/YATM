@@ -44,7 +44,8 @@ public class Pin {
     @Column
     private String mainCategory;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "icon_id")
     private Icon icon;
 
     @ManyToOne

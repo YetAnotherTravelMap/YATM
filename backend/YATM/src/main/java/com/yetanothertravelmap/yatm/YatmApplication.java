@@ -1,8 +1,10 @@
 package com.yetanothertravelmap.yatm;
 
+import com.yetanothertravelmap.yatm.model.Icon;
 import com.yetanothertravelmap.yatm.model.Map;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.model.User;
+import com.yetanothertravelmap.yatm.repository.IconRepository;
 import com.yetanothertravelmap.yatm.repository.MapRepository;
 import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
@@ -10,11 +12,16 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class YatmApplication {
@@ -29,11 +36,9 @@ public class YatmApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder, PinRepository pinRepository, MapRepository mapRepository) {
+    @Order(2)
+    CommandLineRunner commandLineRunner(UserRepository users, PasswordEncoder encoder, PinRepository pinRepository, MapRepository mapRepository, IconRepository iconRepository) {
         return args -> {
-//            File profilePictureFile = new File("C:/Users/Daniel/Downloads/socks.jpg");
-//            byte[] profilePictureBytes = Files.readAllBytes(profilePictureFile.toPath());
-
             User user1 = new User(encoder.encode("pass1"), "test1", "test@email.com");
             users.save(user1);
             User user2 = new User(encoder.encode("pass2"), "test2", "test2@email.com");
@@ -58,7 +63,32 @@ public class YatmApplication {
             Pin myPin = new Pin("pinName", 45.3832, -75.6974, "Carleton University");
             myPin.setMainCategory("Been");
             myPin.setMap(userMap);
+            Icon icon = iconRepository.findById(1L).orElse(null);
+            myPin.setIcon(icon);
             pinRepository.save(myPin);
+        };
+    }
+
+    @Bean
+    @Order(1)
+    CommandLineRunner commandLineRunnerForPredefinedPins(IconRepository iconRepository) {
+        return args -> {
+            Path imagesPath = Paths.get("src/main/resources/static/images/pinIcons");
+
+            List<Path> imageFiles = Files.list(imagesPath).filter(path -> path.toString().endsWith(".png")).toList();
+
+            for (Path imageFile : imageFiles) {
+                String fileName = imageFile.getFileName().toString();
+
+                byte[] imageData = Files.readAllBytes(imageFile);
+
+                Icon icon = new Icon();
+                icon.setIconName(fileName);
+                icon.setImage(imageData);
+                icon.setWidth(35);
+                icon.setHeight(35);
+                iconRepository.save(icon);
+            }
         };
     }
 

@@ -6,6 +6,8 @@ import TemporaryMarker from "../TemporaryMarker/TemporaryMarker.jsx";
 import PinPanelState from "./PinPanelState.js";
 import {useMapEvents} from "react-leaflet";
 import PropTypes from "prop-types";
+import IconSelector from "../IconSelector/IconSelector.jsx";
+import pinPanelState from "./PinPanelState.js";
 
 
 function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
@@ -22,7 +24,10 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
     const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
 
+
     const [subCategories, setSubCategories] = useState([]);
+    const [icons, setIcons] = useState([]);
+    const [icon, setIcon] = useState(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     const {authAxios} = useAuth();
 
 
@@ -33,7 +38,13 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                 setTempMarkerPos([lat, lng]);
                 setIsTempMarkerVisible(true);
                 setPanelState(PinPanelState.PIN_CREATION)
-                map.setView([lat, lng]);
+
+                // Move the map so that the temporary pin is in the center-top of the viewport
+                const bounds = map.getBounds();
+                const latSpan = bounds.getNorth() - bounds.getSouth();
+                const adjustedLat = lat - (latSpan  * 0.25) ;
+                map.setView([adjustedLat, lng]);
+                map.clo
             }else{
                 resetPanel()
             }
@@ -47,8 +58,17 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         console.log(categoriesResponse.data);
     };
 
+    const fetchIcons = async () => {
+        const userResponse = await authAxios.get('/api/user');
+        const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
+        setIcons(iconsResponse.data);
+        console.log(icon);
+        console.log(iconsResponse.data);
+    };
+
     useEffect(() => {
         fetchCategories();
+        fetchIcons();
     }, [authAxios]);
 
     useEffect(() => {
@@ -61,6 +81,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
         setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
+        setIcon(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     }, [panelState, authAxios, pinDetailsToUpdate]);
 
     useEffect(() => {
@@ -87,34 +108,56 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }
         notifyPinUpdate()
         fetchCategories()
+        fetchIcons()
     }
 
+
     async function handlePinCreation() {
-        const pin = {
-            name,
-            latitude: tempMarkerPos[0],
-            longitude: tempMarkerPos[1],
-            mainCategory,
-            subCategories: selectedSubCategories,
-            description
-        };
-        console.log(pin)
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("latitude", tempMarkerPos[0])
+        formData.append("longitude", tempMarkerPos[1])
+        formData.append("mainCategory", mainCategory)
+        formData.append("subCategories", selectedSubCategories);
+        formData.append("description", description);
+        formData.append("iconId", icon.id);
+        formData.append("iconName", icon.iconName);
+        formData.append("iconWidth", icon.width);
+        formData.append("iconHeight", icon.height);
+        if(icon.id < 0){
+            formData.append("iconImage", icon.image);
+        }
+
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, pin);
+        await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
         resetPanel()
     }
 
     async function handlePinUpdate() {
-        const pin = {
-            id: pinDetailsToUpdate.pinId,
-            name,
-            mainCategory,
-            subCategories: selectedSubCategories,
-            description
-        };
-        console.log(pin)
+        const formData = new FormData();
+        formData.append("id", pinDetailsToUpdate.pinId);
+        formData.append("name", name);
+        formData.append("mainCategory", mainCategory)
+        formData.append("subCategories", selectedSubCategories);
+        formData.append("description", description);
+        formData.append("iconId", icon.id);
+        formData.append("iconName", icon.iconName);
+        formData.append("iconWidth", icon.width);
+        formData.append("iconHeight", icon.height);
+        if(icon.id < 0){
+            formData.append("iconImage", icon.image);
+        }
+
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, pin);
+        await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            }
+        });
         resetPanel()
     }
 
@@ -124,6 +167,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         setMainCategory("been");
         setSelectedSubCategories([]);
         setDescription("")
+        setIcon(icons[0])
         setPanelState(PinPanelState.INVISIBLE)
     }
 
@@ -159,6 +203,9 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                         optionTypeName="Sub-category"
                     />
 
+                    <label className={classes["pin-creation-panel-label"]}>Icon:</label>
+                    <IconSelector icon={icon} setIcon={setIcon} icons={icons}/>
+
                     <label htmlFor="description" className={classes["pin-creation-panel-label"]}>Description:</label>
                     <textarea
                         id="description"
@@ -168,7 +215,9 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                         placeholder="Enter a short description here..."
                     />
 
-                    <button id={classes["create-pin-button"]} onClick={handleSubmit}> {isInPinCreationState ? "Create" : "Update"} Pin</button>
+                    <button id={classes["create-pin-button"]}
+                            onClick={handleSubmit}> {isInPinCreationState ? "Create" : "Update"} Pin
+                    </button>
                     <button id={classes["cancel-pin"]} onClick={resetPanel}> Cancel</button>
 
                 </div>

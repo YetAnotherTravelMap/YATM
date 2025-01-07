@@ -1,0 +1,52 @@
+.main_container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.preview_container {
+    margin-top: 10px;
+    margin-right: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.preview {
+    width: 50px;
+    height: 100%;
+}
+
+.state_icon_display_container {
+    margin-left: 5px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+
+.state_icon_change_container{
+    margin-left: 5px;
+    flex-grow: 1;
+}
+
+.icon_grid_container {
+    display: grid;
+    /*max-width: 200px;*/
+    max-height: 100px;
+    overflow: auto;
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+    justify-content: space-around;
+    gap: 5px;
+}
+
+.icon_grid_button {
+    width: 30px;
+    height: 30px;
+}
+
+.upload_text {
+    margin-top: 10px;
+}
+
+.upload_button {
+    margin-top: 0 !important;
+}

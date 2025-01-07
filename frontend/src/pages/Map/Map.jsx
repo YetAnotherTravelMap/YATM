@@ -12,6 +12,7 @@ import PinPanel from "../../components/PinPanel/PinPanel.jsx";
 import PinPopup from "../../components/PinPopup/PinPopup.jsx";
 import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
+import {Icon} from "leaflet";
 
 export function Map() {
 
@@ -57,11 +58,19 @@ export function Map() {
                 url={mapStyle}
             />
 
-            {pins.map(pin => (<Marker key={pin.pinId} position={[pin.latitude, pin.longitude]}>
+            {pins.map(pin => {
+                const markerIcon = pin.icon ? new Icon({
+                    iconUrl: `data:image/png;base64,${pin.icon.image}`,
+                    iconSize: [pin.icon.width, pin.icon.height],
+                }) : null;
+
+                return (<Marker key={pin.pinId} position={[pin.latitude, pin.longitude]}  {...(markerIcon && { icon: markerIcon })} >
                     <Popup>
                         <PinPopup pin={pin} canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
                                   onEditRequest={() => handlePinUpdate(pin)}/>
                     </Popup>
-                </Marker>))}
+                </Marker>)
+            })}
+
         </MapContainer>)
 }

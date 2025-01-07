@@ -1,8 +1,16 @@
 import classes from "./PipPopup.module.css"
 import CategoryTag from "../CategoryTag/CategoryTag.jsx";
 import PropTypes from "prop-types";
+import {useMap} from "react-leaflet";
 
 function PinPopup({pin, onEditRequest, canEditPin}) {
+
+    const map = useMap();
+
+    function onEditClicked() {
+        onEditRequest();
+        map.closePopup();
+    }
 
     return (<>
         <h2>{pin.name}</h2>
@@ -24,7 +32,7 @@ function PinPopup({pin, onEditRequest, canEditPin}) {
         <small>Latitude: {pin.latitude.toFixed(6)}, Longitude: {pin.longitude.toFixed(6)}</small>
         <br/>
 
-        {canEditPin && <button className={classes["edit-button"]} onClick={onEditRequest}>Edit</button>}
+        {canEditPin && <button className={classes["edit-button"]} onClick={onEditClicked}>Edit</button>}
     </>);
 }
 

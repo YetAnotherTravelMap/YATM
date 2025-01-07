@@ -1,5 +1,6 @@
 package com.yetanothertravelmap.yatm.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +21,17 @@ public class Icon {
 
     @Column
     private byte[] image;
+
+    @Column
+    private int width;
+
+    @Column
+    private int height;
+
+    @ManyToOne
+    @JoinColumn(name = "map_id")
+    @JsonIgnore
+    private Map map;
 
     public byte[] getImage() {
         return image;
@@ -43,5 +55,29 @@ public class Icon {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

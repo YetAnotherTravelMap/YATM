@@ -2,8 +2,10 @@ package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.model.Category;
+import com.yetanothertravelmap.yatm.model.Icon;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.service.CategoryService;
+import com.yetanothertravelmap.yatm.service.IconService;
 import com.yetanothertravelmap.yatm.service.MapService;
 import com.yetanothertravelmap.yatm.service.PinService;
 import org.springframework.http.HttpStatus;
@@ -20,11 +22,13 @@ public class MapController {
 
     private final MapService mapService;
     private final PinService pinService;
+    private final IconService iconService;
     private final CategoryService categoryService;
 
-    public MapController(MapService mapService, PinService pinService, CategoryService categoryService) {
+    public MapController(MapService mapService, PinService pinService, IconService iconService, CategoryService categoryService) {
         this.mapService = mapService;
         this.pinService = pinService;
+        this.iconService = iconService;
         this.categoryService = categoryService;
     }
 
@@ -37,6 +41,15 @@ public class MapController {
         return ResponseEntity.ok(categories);
     }
 
+    @GetMapping("/{mapId}/icons")
+    public ResponseEntity<Set<Icon>> getIconsByMapId(@PathVariable Long mapId, Principal principal) {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        Set<Icon> icons = iconService.getIcons(mapId).orElse(new HashSet<>());
+        return ResponseEntity.ok(icons);
+    }
+
     @GetMapping("/{mapId}/pins")
     public ResponseEntity<Set<Pin>> getPinsByMapId(@PathVariable Long mapId, Principal principal) {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
@@ -47,7 +60,7 @@ public class MapController {
     }
 
     @PostMapping("/{mapId}/pins")
-    public ResponseEntity<Pin> createPin(@RequestBody PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
+    public ResponseEntity<Pin> createPin(@ModelAttribute PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
@@ -60,7 +73,7 @@ public class MapController {
         }}
 
     @PutMapping("/{mapId}/pins")
-    public ResponseEntity<Pin> updatePin(@RequestBody PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
+    public ResponseEntity<Pin> updatePin(@ModelAttribute PinRequest pinRequest, @PathVariable Long mapId, Principal principal) {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }

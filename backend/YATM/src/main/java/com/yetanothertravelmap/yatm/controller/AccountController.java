@@ -1,7 +1,6 @@
 package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.ChangePasswordRequest;
-import com.yetanothertravelmap.yatm.dto.ChangeProfilePictureRequest;
 import com.yetanothertravelmap.yatm.service.AccountService;
 import com.yetanothertravelmap.yatm.service.RegistrationService;
 import com.yetanothertravelmap.yatm.model.User;

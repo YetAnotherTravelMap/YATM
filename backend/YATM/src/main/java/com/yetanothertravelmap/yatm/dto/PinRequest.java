@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.dto;
 
 import com.yetanothertravelmap.yatm.enums.MainCategory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,6 +13,12 @@ public class PinRequest {
     private String description;
     private MainCategory mainCategory;
     private List<String> subCategories;
+//    private IconRequest icon;
+    private Long iconId;
+    private String iconName;
+    private MultipartFile iconImage;
+    private int iconWidth;
+    private int iconHeight;
 
     public Long getId() {
         return id;
@@ -67,5 +74,45 @@ public class PinRequest {
 
     public void setSubCategories(List<String> subCategories) {
         this.subCategories = subCategories;
+    }
+
+    public Long getIconId() {
+        return iconId;
+    }
+
+    public void setIconId(Long iconId) {
+        this.iconId = iconId;
+    }
+
+    public String getIconName() {
+        return iconName;
+    }
+
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
+    }
+
+    public MultipartFile getIconImage() {
+        return iconImage;
+    }
+
+    public void setIconImage(MultipartFile iconImage) {
+        this.iconImage = iconImage;
+    }
+
+    public int getIconWidth() {
+        return iconWidth;
+    }
+
+    public void setIconWidth(int iconWidth) {
+        this.iconWidth = iconWidth;
+    }
+
+    public int getIconHeight() {
+        return iconHeight;
+    }
+
+    public void setIconHeight(int iconHeight) {
+        this.iconHeight = iconHeight;
     }
 }
