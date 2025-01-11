@@ -13,6 +13,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -73,14 +76,14 @@ public class YatmApplication {
     @Order(1)
     CommandLineRunner commandLineRunnerForPredefinedPins(IconRepository iconRepository) {
         return args -> {
-            Path imagesPath = Paths.get("src/main/resources/static/images/pinIcons");
+            ClassLoader cl = this.getClass().getClassLoader();
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+            Resource[] resources = resolver.getResources("classpath:images/pinIcons/*.png") ;
 
-            List<Path> imageFiles = Files.list(imagesPath).filter(path -> path.toString().endsWith(".png")).toList();
+            for (Resource imageFile: resources){
+                String fileName = imageFile.getFilename();
 
-            for (Path imageFile : imageFiles) {
-                String fileName = imageFile.getFileName().toString();
-
-                byte[] imageData = Files.readAllBytes(imageFile);
+                byte[] imageData = imageFile.getContentAsByteArray();
 
                 Icon icon = new Icon();
                 icon.setIconName(fileName);
