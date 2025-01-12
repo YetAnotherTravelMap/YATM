@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.ChangePasswordRequest;
+import com.yetanothertravelmap.yatm.dto.AccountDeletionRequest;
 import com.yetanothertravelmap.yatm.service.AccountService;
 import com.yetanothertravelmap.yatm.service.RegistrationService;
 import com.yetanothertravelmap.yatm.model.User;
@@ -60,6 +61,7 @@ public class AccountController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request){
         User user = request.getUser();
         String password = request.getPassword();
+        System.out.println("acpw: " + password);
 
         return ResponseEntity.ok(accountService.changePassword(user, password));
     }
@@ -75,5 +77,13 @@ public class AccountController {
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Failed to update profile picture");
         }
+    }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<?> deleteAccount(@RequestBody AccountDeletionRequest request){
+        User user = request.getUser();
+        String password = request.getPassword();
+
+        return ResponseEntity.ok(accountService.deleteAccount(user,password));
     }
 }

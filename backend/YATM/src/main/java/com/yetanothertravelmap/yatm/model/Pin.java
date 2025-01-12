@@ -136,5 +136,13 @@ public class Pin {
         this.mainCategory = mainCategory.name;
     }
 
-    
+    public String getCountry(){
+        return "temp";
+//        return this.country;
+    }
+
+    public String getCity(){
+        return "temp";
+//        return this.city;
+    }
 }
