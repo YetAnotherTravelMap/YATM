@@ -1,0 +1,182 @@
+.button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #198653;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Header Menu*/
+.profile-page {
+    display: grid;
+    grid-template-rows: 1fr 5fr 5fr 5fr;
+    height: 100vh;
+    background-color: #e8fff8;
+    font-family: Arial, sans-serif;
+}
+
+
+.header-menu {
+    display: flex;
+    justify-content: flex-start;
+    padding: 10px 0;
+}
+
+.menu-button {
+    background-color: #d9d9d9;
+    color: #505050;
+    border: none;
+    cursor: pointer;
+}
+
+/* Top Section */
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 100px;
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Profile initials bubble styling */
+.profile-initials {
+    width: 50px; /* Consistent width */
+    height: 50px; /* Consistent height */
+    background: #212cdf; /* Background color for initials */
+    color: white; /* Text color */
+    font-size: 22px; /* Text size */
+    display: flex; /* Center content */
+    justify-content: center; /* Horizontally center */
+    align-items: center; /* Vertically center */
+    border-radius: 50%; /* Make it circular */
+}
+
+.icons{
+    width: 100px;
+    height: 100px;
+}
+
+.cog-icon{
+    width: 30px;
+    height: 30px;
+}
+
+.user-details {
+    display: flex;
+    padding-left: 10px;
+    flex-direction: column;
+}
+
+.settings-button {
+    display: flex;
+    padding: 10px 10px;
+    background-color: #198653;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    align-items: center;
+    cursor: pointer;
+}
+
+.settings-button:hover{
+    background-color: #0e5738;
+}
+/* Stats section */
+
+.stats-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 100px;
+}
+
+.stat-container {
+    display: flex;
+    align-items: center;
+}
+
+.stat-text-container{
+    align-items: center;
+    text-align: center;
+}
+
+.stat-container h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.stat-container p {
+    margin: 5px 0 0;
+    font-size: 1.5em;
+}
+/* Import/Export Section */
+
+.import-export-section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 100px;
+}
+
+
+.export-container,
+.import-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.profile-page-button:hover {
+    background-color: #0e5738;
+}
+
+input[type="file"] {
+    margin-top: 10px;
+}
+
+/* Fullscreen overlay */
+.settings {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top of other content */
+}
+
+.settings-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Close button */
+.close-settings-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}

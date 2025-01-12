@@ -1,0 +1,63 @@
+.multi-select-input-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    column-gap: 5px;
+}
+
+.multi-select-input {
+    width: 100%;
+    margin-top: 0.4em;
+    padding: 0.5em 5em 0.5em 1em;
+    border: 1px solid #6b6f71;
+    border-radius: 5px;
+    color: #000;
+}
+
+.multi-select-input-cancel-button {
+    width: 20px;
+    background: none;
+    border: none;
+    font-size: 25px;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.multi-select-input-cancel-button:hover {
+    color: #333;
+}
+
+
+
+
+
+
+.suggestion-list {
+    display: flex;
+    flex-direction: column;
+    background: #f4f4f4;
+    box-shadow: 1px 1px 8px #86abcb;
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    margin-right: 20px;
+    max-height: 100px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.suggestion {
+    padding: 10px 20px;
+    font-family: Helvetica, sans-serif;
+    font-size: 14px;
+    border: none;
+    background: #f4f4f4;
+    text-align: start;
+}
+
+.suggestion:hover {
+    background: #efefef;
+}
+
+
+
+

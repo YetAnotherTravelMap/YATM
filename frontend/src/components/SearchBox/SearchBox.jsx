@@ -1,8 +1,7 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import SearchBoxInput from "./SearchBoxInput.jsx";
-import "./SearchBox.css"
+import classes from "./SearchBox.module.css"
 import SearchResultsList from "./SearchResultsList.jsx";
-import axios from "axios";
 
 function SearchBox() {
 
@@ -15,7 +14,7 @@ function SearchBox() {
     }
 
     return (
-        <div className="search-container">
+        <div className={classes["search-container"]}>
             <SearchBoxInput searchInput={searchInput} setSearchInput={setSearchInput} setSearchResult={setSearchResults}/>
             <SearchResultsList results={searchResults} resetSearchResults={resetSearchResults}></SearchResultsList>
         </div>

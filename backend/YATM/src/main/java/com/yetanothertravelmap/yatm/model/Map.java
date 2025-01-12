@@ -12,7 +12,7 @@ public class Map {
     public Map(){}
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long mapId;
 
     @Column
@@ -41,4 +41,5 @@ public class Map {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

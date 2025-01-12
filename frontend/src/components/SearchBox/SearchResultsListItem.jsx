@@ -1,6 +1,7 @@
-import './SearchResultsListItem.css'
 import {useMap} from "react-leaflet";
 import L from "leaflet";
+import classes from './SearchResultsListItem.module.css'
+import PropTypes from "prop-types";
 
 function SearchResultsListItem({result, resetSearchResults}) {
     const map = useMap()
@@ -15,10 +16,19 @@ function SearchResultsListItem({result, resetSearchResults}) {
     }
 
     return (
-        <button className="result-item" onClick={handleClick}>
+        <button className={classes["result-item"]} onClick={handleClick}>
             {result.display_name}
         </button>
     );
+}
+
+SearchResultsListItem.propTypes = {
+    result: PropTypes.shape({
+        display_name: PropTypes.string.isRequired,
+        boundingbox: PropTypes.arrayOf(PropTypes.string).isRequired,
+
+    }).isRequired,
+    resetSearchResults: PropTypes.func.isRequired,
 }
 
 export default SearchResultsListItem;

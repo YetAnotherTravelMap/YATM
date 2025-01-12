@@ -1,7 +1,9 @@
 package com.yetanothertravelmap.yatm.model;
 
+import com.yetanothertravelmap.yatm.repository.MapRepository;
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -9,7 +11,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long userId;
 
     @Column
@@ -33,13 +35,13 @@ public class User {
     @Column
     private String roles;
 
-    @OneToMany(mappedBy = "user")
-    private Set<Map> maps;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private Set<Map> maps = new HashSet<>();
 
 
-    public User(String firstName, String lastName, String hash, String username, String email, byte[] profilePicture) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String hash, String username, String email, byte[] profilePicture) {
+        this.firstName = "firstName";
+        this.lastName = "lastName";
         this.hash = hash;
         this.username = username;
         this.email = email;
@@ -47,9 +49,9 @@ public class User {
         this.roles = "READ,ROLE_USER";
     }
 
-    public User(String firstName, String lastName, String hash, String username, String email) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public User(String hash, String username, String email) {
+        this.firstName = "firstName";
+        this.lastName = "lastName";
         this.hash = hash;
         this.username = username;
         this.email = email;
@@ -125,7 +127,29 @@ public class User {
         return maps;
     }
 
+    public Set<Long> getMapIds(){
+        Set<Long> mapIds = new HashSet<>();
+        for(Map map : this.getMaps()){
+            mapIds.add(map.getMapId());
+        }
+
+        return mapIds;
+    }
+
     public void setMaps(Set<Map> maps) {
         this.maps = maps;
+    }
+
+    public Long getId(){
+        return this.userId;
+    }
+
+    public Map getMapByTitle(String mapTitle){
+        for(Map map : this.getMaps()){
+            if(map.getTitle().equals(mapTitle)){
+                return map;
+            }
+        }
+        return null;
     }
 }
