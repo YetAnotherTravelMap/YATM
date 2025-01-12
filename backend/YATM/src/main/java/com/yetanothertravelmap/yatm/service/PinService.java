@@ -1,19 +1,15 @@
 package com.yetanothertravelmap.yatm.service;
 
 import com.yetanothertravelmap.yatm.dto.PinRequest;
-import com.yetanothertravelmap.yatm.model.Category;
-import com.yetanothertravelmap.yatm.model.Icon;
+import com.yetanothertravelmap.yatm.model.*;
 import com.yetanothertravelmap.yatm.model.Map;
-import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.repository.IconRepository;
 import com.yetanothertravelmap.yatm.repository.MapRepository;
 import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class PinService {
