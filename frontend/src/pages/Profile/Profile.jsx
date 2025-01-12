@@ -12,7 +12,7 @@ import useAuth from "./../../hooks/UseAuth"
 export function Profile(){
     const [user, setUserData] = useState({username: "-", email: "-"});
     const [settingsVisible, setSettingsVisible] = useState(false);
-    const [pins, setPins] = useState([]);
+    const [stats, setStats] = useState([]);
 
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
@@ -24,26 +24,45 @@ export function Profile(){
         const fetchUserData = async () => {
             const response = await authAxios.get('/api/user');
             setUserData(response.data);
+
+            await getStats(response.data);
         };
+
+        const getStats = async (userData) => {
+            try {
+                const statsResponse = await authAxios.post(`/api/stats`, userData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
+                    }
+                });
+                console.log(statsResponse.data);
+                setStats(statsResponse.data);
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            }
+        };
+
         fetchUserData();
+        getStats();
     }, [authAxios]);
 
     const profilePictureSrc = user.profilePicture
         ? `data:image/png;base64,${user.profilePicture}`
         : null;
 
-    const getPins = async () => {
+    const getStats = async () => {
         try {
-            const pinsResponse = await authAxios.get(`/api/user/maps/${user.mapIdArray[0]}/pins`, {
+            const statsResponse = await authAxios.post(`/api/stats`, user, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer ' + localStorage.getItem('jwt')
                 }
             });
-            setPins(pinsResponse.data);
-            console.log(pinsResponse.data);
+            console.log(statsResponse.data);
+            setStats(statsResponse.data);
         } catch (error) {
-            console.error('Error fetching pins:', error);
+            console.error('Error fetching stats:', error);
         }
     };
 
@@ -52,7 +71,7 @@ export function Profile(){
             {/* Header Menu */}
             <header className={classes["header-menu"]}>
                 <button className={`${classes["menu-button"]} ${classes.button}`} onClick={() => window.location.href = '/'}>Back to Map</button>
-                <button className={`${classes["get-pins-button"]} ${classes.button}`} onClick={getPins}>Get pins</button>
+                {/*<button className={`${classes["get-pins-button"]} ${classes.button}`} onClick={getStats}>Get stats</button>*/}
             </header>
             {/* Top Section */}
             <div className={classes["top-section"]}>
@@ -80,19 +99,19 @@ export function Profile(){
                     <img src={citiesTravelled} alt="Profile" className={classes.icons}/>
                     <div className={classes["stat-text-container"]}>
                         <h3>Cities Visited</h3>
-                        <p>15</p></div>
+                        <p>{stats.at(2)}</p></div>
                 </div>
                 <div className={classes["stat-container"]}>
                     <img src={countriesVisited} alt="Profile" className={classes.icons}/>
                     <div className={classes["stat-text-container"]}>
                         <h3>Countries Visited</h3>
-                        <p>5</p></div>
+                        <p>{stats.at(1)}</p></div>
                 </div>
                 <div className={classes["stat-container"]}>
                     <img src={pinsCreated} alt="Profile" className={classes.icons}/>
                     <div className={classes["stat-text-container"]}>
                         <h3>Pins Created</h3>
-                        <p>20</p></div>
+                        <p>{stats.at(0)}</p></div>
                 </div>
             </div>
 

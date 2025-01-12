@@ -75,20 +75,6 @@
     background-color: #a71d2a;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .settings-content {
     background-color: white;
     padding: 20px;
@@ -109,3 +95,16 @@
     cursor: pointer;
 }
 
+.account-deletion input {
+    width: 50%;
+    margin-bottom: 10px;
+    padding: 8px;
+    padding: 8px;
+    border: 1px solid #198653FF;
+    border-radius: 4px;
+}
+
+.account-deletion-button{
+    background-color: #dc3545;
+    margin-left: 5px;
+}

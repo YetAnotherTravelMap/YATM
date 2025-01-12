@@ -9,6 +9,8 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
     const [reenterPassword, setReenterPassword] = useState("");
     const [passwordChanged, setPasswordChanged] = useState(false);
 
+    const [currentPassword, setCurrentPassword] = useState("");
+
     const navigate = useNavigate();
 
     const handlePasswordChange = async (event) => {
@@ -31,6 +33,23 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
         } else {
             alert("Passwords do not match");
         }
+    };
+
+    const handleAccountDelete = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await axios.post('/api/user/delete-account', { user, currentPassword }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('jwt'),
+                },
+            });
+
+            if (response.status === 200) { logout(); }
+        } catch (error) {
+            console.error("Error deleting account:", error);
+        }
+
     };
 
     const passwordsMatch = password && reenterPassword && password === reenterPassword;
@@ -120,6 +139,22 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
                 <button className={`${classes["logout-button"]} ${classes.button}`} onClick={logout}>
                     Logout
                 </button>
+
+                <div className={classes["account-deletion"]}>
+                    <input
+                        type="password"
+                        placeholder="Enter Password"
+                        value={currentPassword}
+                        onChange={(p) => {
+                            setCurrentPassword(p.target.value);
+                        }}
+                    />
+                    {/* Delete Account button*/}
+                    <button className={`${classes["account-deletion-button"]} ${classes.button}`} onClick={handleAccountDelete}>
+                        Delete Account
+                    </button>
+                </div>
+
             </div>
         </div>
     );
