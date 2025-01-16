@@ -44,8 +44,8 @@ public class StatsService {
             totalPins += pins.get().size();
 
             for (Pin pin : pins.get()) {
-                if(!countryList.contains(pin.getCountry())){
-                    countryList.add(pin.getCountry());
+                if(!countryList.contains(pin.getCountryCode())){
+                    countryList.add(pin.getCountryCode());
                     totalCountries++;
                 }
                 if(!cityList.contains(pin.getCity())){
