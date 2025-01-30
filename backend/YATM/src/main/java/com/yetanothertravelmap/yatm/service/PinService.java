@@ -127,6 +127,7 @@ public class PinService {
         Optional<Pin> pin = pinRepository.findByPinId(pinId);
         if (pin.isPresent() && pin.get().getMap().getMapId() == mapId) {
             pinRepository.deleteById(pinId);
+            categoryService.deleteUnusedCategories();
             return true;
         } else {
             return false;

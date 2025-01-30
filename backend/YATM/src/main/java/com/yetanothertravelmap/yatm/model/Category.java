@@ -26,6 +26,9 @@ public class Category {
     @JsonIgnore
     private Map map;
 
+    @ManyToMany(mappedBy = "categories")
+    Set<Pin> pins;
+
     public Map getMap() {
         return map;
     }
