@@ -13,6 +13,7 @@ export function Profile(){
     const [user, setUserData] = useState({username: "-", email: "-"});
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [stats, setStats] = useState([]);
+    const [exportFormat, setExportFormat] = useState("json");
 
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
@@ -30,12 +31,7 @@ export function Profile(){
 
         const getStats = async (userData) => {
             try {
-                const statsResponse = await authAxios.post(`/api/stats`, userData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-                    }
-                });
+                const statsResponse = await authAxios.post(`/api/stats`, userData);
                 console.log(statsResponse.data);
                 setStats(statsResponse.data);
             } catch (error) {
@@ -51,20 +47,16 @@ export function Profile(){
         ? `data:image/png;base64,${user.profilePicture}`
         : null;
 
-    const getStats = async () => {
-        try {
-            const statsResponse = await authAxios.post(`/api/stats`, user, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-                }
-            });
-            console.log(statsResponse.data);
-            setStats(statsResponse.data);
-        } catch (error) {
-            console.error('Error fetching stats:', error);
-        }
-    };
+    async function handleExport() {
+        const userResponse = await authAxios.get("/api/user");
+        const json = await authAxios.get(`/api/export/${userResponse.data.mapIdArray[0]}/json`);
+
+        const blob = new Blob([JSON.stringify(json.data)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'pins.json';
+        link.click();
+    }
 
     return (
         <div className={classes["profile-page"]}>
@@ -119,17 +111,15 @@ export function Profile(){
             <div className={classes["import-export-section"]}>
                 <div className={classes["export-container"]}>
                     <h3>Export Travel Data</h3>
-                    <select>
+                    <select value={exportFormat} onChange={(e) => setExportFormat(e.target.value)}>
                         <option value="kml">KML</option>
                         <option value="json">JSON</option>
                         <option value="xml">XML</option>
                     </select>
-                    <button className={`${classes["profile-page-button"]} ${classes.button}`}>Export</button>
+                    <button className={`${classes["profile-page-button"]} ${classes.button}`} onClick={handleExport}>Export</button>
                 </div>
                 <div className={classes["import-container"]}>
                     <h3>Import Travel Data</h3>
-                    <input type="file" accept=".kml,.json,.xml" />
-                    <button className={`${classes["profile-page-button"]} ${classes.button}`}>Import</button>
                 </div>
             </div>
             {settingsVisible && (
