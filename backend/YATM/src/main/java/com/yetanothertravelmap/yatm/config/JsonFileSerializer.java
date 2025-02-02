@@ -21,7 +21,7 @@ public class JsonFileSerializer extends JsonSerializer<JsonFile> {
         jsonGenerator.writeStartObject();
 
         jsonGenerator.writeArrayFieldStart("features");
-        for (Pin pin : jsonFile.pins()){
+        for (Pin pin : jsonFile.getPins()){
             serializePin(jsonGenerator, pin);
         }
         jsonGenerator.writeEndArray();
@@ -42,9 +42,9 @@ public class JsonFileSerializer extends JsonSerializer<JsonFile> {
     private void serializeProperties(JsonGenerator jsonGenerator, Pin pin) throws IOException {
         jsonGenerator.writeObjectFieldStart("properties");
         jsonGenerator.writeStringField("name", pin.getName());
-        jsonGenerator.writeStringField("mainCategory", pin.getMainCategory());
+        jsonGenerator.writeStringField("main_category", pin.getMainCategory());
         jsonGenerator.writeStringField("description", pin.getDescription());
-        jsonGenerator.writeStringField("countryCode", pin.getCountryCode());
+        jsonGenerator.writeStringField("country_code", pin.getCountryCode());
         serializeCategories(jsonGenerator, pin.getCategories());
         serializeIcon(jsonGenerator, pin.getIcon());
         jsonGenerator.writeEndObject();
@@ -53,10 +53,10 @@ public class JsonFileSerializer extends JsonSerializer<JsonFile> {
     private void serializeIcon(JsonGenerator jsonGenerator, Icon icon) throws IOException {
         jsonGenerator.writeObjectFieldStart("icon");
 
-        jsonGenerator.writeStringField("iconName", icon.getIconName());
-        jsonGenerator.writeNumberField("iconWidth", icon.getWidth());
-        jsonGenerator.writeNumberField("iconHeight", icon.getHeight());
-        jsonGenerator.writeStringField("iconImage", Base64.getEncoder().encodeToString(icon.getImage()));
+        jsonGenerator.writeStringField("icon_name", icon.getIconName());
+        jsonGenerator.writeNumberField("icon_width", icon.getWidth());
+        jsonGenerator.writeNumberField("icon_height", icon.getHeight());
+        jsonGenerator.writeStringField("icon_image", Base64.getEncoder().encodeToString(icon.getImage()));
 
         jsonGenerator.writeEndObject();
     }

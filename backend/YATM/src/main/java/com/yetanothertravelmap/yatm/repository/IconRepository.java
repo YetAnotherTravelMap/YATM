@@ -13,4 +13,6 @@ public interface IconRepository extends JpaRepository<Icon, Long> {
     Optional<Set<Icon>> findByMapIdIncludingNull(Long mapId);
 
     Optional<Icon> findByIdAndMap_MapId(Long id, Long mapId);
+    Optional<Icon> findByImageAndMap_MapId(byte[] image, Long mapId);
+
 }

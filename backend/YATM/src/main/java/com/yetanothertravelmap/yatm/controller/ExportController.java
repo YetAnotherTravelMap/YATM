@@ -1,7 +1,6 @@
 package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.JsonFile;
-import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.service.MapService;
 import com.yetanothertravelmap.yatm.service.PinService;

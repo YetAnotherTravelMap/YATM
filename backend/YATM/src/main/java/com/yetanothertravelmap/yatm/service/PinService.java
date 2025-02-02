@@ -33,7 +33,7 @@ public class PinService {
     }
 
     public boolean createPin(PinRequest pinRequest, Long mapId) {
-       Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
+        Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
         if (mapOptional.isPresent()) {
             Pin newPin = new Pin();
             newPin.setName(pinRequest.getName());
@@ -47,27 +47,35 @@ public class PinService {
             newPin.setMap(map);
 
             Set<Category> subCategories = new HashSet<>();
-            for (String categoryName: pinRequest.getSubCategories()){
+            for (String categoryName : pinRequest.getSubCategories()) {
                 Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, map);
                 subCategories.add(newCategory);
             }
             newPin.setCategories(subCategories);
 
-            if(pinRequest.getIconId() > 0){ // Existing pin
-                Optional<Icon> iconOptional = iconRepository.findById(pinRequest.getIconId());
-                if(iconOptional.isPresent()){
+            if (pinRequest.getIconImageBytes() != null && pinRequest.getIconImageBytes().length > 0) { // Imported Pin
+                Optional<Icon> iconOptional = iconRepository.findByImageAndMap_MapId(pinRequest.getIconImageBytes(), mapId);
+                if (iconOptional.isPresent()) { // Importing Existing Pin Icon
                     newPin.setIcon(iconOptional.get());
                 }
-            }else { // New Pin
+            }
+
+            if (pinRequest.getIconId() != null && pinRequest.getIconId() > 0) { // Existing pin
+                Optional<Icon> iconOptional = iconRepository.findById(pinRequest.getIconId());
+                if (iconOptional.isPresent()) {
+                    newPin.setIcon(iconOptional.get());
+                }
+            } else { // New Pin
                 try {
                     Icon newIcon = new Icon();
-                    newIcon.setImage(pinRequest.getIconImage().getBytes());
+                    byte[] iconBytes = (pinRequest.getIconImageBytes() != null && pinRequest.getIconImageBytes().length > 0) ? pinRequest.getIconImageBytes() : pinRequest.getIconImage().getBytes();
+                    newIcon.setImage(iconBytes);
                     newIcon.setIconName(pinRequest.getIconName());
                     newIcon.setWidth(pinRequest.getIconWidth());
                     newIcon.setHeight(pinRequest.getIconHeight());
                     iconRepository.save(newIcon);
                     newPin.setIcon(newIcon);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Cannot get the bytes of new pin's uploaded new icon! " + e.getMessage());
                     newPin.setIcon(null);
                     return false;
@@ -90,18 +98,18 @@ public class PinService {
             pin.setMainCategory(pinRequest.getMainCategory());
 
             Set<Category> subCategories = new HashSet<>();
-            for (String categoryName: pinRequest.getSubCategories()){
+            for (String categoryName : pinRequest.getSubCategories()) {
                 Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, pin.getMap());
                 subCategories.add(newCategory);
             }
             pin.setCategories(subCategories);
 
-            if(pinRequest.getIconId() > 0){ // Existing pin
+            if (pinRequest.getIconId() > 0) { // Existing pin
                 Optional<Icon> iconOptional = iconRepository.findById(pinRequest.getIconId());
-                if(iconOptional.isPresent()){
+                if (iconOptional.isPresent()) {
                     pin.setIcon(iconOptional.get());
                 }
-            }else { // New Pin
+            } else { // New Pin
                 try {
                     Icon newIcon = new Icon();
                     newIcon.setImage(pinRequest.getIconImage().getBytes());
@@ -110,7 +118,7 @@ public class PinService {
                     newIcon.setHeight(pinRequest.getIconHeight());
                     iconRepository.save(newIcon);
                     pin.setIcon(newIcon);
-                }catch (Exception e){
+                } catch (Exception e) {
                     System.out.println("Cannot get the bytes of new pin's uploaded new icon! " + e.getMessage());
                     pin.setIcon(null);
                     return false;

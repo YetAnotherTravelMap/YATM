@@ -13,6 +13,7 @@ import PinPopup from "../../components/PinPopup/PinPopup.jsx";
 import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
 import { Icon } from "leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
 export function Map() {
     const [pinPanelState, setPinPanelState] = useState(PinPanelState.INVISIBLE);
@@ -145,31 +146,33 @@ export function Map() {
                 url={mapStyle}
             />
 
-            {filteredPins.map((pin) => {
-                const markerIcon = pin.icon
-                    ? new Icon({
-                        iconUrl: `data:image/png;base64,${pin.icon.image}`,
-                        iconSize: [pin.icon.width, pin.icon.height],
-                    })
-                    : null;
+            <MarkerClusterGroup chunkedLoading>
+                {filteredPins.map((pin) => {
+                    const markerIcon = pin.icon
+                        ? new Icon({
+                            iconUrl: `data:image/png;base64,${pin.icon.image}`,
+                            iconSize: [pin.icon.width, pin.icon.height],
+                        })
+                        : null;
 
-                return (
-                    <Marker
-                        key={pin.pinId}
-                        position={[pin.latitude, pin.longitude]}
-                        {...(markerIcon && { icon: markerIcon })}
-                    >
-                        <Popup>
-                            <PinPopup
-                                pin={pin}
-                                canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
-                                onEditRequest={() => handlePinUpdate(pin)}
-                                onDeleteRequest={() => handlePinDelete(pin)}
-                            />
-                        </Popup>
-                    </Marker>
-                );
-            })}
+                    return (
+                        <Marker
+                            key={pin.pinId}
+                            position={[pin.latitude, pin.longitude]}
+                            {...(markerIcon && { icon: markerIcon })}
+                        >
+                            <Popup>
+                                <PinPopup
+                                    pin={pin}
+                                    canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
+                                    onEditRequest={() => handlePinUpdate(pin)}
+                                    onDeleteRequest={() => handlePinDelete(pin)}
+                                />
+                            </Popup>
+                        </Marker>
+                    );
+                })}
+            </MarkerClusterGroup>
         </MapContainer>
     );
 }
