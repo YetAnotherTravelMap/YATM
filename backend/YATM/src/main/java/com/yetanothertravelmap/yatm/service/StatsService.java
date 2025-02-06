@@ -25,8 +25,7 @@ public class StatsService {
         this.userRepository = userRepository;
     }
 
-    public ArrayList<Integer> getStats(User user){
-        System.out.println("username: " + user.getUsername());
+    public ArrayList<String> getStats(User user){
         user = userRepository.findByUsername(user.getUsername()).orElse(null);
 
         List<Map> maps = mapRepository.findByUser(user);
@@ -34,10 +33,12 @@ public class StatsService {
 
         Integer totalPins = 0;
         Integer totalCountries = 0;
-        Integer totalCities = 0;
 
         ArrayList<String> countryList = new ArrayList<>();
-        ArrayList<String> cityList = new ArrayList<>();
+        ArrayList<Integer> countryCount = new ArrayList<>();
+
+        int max = 0;
+        int maxIndex = -1;
 
         for(Map map : maps){
             pins = pinRepository.findByMap_MapId(map.getMapId());
@@ -46,19 +47,27 @@ public class StatsService {
             for (Pin pin : pins.get()) {
                 if(!countryList.contains(pin.getCountryCode())){
                     countryList.add(pin.getCountryCode());
+                    countryCount.add(1);
                     totalCountries++;
                 }
-                if(!cityList.contains(pin.getCity())){
-                    cityList.add(pin.getCity());
-                    totalCities++;
+                else{
+                    int index = countryList.indexOf(pin.getCountryCode());
+                    countryCount.set(index, countryCount.get(index) + 1);
+                }
+            }
+
+            for (int i = 0; i < countryCount.size(); i++) {
+                if(countryCount.get(i) > max){
+                    maxIndex = i;
+                    max = countryCount.get(i);
                 }
             }
         }
 
-        ArrayList<Integer> stats = new ArrayList<>();
-        stats.add(totalPins);
-        stats.add(totalCountries);
-        stats.add(totalCities);
+        ArrayList<String> stats = new ArrayList<>();
+        stats.add(totalPins.toString());
+        stats.add(totalCountries.toString());
+        stats.add(countryList.get(maxIndex));
 
         return stats;
     }

@@ -7,6 +7,7 @@ import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +22,13 @@ public class AccountService {
     private final MapRepository mapRepository;
     private final PinRepository pinRepository;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
 
-    public AccountService(UserRepository userRepository, MapRepository mapRepository, PinRepository pinRepository){
+    public AccountService(UserRepository userRepository, MapRepository mapRepository, PinRepository pinRepository, PasswordEncoder passwordEncoder){
         this.userRepository = userRepository;
         this.mapRepository = mapRepository;
         this.pinRepository = pinRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public boolean changePassword(User user, String password){
@@ -59,15 +62,22 @@ public class AccountService {
         Optional<User> optionalUser = userRepository.findByUsername(user.getUsername());
         user = optionalUser.get();
 
-        List<Map> maps = mapRepository.findByUser(user);
-        System.out.println("maps size as: " + maps.size());
-        for(Map map : maps){
-            pinRepository.deleteByMap(map);
+
+        if(passwordEncoder.matches(password, user.getHash())) {
+            List<Map> maps = mapRepository.findByUser(user);
+            System.out.println("maps size as: " + maps.size());
+            for (Map map : maps) {
+                pinRepository.deleteByMap(map);
+            }
+
+            mapRepository.deleteByUser(user);
+
+            userRepository.delete(user);
+            return true;
         }
-
-        mapRepository.deleteByUser(user);
-
-        userRepository.delete(user);
-        return false;
+        else{
+            System.out.println("Passwords do not match.");
+            return false;
+        }
     }
 }
