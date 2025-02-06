@@ -98,7 +98,7 @@ export function Profile(){
                 <div className={classes["stat-container"]}>
                     <img src={citiesTravelled} alt="Profile" className={classes.icons}/>
                     <div className={classes["stat-text-container"]}>
-                        <h3>Cities Visited</h3>
+                        <h3>Most pinned country</h3>
                         <p>{stats.at(2)}</p></div>
                 </div>
                 <div className={classes["stat-container"]}>
