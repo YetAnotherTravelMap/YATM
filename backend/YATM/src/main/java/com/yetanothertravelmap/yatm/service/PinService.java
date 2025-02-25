@@ -103,9 +103,11 @@ public class PinService {
         newPin.setMap(map);
 
         Set<Category> subCategories = new HashSet<>();
-        for (String categoryName : pinRequest.getSubCategories()) {
-            Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, map);
-            subCategories.add(newCategory);
+        if(pinRequest.getSubCategories() != null) {
+            for (String categoryName : pinRequest.getSubCategories()) {
+                Category newCategory = categoryService.findOrCreateByCategoryName(categoryName, map);
+                subCategories.add(newCategory);
+            }
         }
         newPin.setCategories(subCategories);
         newPin.setIcon(getOrCreateNewIcon(pinRequest, map));

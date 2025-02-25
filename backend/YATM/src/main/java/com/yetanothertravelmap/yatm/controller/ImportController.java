@@ -5,9 +5,11 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.yetanothertravelmap.yatm.dto.JsonFile;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.kml.Kml;
+import com.yetanothertravelmap.yatm.dto.xml.XmlTravelMap;
 import com.yetanothertravelmap.yatm.service.KmlService;
 import com.yetanothertravelmap.yatm.service.MapService;
 import com.yetanothertravelmap.yatm.service.PinService;
+import com.yetanothertravelmap.yatm.service.XmlService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,11 +26,13 @@ public class ImportController {
     private final MapService mapService;
     private final PinService pinService;
     private final KmlService kmlService;
+    private final XmlService xmlService;
 
-    public ImportController(MapService mapService, PinService pinService, KmlService kmlService) {
+    public ImportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService) {
         this.mapService = mapService;
         this.pinService = pinService;
         this.kmlService = kmlService;
+        this.xmlService = xmlService;
     }
 
     @PostMapping("/{mapId}")
@@ -61,6 +65,10 @@ public class ImportController {
                 XmlMapper xmlMapper = new XmlMapper();
                 Kml kml = xmlMapper.readValue(file.getInputStream(), Kml.class);
                 pinRequests = kmlService.getPinRequestsFromKml(kml);
+            }else if(fileType.equals("xml")) {
+                XmlMapper xmlMapper = new XmlMapper();
+                XmlTravelMap xml = xmlMapper.readValue(file.getInputStream(), XmlTravelMap.class);
+                pinRequests = xmlService.getPinRequestsFromXmlTravelMap(xml);
             }
 
             boolean isSuccessful = pinService.createMultiplePins(pinRequests, mapId);

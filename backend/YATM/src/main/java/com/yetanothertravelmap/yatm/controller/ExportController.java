@@ -5,10 +5,12 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.yetanothertravelmap.yatm.dto.JsonFile;
 import com.yetanothertravelmap.yatm.dto.kml.Kml;
+import com.yetanothertravelmap.yatm.dto.xml.XmlTravelMap;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.service.KmlService;
 import com.yetanothertravelmap.yatm.service.MapService;
 import com.yetanothertravelmap.yatm.service.PinService;
+import com.yetanothertravelmap.yatm.service.XmlService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,11 +33,13 @@ public class ExportController {
     private final MapService mapService;
     private final PinService pinService;
     private final KmlService kmlService;
+    private final XmlService xmlService;
 
-    public ExportController(MapService mapService, PinService pinService, KmlService kmlService) {
+    public ExportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService) {
         this.mapService = mapService;
         this.pinService = pinService;
         this.kmlService = kmlService;
+        this.xmlService = xmlService;
     }
 
     @GetMapping("/{mapId}/json")
@@ -68,6 +72,28 @@ public class ExportController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.kml")
                 .contentType(MediaType.valueOf("application/vnd.google-earth.kml+xml; charset=utf-8"))
+                .body(resource);
+    }
+
+    @GetMapping("/{mapId}/xml")
+    public ResponseEntity<ByteArrayResource> getXmlFile(@PathVariable Long mapId, Principal principal) throws JsonProcessingException {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
+        XmlTravelMap xmlTravelMap = xmlService.getXmlTravelMapFromPins(pins);
+
+        XmlMapper xmlMapper = new XmlMapper();
+        xmlMapper.enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION);
+        String xml = xmlMapper.writeValueAsString(xmlTravelMap);
+        byte[] xmlBytes = xml.getBytes(StandardCharsets.UTF_8);
+
+        ByteArrayResource resource = new ByteArrayResource(xmlBytes);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.xml")
+                .contentType(MediaType.APPLICATION_XML)
                 .body(resource);
     }
 

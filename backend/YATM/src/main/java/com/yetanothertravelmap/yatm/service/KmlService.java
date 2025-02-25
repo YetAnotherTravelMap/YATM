@@ -57,7 +57,7 @@ public class KmlService {
                         pin.setCountryCode(data.getValue());
                         break;
                     case "categories":
-                        String[] categories = data.getValue().split("\\|;,;\\|");
+                        String[] categories = data.getValue().split("\\|\\|");
                         List<String> filteredCategories = Arrays.stream(categories).filter(s -> !s.isEmpty()).toList();
                         pin.setSubCategories(filteredCategories);
                         break;
@@ -99,7 +99,7 @@ public class KmlService {
         Set<String> categories = pin.getCategories().stream()
                 .map(Category::getName)
                 .collect(Collectors.toSet());
-        dataList.add(createData("categories", String.join("|;,;|", categories)));
+        dataList.add(createData("categories", String.join("||", categories)));
 
         // Icon data
         Icon icon = pin.getIcon();
