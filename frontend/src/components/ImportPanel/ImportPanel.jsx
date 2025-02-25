@@ -16,7 +16,7 @@ function ImportPanel({updateStats}) {
         if (!importFile) return;
         setLoading(true);
         const formData = new FormData();
-        formData.append('jsonFile', importFile);
+        formData.append('file', importFile);
         const userResponse = await authAxios.get("/api/user");
         await authAxios.post(`/api/import/${userResponse.data.mapIdArray[0]}`, formData, {
             headers: {

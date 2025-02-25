@@ -50,12 +50,21 @@ export function Profile(){
 
     async function handleExport() {
         const userResponse = await authAxios.get("/api/user");
-        const json = await authAxios.get(`/api/export/${userResponse.data.mapIdArray[0]}/json`);
+        const exportResult = await authAxios.get(`/api/export/${userResponse.data.mapIdArray[0]}/${exportFormat}`);
 
-        const blob = new Blob([JSON.stringify(json.data)], { type: 'application/json' });
+        let contentType;
+        if (exportFormat === "json") {
+            contentType = "application/json";
+        } else if (exportFormat === "kml") {
+            contentType = "application/vnd.google-earth.kml+xml";
+        } else if (exportFormat === "xml") {
+            contentType = "application/xml";
+        }
+
+        const blob = new Blob([exportFormat === "json" ? JSON.stringify(exportResult.data) : exportResult.data], { type: contentType });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = 'pins.json';
+        link.download = `pins.${exportFormat}`;
         link.click();
     }
 

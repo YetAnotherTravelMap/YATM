@@ -12,7 +12,10 @@ public interface IconRepository extends JpaRepository<Icon, Long> {
     @Query("SELECT i FROM Icon i WHERE i.map.mapId = ?1 OR i.map IS NULL")
     Optional<Set<Icon>> findByMapIdIncludingNull(Long mapId);
 
+    @Query("SELECT i FROM Icon i WHERE i.id = ?1 AND (i.map.mapId = ?2 OR i.map IS NULL)")
     Optional<Icon> findByIdAndMap_MapId(Long id, Long mapId);
+
+    @Query("SELECT i FROM Icon i WHERE i.image = ?1 AND (i.map.mapId = ?2 OR i.map IS NULL)")
     Optional<Icon> findByImageAndMap_MapId(byte[] image, Long mapId);
 
 }
