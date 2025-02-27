@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.service;
 
 import com.yetanothertravelmap.yatm.model.Map;
+import com.yetanothertravelmap.yatm.model.PieChartCountryEntry;
 import com.yetanothertravelmap.yatm.model.Pin;
 import com.yetanothertravelmap.yatm.model.User;
 import com.yetanothertravelmap.yatm.repository.MapRepository;
@@ -8,10 +9,9 @@ import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class StatsService {
@@ -25,7 +25,7 @@ public class StatsService {
         this.userRepository = userRepository;
     }
 
-    public ArrayList<String> getStats(User user){
+    public ArrayList<Object> getStats(User user){
         user = userRepository.findByUsername(user.getUsername()).orElse(null);
 
         List<Map> maps = mapRepository.findByUser(user);
@@ -35,10 +35,9 @@ public class StatsService {
         Integer totalCountries = 0;
 
         ArrayList<String> countryList = new ArrayList<>();
-        ArrayList<Integer> countryCount = new ArrayList<>();
 
-        int max = 0;
-        int maxIndex = -1;
+        ArrayList<PieChartCountryEntry> countryEntries = new ArrayList<>();
+
 
         for(Map map : maps){
             pins = pinRepository.findByMap_MapId(map.getMapId());
@@ -47,28 +46,52 @@ public class StatsService {
             for (Pin pin : pins.get()) {
                 if(!countryList.contains(pin.getCountryCode())){
                     countryList.add(pin.getCountryCode());
-                    countryCount.add(1);
+                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), "temp"));
                     totalCountries++;
                 }
                 else{
                     int index = countryList.indexOf(pin.getCountryCode());
-                    countryCount.set(index, countryCount.get(index) + 1);
-                }
-            }
-
-            for (int i = 0; i < countryCount.size(); i++) {
-                if(countryCount.get(i) > max){
-                    maxIndex = i;
-                    max = countryCount.get(i);
+                    countryEntries.get(index).addOne();
                 }
             }
         }
 
-        ArrayList<String> stats = new ArrayList<>();
+        int otherSum = 0;
+
+        ArrayList<PieChartCountryEntry> newCountryEntries = new ArrayList<>();
+
+        for (int i = 0; i < countryEntries.size(); i++) {
+            if((double) countryEntries.get(i).getValue() /totalPins < (.0625)){
+                otherSum += countryEntries.get(i).getValue();
+            }
+            else{
+                newCountryEntries.add(countryEntries.get(i));
+            }
+        }
+
+        if(otherSum > 0){
+            newCountryEntries.add(new PieChartCountryEntry("other", otherSum, getColour(), "Other"));
+        }
+
+
+        ArrayList<Object> stats = new ArrayList<>();
         stats.add(totalPins.toString());
         stats.add(totalCountries.toString());
-        stats.add(countryList.get(maxIndex));
+        stats.add(newCountryEntries);
 
         return stats;
+    }
+
+    public String getColour(){
+        Random random = new Random();
+        String colour = "#";
+        int[] rgb = {random.nextInt(0,255),random.nextInt(0,255),random.nextInt(0,255)};
+        for (int i = 0; i < 3; i++) {
+            if(rgb[i] < 16){
+                colour = colour + "0";
+            }
+            colour = colour + Integer.toHexString(rgb[i]);
+        }
+        return colour;
     }
 }
