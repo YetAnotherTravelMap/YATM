@@ -85,4 +85,17 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @DeleteMapping("/{mapId}/pins/{pinId}")
+    public ResponseEntity<Void> deletePin(@PathVariable Long mapId, @PathVariable Long pinId, Principal principal) {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        boolean isSuccessful = pinService.deletePin(mapId, pinId);
+        if (isSuccessful) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

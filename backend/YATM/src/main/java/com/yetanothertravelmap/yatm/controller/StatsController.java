@@ -18,7 +18,6 @@ public class StatsController {
 
     @PostMapping
     public ResponseEntity<?> getUserStats(@RequestBody User user){
-        System.out.println("Username: " + user.getUsername());
         return ResponseEntity.ok(statsService.getStats(user));
     }
 }

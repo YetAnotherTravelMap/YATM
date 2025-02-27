@@ -10,6 +10,7 @@ public class PinRequest {
     private String name;
     private Double latitude;
     private Double longitude;
+    private String countryCode;
     private String description;
     private MainCategory mainCategory;
     private List<String> subCategories;
@@ -50,6 +51,14 @@ public class PinRequest {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public String getDescription() {

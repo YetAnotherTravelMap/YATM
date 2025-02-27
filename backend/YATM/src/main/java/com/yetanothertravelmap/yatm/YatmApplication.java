@@ -68,6 +68,7 @@ public class YatmApplication {
             myPin.setMap(userMap);
             Icon icon = iconRepository.findById(1L).orElse(null);
             myPin.setIcon(icon);
+            myPin.setCountryCode("ca");
             pinRepository.save(myPin);
         };
     }

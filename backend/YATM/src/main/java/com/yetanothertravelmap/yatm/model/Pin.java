@@ -39,6 +39,9 @@ public class Pin {
     private double longitude;
 
     @Column
+    private String countryCode;
+
+    @Column
     private String description;
 
     @Column
@@ -136,9 +139,12 @@ public class Pin {
         this.mainCategory = mainCategory.name;
     }
 
-    public String getCountry(){
-        return "temp";
-//        return this.country;
+    public String getCountryCode(){
+        return this.countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
     }
 
     public String getCity(){

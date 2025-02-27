@@ -39,6 +39,12 @@ export function Map() {
         }
     }
 
+    async function handlePinDelete(pin) {
+        const userResponse = await authAxios.get('/api/user');
+        await authAxios.delete(`/api/maps/${userResponse.data.mapIdArray[0]}/pins/${pin.pinId}`);
+        await fetchUserPins();
+    }
+
     return (<MapContainer center={[45.384, -75.697]} zoom={5} zoomControl={false} maxBounds={[[-90, -180], [90, 180]]}
                           minZoom={3}
                           maxZoom={19} bounceAtZoomLimits={false} maxBoundsViscosity={1}>
@@ -67,7 +73,8 @@ export function Map() {
                 return (<Marker key={pin.pinId} position={[pin.latitude, pin.longitude]}  {...(markerIcon && { icon: markerIcon })} >
                     <Popup>
                         <PinPopup pin={pin} canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
-                                  onEditRequest={() => handlePinUpdate(pin)}/>
+                                  onEditRequest={() => handlePinUpdate(pin)}
+                                  onDeleteRequest={() => handlePinDelete(pin)}/>
                     </Popup>
                 </Marker>)
             })}

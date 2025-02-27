@@ -18,6 +18,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
 
     const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
     const [isTempMarkerVisible, setIsTempMarkerVisible] = useState(isInPinCreationState);
+    const [countryCode, setCountryCode] = useState(isInPinUpdateState ? pinDetailsToUpdate.countryCode : null);
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
@@ -94,6 +95,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                 }
             });
             setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road)
+            setCountryCode(response.data[0].address.country_code)
             console.log(response.data);
         };
         fetchPinLocationName();
@@ -117,6 +119,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         formData.append("name", name);
         formData.append("latitude", tempMarkerPos[0])
         formData.append("longitude", tempMarkerPos[1])
+        formData.append("countryCode", countryCode)
         formData.append("mainCategory", mainCategory)
         formData.append("subCategories", selectedSubCategories);
         formData.append("description", description);

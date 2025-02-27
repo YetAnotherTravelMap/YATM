@@ -3,12 +3,17 @@ import CategoryTag from "../CategoryTag/CategoryTag.jsx";
 import PropTypes from "prop-types";
 import {useMap} from "react-leaflet";
 
-function PinPopup({pin, onEditRequest, canEditPin}) {
+function PinPopup({pin, onDeleteRequest, onEditRequest, canEditPin}) {
 
     const map = useMap();
 
     function onEditClicked() {
         onEditRequest();
+        map.closePopup();
+    }
+
+    function onDeleteClicked() {
+        onDeleteRequest();
         map.closePopup();
     }
 
@@ -33,6 +38,7 @@ function PinPopup({pin, onEditRequest, canEditPin}) {
         <br/>
 
         {canEditPin && <button className={classes["edit-button"]} onClick={onEditClicked}>Edit</button>}
+        {canEditPin && <button className={classes["edit-button"]} onClick={onDeleteClicked}>Delete</button>}
     </>);
 }
 
@@ -46,6 +52,7 @@ PinPopup.propTypes = {
         name: PropTypes.string,
         description: PropTypes.string,
     }).isRequired,
+    onDeleteRequest: PropTypes.func.isRequired,
     onEditRequest: PropTypes.func.isRequired,
     canEditPin: PropTypes.bool.isRequired,
 }

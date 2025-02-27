@@ -39,6 +39,7 @@ public class PinService {
             newPin.setName(pinRequest.getName());
             newPin.setLatitude(pinRequest.getLatitude());
             newPin.setLongitude(pinRequest.getLongitude());
+            newPin.setCountryCode(pinRequest.getCountryCode());
             newPin.setDescription(pinRequest.getDescription());
             newPin.setMainCategory(pinRequest.getMainCategory());
 
@@ -120,6 +121,16 @@ public class PinService {
             return true;
         }
         return false;
+    }
+
+    public boolean deletePin(Long mapId, Long pinId) {
+        Optional<Pin> pin = pinRepository.findByPinId(pinId);
+        if (pin.isPresent() && pin.get().getMap().getMapId() == mapId) {
+            pinRepository.deleteById(pinId);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
