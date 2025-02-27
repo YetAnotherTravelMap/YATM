@@ -33,4 +33,7 @@ public class CategoryService {
         return category;
     }
 
+    public void deleteUnusedCategories() {
+        categoryRepository.deleteUnusedCategories();
+    }
 }

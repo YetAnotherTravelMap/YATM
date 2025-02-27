@@ -18,6 +18,7 @@ public class PinRequest {
     private Long iconId;
     private String iconName;
     private MultipartFile iconImage;
+    private byte[] iconImageBytes;
     private int iconWidth;
     private int iconHeight;
 
@@ -107,6 +108,14 @@ public class PinRequest {
 
     public void setIconImage(MultipartFile iconImage) {
         this.iconImage = iconImage;
+    }
+
+    public byte[] getIconImageBytes() {
+        return iconImageBytes;
+    }
+
+    public void setIconImageBytes(byte[] iconImageBytes) {
+        this.iconImageBytes = iconImageBytes;
     }
 
     public int getIconWidth() {

@@ -8,12 +8,15 @@ import AccountSettings from '../../components/AccountSettings/AccountSettings.js
 
 
 import useAuth from "./../../hooks/UseAuth"
+import ImportPanel from "../../components/ImportPanel/ImportPanel.jsx";
 
 export function Profile(){
     const [user, setUserData] = useState({username: "-", email: "-"});
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [stats, setStats] = useState([]);
+    const [exportFormat, setExportFormat] = useState("json");
     const [hoveredIndex, setHoveredIndex] = useState(null);
+
 
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
@@ -21,51 +24,50 @@ export function Profile(){
 
     const { logout, authAxios } = useAuth();
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const response = await authAxios.get('/api/user');
-            setUserData(response.data);
+    const fetchUserData = async () => {
+        const response = await authAxios.get('/api/user');
+        setUserData(response.data);
 
-            await getStats(response.data);
-        };
+        await getStats(response.data);
+    };
 
-        const getStats = async (userData) => {
-            try {
-                const statsResponse = await authAxios.post(`/api/stats`, userData, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-                    }
-                });
-                console.log(statsResponse.data);
-                setStats(statsResponse.data);
-            } catch (error) {
-                console.error('Error fetching stats:', error);
-            }
-        };
-
-        fetchUserData();
-        getStats();
-    }, [authAxios]);
-
-    const profilePictureSrc = user.profilePicture
-        ? `data:image/png;base64,${user.profilePicture}`
-        : null;
-
-    const getStats = async () => {
+    const getStats = async (userData) => {
         try {
-            const statsResponse = await authAxios.post(`/api/stats`, user, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + localStorage.getItem('jwt')
-                }
-            });
+            const statsResponse = await authAxios.post(`/api/stats`, userData);
             console.log(statsResponse.data);
             setStats(statsResponse.data);
         } catch (error) {
             console.error('Error fetching stats:', error);
         }
     };
+
+    useEffect(() => {
+        fetchUserData();
+    }, [authAxios]);
+
+    const profilePictureSrc = user.profilePicture
+        ? `data:image/png;base64,${user.profilePicture}`
+        : null;
+
+    async function handleExport() {
+        const userResponse = await authAxios.get("/api/user");
+        const exportResult = await authAxios.get(`/api/export/${userResponse.data.mapIdArray[0]}/${exportFormat}`);
+
+        let contentType;
+        if (exportFormat === "json") {
+            contentType = "application/json";
+        } else if (exportFormat === "kml") {
+            contentType = "application/vnd.google-earth.kml+xml";
+        } else if (exportFormat === "xml") {
+            contentType = "application/xml";
+        }
+
+        const blob = new Blob([exportFormat === "json" ? JSON.stringify(exportResult.data) : exportResult.data], { type: contentType });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `pins.${exportFormat}`;
+        link.click();
+    }
 
     return (
         <div className={classes["profile-page"]}>
@@ -140,18 +142,14 @@ export function Profile(){
             <div className={classes["import-export-section"]}>
                 <div className={classes["export-container"]}>
                     <h3>Export Travel Data</h3>
-                    <select>
+                    <select value={exportFormat} onChange={(e) => setExportFormat(e.target.value)}>
                         <option value="kml">KML</option>
                         <option value="json">JSON</option>
                         <option value="xml">XML</option>
                     </select>
-                    <button className={`${classes["profile-page-button"]} ${classes.button}`}>Export</button>
+                    <button className={`${classes["profile-page-button"]} ${classes.button}`} onClick={handleExport}>Export</button>
                 </div>
-                <div className={classes["import-container"]}>
-                    <h3>Import Travel Data</h3>
-                    <input type="file" accept=".kml,.json,.xml" />
-                    <button className={`${classes["profile-page-button"]} ${classes.button}`}>Import</button>
-                </div>
+                <ImportPanel updateStats={fetchUserData}/>
             </div>
             {settingsVisible && (
                 <AccountSettings toggleSettingsPanel={toggleSettingsPanel} logout={logout} user={user} />
