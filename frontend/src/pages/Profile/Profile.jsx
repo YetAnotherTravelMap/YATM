@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
+import { PieChart } from "react-minimal-pie-chart";
 import classes from './Profile.module.css';
-import citiesTravelled from '../../assets/citiesTravelled.png';
 import countriesVisited from '../../assets/countriesVisited.png';
 import pinsCreated from '../../assets/pinsCreated.png';
 import cogIcon from '../../assets/cogWheel.png';
@@ -13,6 +13,7 @@ export function Profile(){
     const [user, setUserData] = useState({username: "-", email: "-"});
     const [settingsVisible, setSettingsVisible] = useState(false);
     const [stats, setStats] = useState([]);
+    const [hoveredIndex, setHoveredIndex] = useState(null);
 
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
@@ -96,10 +97,30 @@ export function Profile(){
             {/* Stats section */}
             <div className={classes["stats-section"]}>
                 <div className={classes["stat-container"]}>
-                    <img src={citiesTravelled} alt="Profile" className={classes.icons}/>
                     <div className={classes["stat-text-container"]}>
-                        <h3>Most pinned country</h3>
-                        <p>{stats.at(2)}</p></div>
+                        <h3>Country pin distribution</h3>
+                        <div className={classes["chart-container"]}>
+                            <PieChart
+                                data={stats.at(2)}
+                                label={({ dataEntry }) => dataEntry.title}
+                                labelPosition={80}
+                                labelStyle={{
+                                    fontSize: "10px",
+                                    fontFamily: "Arial, sans-serif",
+                                    fontWeight: "bold",
+                                    fill: "#eee",
+                                    textShadow: "1px 1px 2px rgba(0,0,0,1)"
+                                }}
+                                onMouseOver={(_, dataIndex) => setHoveredIndex(dataIndex)}
+                                onMouseOut={() => setHoveredIndex(null)}
+                            />
+                            {hoveredIndex !== null && stats.at(2)[hoveredIndex] && (
+                                <div className={classes["tooltip"]}>
+                                    {stats.at(2)[hoveredIndex].countryName}
+                                </div>
+                            )}
+                        </div>
+                    </div>
                 </div>
                 <div className={classes["stat-container"]}>
                     <img src={countriesVisited} alt="Profile" className={classes.icons}/>
