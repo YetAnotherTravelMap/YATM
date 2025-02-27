@@ -61,7 +61,6 @@ public class AccountController {
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request){
         User user = request.getUser();
         String password = request.getPassword();
-        System.out.println("acpw: " + password);
 
         return ResponseEntity.ok(accountService.changePassword(user, password));
     }
@@ -84,6 +83,12 @@ public class AccountController {
         User user = request.getUser();
         String password = request.getPassword();
 
-        return ResponseEntity.ok(accountService.deleteAccount(user,password));
+        if(accountService.deleteAccount(user,password)){
+            return ResponseEntity.ok("Account deleted successfully");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Incorrect Password.");
+        }
+
     }
 }

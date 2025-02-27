@@ -180,3 +180,24 @@ input[type="file"] {
     border: none;
     cursor: pointer;
 }
+
+.chart-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    padding: 10px;
+}
+
+.tooltip {
+    position: absolute;
+    top: 150px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: nowrap;
+    pointer-events: none; /* Prevents interaction issues */
+}

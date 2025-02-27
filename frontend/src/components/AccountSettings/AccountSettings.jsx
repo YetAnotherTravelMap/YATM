@@ -8,6 +8,7 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
     const [password, setPassword] = useState("");
     const [reenterPassword, setReenterPassword] = useState("");
     const [passwordChanged, setPasswordChanged] = useState(false);
+    const [pwerror, setError] = useState(false);
 
     const [currentPassword, setCurrentPassword] = useState("");
 
@@ -47,7 +48,7 @@ function AccountSettings({ toggleSettingsPanel, logout, user }) {
 
             if (response.status === 200) { logout(); }
         } catch (error) {
-            console.error("Error deleting account:", error);
+            console.error("Error changing password:", error.body);
         }
 
     };
