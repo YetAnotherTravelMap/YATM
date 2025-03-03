@@ -14,11 +14,13 @@ import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
 import { Icon } from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay.jsx";
 
 export function Map() {
     const [pinPanelState, setPinPanelState] = useState(PinPanelState.INVISIBLE);
     const [pinDetailsToUpdate, setPinDetailsToUpdate] = useState(null);
     const [pins, setPins] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedMainCategories, setSelectedMainCategories] = useState([]);
@@ -28,11 +30,13 @@ export function Map() {
     const mainCategories = ["Favourite", "Been", "Want2Go"];
 
     const fetchUserPins = async () => {
+        setLoading(true);
         const userResponse = await authAxios.get("/api/user");
         const pinsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`);
         const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
         setCategories(categoriesResponse.data);
         setPins(pinsResponse.data);
+        setLoading(false);
     };
 
     const handleMainCategoryChange = (category) => {
@@ -70,10 +74,11 @@ export function Map() {
     async function handlePinDelete(pin) {
         const userResponse = await authAxios.get("/api/user");
         await authAxios.delete(`/api/maps/${userResponse.data.mapIdArray[0]}/pins/${pin.pinId}`);
-        await fetchUserPins();
+        setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId))])
     }
 
-    return (
+    return (<>
+        {loading && <LoadingOverlay/>}
         <MapContainer
             center={[45.384, -75.697]}
             zoom={5}
@@ -86,6 +91,7 @@ export function Map() {
             maxZoom={19}
             bounceAtZoomLimits={false}
             maxBoundsViscosity={1}
+            preferCanvas={true}
         >
             <Control prepend position="topleft">
                 <SearchBox />
@@ -117,7 +123,7 @@ export function Map() {
                             </label>
                         ))}
 
-                        <h4>Subcategories</h4>
+                        {categories.length > 0 && <h4>Subcategories</h4>}
                         {categories.map((category) => (
                             <label key={category.id} className="category-label">
                                 <input
@@ -137,7 +143,18 @@ export function Map() {
                     panelState={pinPanelState}
                     setPanelState={setPinPanelState}
                     pinDetailsToUpdate={pinDetailsToUpdate}
-                    notifyPinUpdate={fetchUserPins}
+                    createPin={async (pin) => {
+                        setPins(pins => [...pins, pin])
+                        const userResponse = await authAxios.get("/api/user");
+                        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+                        setCategories(categoriesResponse.data);
+                    }}
+                    updatePin={async (pin) => {
+                        setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId)), pin])
+                        const userResponse = await authAxios.get("/api/user");
+                        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+                        setCategories(categoriesResponse.data);
+                    }}
                 />
             </Control>
 
@@ -174,5 +191,5 @@ export function Map() {
                 })}
             </MarkerClusterGroup>
         </MapContainer>
-    );
+    </>);
 }

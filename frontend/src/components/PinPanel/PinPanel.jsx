@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import IconSelector from "../IconSelector/IconSelector.jsx";
 
 
-function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
+function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, updatePin}) {
 
     const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT && !!pinDetailsToUpdate
     const isInPinCreationState = panelState === PinPanelState.PIN_CREATION
@@ -108,7 +108,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }else if (panelState === PinPanelState.PIN_EDIT) {
             await handlePinUpdate();
         }
-        notifyPinUpdate()
         fetchCategories()
         fetchIcons()
     }
@@ -133,11 +132,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }
 
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+        const createdPin = await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         });
+        createPin(createdPin.data);
         resetPanel()
     }
 
@@ -157,11 +157,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }
 
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+        const updatedPin = await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         });
+        updatePin(updatedPin.data);
         resetPanel()
     }
 
@@ -245,7 +246,8 @@ PinPanel.propTypes = {
         countryCode: PropTypes.string,
         icon: PropTypes.any
     }),
-    notifyPinUpdate: PropTypes.func.isRequired
+    createPin: PropTypes.func.isRequired,
+    updatePin: PropTypes.func.isRequired
 }
 
 export default PinPanel;

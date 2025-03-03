@@ -65,9 +65,9 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        boolean isSuccessful = pinService.createPin(pinRequest, mapId);
-        if (isSuccessful) {
-            return new ResponseEntity<>(HttpStatus.CREATED);
+        Pin createdPin = pinService.createPin(pinRequest, mapId);
+        if (createdPin != null) {
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdPin);
         }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }}
@@ -78,9 +78,9 @@ public class MapController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        boolean isSuccessful = pinService.updatePin(pinRequest);
-        if (isSuccessful) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Pin updatedPin = pinService.updatePin(pinRequest);
+        if (updatedPin != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(updatedPin);
         }else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
