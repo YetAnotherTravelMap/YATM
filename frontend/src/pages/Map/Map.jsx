@@ -1,7 +1,7 @@
 import "./Map.css";
 import "leaflet/dist/leaflet.css";
 
-import { MapContainer, Marker, Popup } from "react-leaflet";
+import { MapContainer } from "react-leaflet";
 import { MapLibreTileLayer } from "../../components/MapLibreTileLayer/MapLibreTileLayer.ts";
 import mapStyle from "../../assets/MapStyles/WorldNavigationMap_Esri_S.json";
 import SearchBox from "../../components/SearchBox/SearchBox.jsx";
@@ -9,12 +9,10 @@ import Control from "react-leaflet-custom-control";
 import ProfilePanel from "../../components/ProfilePanel/ProfilePanel.jsx";
 import { useState, useEffect } from "react";
 import PinPanel from "../../components/PinPanel/PinPanel.jsx";
-import PinPopup from "../../components/PinPopup/PinPopup.jsx";
 import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
-import { Icon } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
 import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay.jsx";
+import PinCluster from "../../components/PinCluster/PinCluster.jsx";
 
 export function Map() {
     const [pinPanelState, setPinPanelState] = useState(PinPanelState.INVISIBLE);
@@ -162,34 +160,8 @@ export function Map() {
                 attribution="Esri, TomTom, Garmin, FAO, NOAA, USGS, &copy; OpenStreetMap contributors, and the GIS User Community"
                 url={mapStyle}
             />
+            <PinCluster pins={filteredPins} canEditPin={pinPanelState !== PinPanelState.PIN_CREATION} handlePinUpdate={handlePinUpdate} handlePinDelete={handlePinDelete} />
 
-            <MarkerClusterGroup chunkedLoading>
-                {filteredPins.map((pin) => {
-                    const markerIcon = pin.icon
-                        ? new Icon({
-                            iconUrl: `data:image/png;base64,${pin.icon.image}`,
-                            iconSize: [pin.icon.width, pin.icon.height],
-                        })
-                        : null;
-
-                    return (
-                        <Marker
-                            key={pin.pinId}
-                            position={[pin.latitude, pin.longitude]}
-                            {...(markerIcon && { icon: markerIcon })}
-                        >
-                            <Popup>
-                                <PinPopup
-                                    pin={pin}
-                                    canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
-                                    onEditRequest={() => handlePinUpdate(pin)}
-                                    onDeleteRequest={() => handlePinDelete(pin)}
-                                />
-                            </Popup>
-                        </Marker>
-                    );
-                })}
-            </MarkerClusterGroup>
         </MapContainer>
     </>);
 }

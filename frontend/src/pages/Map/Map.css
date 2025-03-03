@@ -8,6 +8,11 @@
     height: 100vh;
 }
 
+.leaflet-div-icon {
+    background: none !important;
+    border: none !important;
+}
+
 /* Circular button for filter menu */
 .filter-button {
     background-color: #0E5738FF;
