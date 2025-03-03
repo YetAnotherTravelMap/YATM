@@ -3,6 +3,7 @@ package com.yetanothertravelmap.yatm.service;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.xml.*;
 import com.yetanothertravelmap.yatm.model.Category;
+import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import com.yetanothertravelmap.yatm.model.Pin;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class XmlService {
+
+    private final GeocodingService geocodingService;
+
+    public XmlService(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
+    }
 
     public XmlTravelMap getXmlTravelMapFromPins(Set<Pin> pins) {
         XmlTravelMap xmlTravelMap = new XmlTravelMap();
@@ -35,6 +42,7 @@ public class XmlService {
             pinRequest.setName(xmlPin.getName());
             pinRequest.setMainCategory(xmlPin.getMainCategory());
             pinRequest.setDescription(xmlPin.getDescription());
+            pinRequest.setCountry(xmlPin.getCountry());
             pinRequest.setCountryCode(xmlPin.getCountryCode());
 
             // Categories
@@ -53,10 +61,20 @@ public class XmlService {
             pinRequest.setLongitude(coordinates.getLongitude());
             pinRequest.setLatitude(coordinates.getLatitude());
 
-            // Set default icon ID if any icon data is missing
+            // Use default values for null attributes
             if (pinRequest.getIconName() == null || pinRequest.getIconImageBytes() == null ||
                     pinRequest.getIconHeight() == 0 || pinRequest.getIconWidth() == 0) {
                 pinRequest.setIconId(1L);
+            }
+            if(pinRequest.getMainCategory() == null){
+                pinRequest.setMainCategory("Imported");
+            }
+            if(pinRequest.getCountryCode() == null || pinRequest.getCountry() == null){
+                GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(pinRequest.getLatitude().toString(), pinRequest.getLongitude().toString()).blockFirst();
+                if(geocodingRecord != null) {
+                    pinRequest.setCountry(geocodingRecord.address().country());
+                    pinRequest.setCountryCode(geocodingRecord.address().country_code());
+                }
             }
 
             pinRequests.add(pinRequest);
@@ -70,6 +88,7 @@ public class XmlService {
         xmlPin.setName(pin.getName());
         xmlPin.setMainCategory(pin.getMainCategory());
         xmlPin.setDescription(pin.getDescription());
+        xmlPin.setCountry(pin.getCountry());
         xmlPin.setCountryCode(pin.getCountryCode());
 
         // Categories

@@ -1,7 +1,9 @@
 package com.yetanothertravelmap.yatm.dto.xml;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pin {
     @JacksonXmlProperty(localName = "name")
     private String name;
@@ -11,6 +13,9 @@ public class Pin {
 
     @JacksonXmlProperty(localName = "description")
     private String description;
+
+    @JacksonXmlProperty(localName = "country")
+    private String country;
 
     @JacksonXmlProperty(localName = "countryCode")
     private String countryCode;
@@ -46,6 +51,14 @@ public class Pin {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 
     public String getCountryCode() {

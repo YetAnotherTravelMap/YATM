@@ -1,8 +1,10 @@
 package com.yetanothertravelmap.yatm.dto.kml;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "kml")
 public class Kml {
     @JacksonXmlProperty(isAttribute = true, localName = "xmlns")

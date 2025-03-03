@@ -97,6 +97,7 @@ public class PinService {
         newPin.setName(pinRequest.getName());
         newPin.setLatitude(pinRequest.getLatitude());
         newPin.setLongitude(pinRequest.getLongitude());
+        newPin.setCountry(pinRequest.getCountry());
         newPin.setCountryCode(pinRequest.getCountryCode());
         newPin.setDescription(pinRequest.getDescription());
         newPin.setMainCategory(pinRequest.getMainCategory());

@@ -7,7 +7,6 @@ import PinPanelState from "./PinPanelState.js";
 import {useMapEvents} from "react-leaflet";
 import PropTypes from "prop-types";
 import IconSelector from "../IconSelector/IconSelector.jsx";
-import pinPanelState from "./PinPanelState.js";
 
 
 function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
@@ -18,6 +17,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
 
     const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
     const [isTempMarkerVisible, setIsTempMarkerVisible] = useState(isInPinCreationState);
+    const [country, setCountry] = useState(isInPinUpdateState ? pinDetailsToUpdate.country : null);
     const [countryCode, setCountryCode] = useState(isInPinUpdateState ? pinDetailsToUpdate.countryCode : null);
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
@@ -45,7 +45,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                 const latSpan = bounds.getNorth() - bounds.getSouth();
                 const adjustedLat = lat - (latSpan  * 0.25) ;
                 map.setView([adjustedLat, lng]);
-                map.clo
             }else{
                 resetPanel()
             }
@@ -94,7 +93,8 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                     lon: lon,
                 }
             });
-            setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road)
+            setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road || response.data[0].address.country)
+            setCountry(response.data[0].address.country)
             setCountryCode(response.data[0].address.country_code)
             console.log(response.data);
         };
@@ -119,6 +119,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         formData.append("name", name);
         formData.append("latitude", tempMarkerPos[0])
         formData.append("longitude", tempMarkerPos[1])
+        formData.append("country", country)
         formData.append("countryCode", countryCode)
         formData.append("mainCategory", mainCategory)
         formData.append("subCategories", selectedSubCategories);
@@ -240,6 +241,9 @@ PinPanel.propTypes = {
         categories: PropTypes.array,
         name: PropTypes.string,
         description: PropTypes.string,
+        country: PropTypes.string,
+        countryCode: PropTypes.string,
+        icon: PropTypes.any
     }),
     notifyPinUpdate: PropTypes.func.isRequired
 }

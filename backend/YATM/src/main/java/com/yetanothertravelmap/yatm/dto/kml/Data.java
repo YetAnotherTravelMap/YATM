@@ -1,7 +1,9 @@
 package com.yetanothertravelmap.yatm.dto.kml;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {
     @JacksonXmlProperty(isAttribute = true, localName = "name")
     private String name;

@@ -44,6 +44,7 @@ public class JsonFileSerializer extends JsonSerializer<JsonFile> {
         jsonGenerator.writeStringField("name", pin.getName());
         jsonGenerator.writeStringField("main_category", pin.getMainCategory());
         jsonGenerator.writeStringField("description", pin.getDescription());
+        jsonGenerator.writeStringField("country", pin.getCountry());
         jsonGenerator.writeStringField("country_code", pin.getCountryCode());
         serializeCategories(jsonGenerator, pin.getCategories());
         serializeIcon(jsonGenerator, pin.getIcon());

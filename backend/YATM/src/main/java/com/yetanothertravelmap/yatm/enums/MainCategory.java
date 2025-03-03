@@ -3,7 +3,8 @@ package com.yetanothertravelmap.yatm.enums;
 public enum MainCategory {
     BEEN("Been"),
     FAVOURITE("Favourite"),
-    WANT2GO("Want2Go");
+    WANT2GO("Want2Go"),
+    IMPORTED("Imported");
 
     public final String name;
 

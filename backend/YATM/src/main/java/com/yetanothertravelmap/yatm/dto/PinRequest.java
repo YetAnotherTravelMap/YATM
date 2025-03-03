@@ -10,11 +10,11 @@ public class PinRequest {
     private String name;
     private Double latitude;
     private Double longitude;
+    private String country;
     private String countryCode;
     private String description;
     private MainCategory mainCategory;
     private List<String> subCategories;
-//    private IconRequest icon;
     private Long iconId;
     private String iconName;
     private MultipartFile iconImage;
@@ -62,6 +62,14 @@ public class PinRequest {
         this.countryCode = countryCode;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -84,6 +92,10 @@ public class PinRequest {
 
     public void setSubCategories(List<String> subCategories) {
         this.subCategories = subCategories;
+    }
+
+    public void addSubCategories(List<String> subCategories) {
+        this.subCategories.addAll(subCategories);
     }
 
     public Long getIconId() {

@@ -1,8 +1,10 @@
 package com.yetanothertravelmap.yatm.dto.xml;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @JacksonXmlRootElement(localName = "TravelMap")
 public class XmlTravelMap {
     @JacksonXmlProperty(localName = "name")
