@@ -1,6 +1,7 @@
 package com.yetanothertravelmap.yatm.controller;
 
 import com.yetanothertravelmap.yatm.dto.PinRequest;
+import com.yetanothertravelmap.yatm.dto.PinWithoutIconImage;
 import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.Icon;
 import com.yetanothertravelmap.yatm.model.Pin;
@@ -13,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/maps")
@@ -51,12 +54,17 @@ public class MapController {
     }
 
     @GetMapping("/{mapId}/pins")
-    public ResponseEntity<Set<Pin>> getPinsByMapId(@PathVariable Long mapId, Principal principal) {
+    public ResponseEntity<Set<PinWithoutIconImage>> getPinsByMapId(@PathVariable Long mapId, Principal principal) {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
-        return ResponseEntity.ok(pins);
+        Set<PinWithoutIconImage> pinWithoutIconImages = pinService.getPins(mapId)
+                .orElse(Collections.emptySet())
+                .stream()
+                .map(PinWithoutIconImage::new)
+                .collect(Collectors.toSet());
+
+        return ResponseEntity.ok(pinWithoutIconImages);
     }
 
     @PostMapping("/{mapId}/pins")

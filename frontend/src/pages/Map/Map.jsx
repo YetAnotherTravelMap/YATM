@@ -31,9 +31,24 @@ export function Map() {
         setLoading(true);
         const userResponse = await authAxios.get("/api/user");
         const pinsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`);
+        const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
         const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+
+        const iconsMap = {};
+        iconsResponse.data.forEach(icon => {
+            iconsMap[icon.id] = icon;
+        });
+        const populatedPins = pinsResponse.data.map(pin => {
+            const iconDetails = iconsMap[pin.iconId];
+            return {
+                ...pin,
+                icon: {
+                    ...iconDetails
+                }
+            };
+        });
         setCategories(categoriesResponse.data);
-        setPins(pinsResponse.data);
+        setPins(populatedPins);
         setLoading(false);
     };
 
