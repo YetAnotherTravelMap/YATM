@@ -27,16 +27,19 @@ const fetchIcon = (count) => {
             factor = (percent - 0.5) * 2
         }
 
-        const r = color1.red + factor * (color2.red - color1.red);
-        const g = color1.green + factor * (color2.green - color1.green);
-        const b = color1.blue + factor * (color2.blue - color1.blue);
+        const r = Math.round(color1.red + factor * (color2.red - color1.red));
+        const g = Math.round(color1.green + factor * (color2.green - color1.green));
+        const b = Math.round(color1.blue + factor * (color2.blue - color1.blue));
 
-        console.log("count", count, "percent", percent, "r", r, "g", g, "b", b);
-        const w = 30
-        const h = 30
+        const clusterStyle = `
+            width: 30px; 
+            height: 30px; 
+            background-color: rgb(${r}, ${g}, ${b}); 
+            box-shadow: 0px 0px 10px rgb(${r}, ${g}, ${b});
+        `;
 
         icons[count] = L.divIcon({
-            html: `<div class=${classes["cluster-marker"]} style="width: ${w}px; height: ${h}px; background-color: rgb(${r},${g},${b}); box-shadow: 0px 0px 10px rgba(${r},${g},${b});">
+            html: `<div class=${classes["cluster-marker"]} style="${clusterStyle}">
                     ${count}
                   </div>`
         });
@@ -110,7 +113,7 @@ function PinCluster({pins, canEditPin, handlePinUpdate, handlePinDelete}) {
             {clusters.map((cluster) => {
                 // every cluster point has coordinates
                 const [longitude, latitude] = cluster.geometry.coordinates;
-                // the point may be either a cluster or a crime point
+                // the point may be either a cluster or a pin
                 const {cluster: isCluster, point_count: pointCount} = cluster.properties;
 
                 // we have a cluster to render

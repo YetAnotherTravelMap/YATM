@@ -55,15 +55,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
         const userResponse = await authAxios.get('/api/user');
         const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
         setSubCategories(categoriesResponse.data.map(category => category.name));
-        console.log(categoriesResponse.data);
     };
 
     const fetchIcons = async () => {
         const userResponse = await authAxios.get('/api/user');
         const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
         setIcons(iconsResponse.data);
-        console.log(icon);
-        console.log(iconsResponse.data);
     };
 
     useEffect(() => {
@@ -96,7 +93,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
             setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road || response.data[0].address.country)
             setCountry(response.data[0].address.country)
             setCountryCode(response.data[0].address.country_code)
-            console.log(response.data);
         };
         fetchPinLocationName();
     }, [tempMarkerPos, authAxios]);
