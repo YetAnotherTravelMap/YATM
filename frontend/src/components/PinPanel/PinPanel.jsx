@@ -217,7 +217,9 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
                     />
 
                     <button id={classes["create-pin-button"]}
-                            onClick={handleSubmit}> {isInPinCreationState ? "Create" : "Update"} Pin
+                            onClick={handleSubmit}
+                            disabled={(name === null || name === "")}>
+                        {isInPinCreationState ? "Create" : "Update"} Pin
                     </button>
                     <button id={classes["cancel-pin"]} onClick={resetPanel}> Cancel</button>
 

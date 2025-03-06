@@ -61,6 +61,12 @@
     border-color: #053e01;
 }
 
+#create-pin-button:disabled {
+    color: #737373;
+    border-color: transparent;
+    cursor: not-allowed;
+}
+
 #cancel-pin {
     margin-left: auto;
     text-align: center;
