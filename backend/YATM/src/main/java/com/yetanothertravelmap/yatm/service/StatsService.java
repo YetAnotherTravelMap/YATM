@@ -46,7 +46,7 @@ public class StatsService {
             for (Pin pin : pins.get()) {
                 if(!countryList.contains(pin.getCountryCode())){
                     countryList.add(pin.getCountryCode());
-                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), "temp"));
+                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), pin.getCountry()));
                     totalCountries++;
                 }
                 else{
@@ -59,10 +59,17 @@ public class StatsService {
         int otherSum = 0;
 
         ArrayList<PieChartCountryEntry> newCountryEntries = new ArrayList<>();
+        String otherCountryString = "";
 
         for (int i = 0; i < countryEntries.size(); i++) {
-            if((double) countryEntries.get(i).getValue() /totalPins < (.0625)){
+            if((double) countryEntries.get(i).getValue() / totalPins < (.0625)){
                 otherSum += countryEntries.get(i).getValue();
+
+                if(countryEntries.get(i).getCountryName().equals("CÃ´te dâ€™Ivoire")){ //Special case for Côte d'Ivoire because of character issues in database
+                    countryEntries.get(i).setCountryName("Côte d'Ivoire");
+                }
+
+                otherCountryString += countryEntries.get(i).getCountryName() + " " + (double) Math.round((100*(((double) countryEntries.get(i).getValue())/totalPins)) * 1000d) / 1000d + "%\n";
             }
             else{
                 newCountryEntries.add(countryEntries.get(i));
@@ -70,7 +77,7 @@ public class StatsService {
         }
 
         if(otherSum > 0){
-            newCountryEntries.add(new PieChartCountryEntry("other", otherSum, getColour(), "Other"));
+            newCountryEntries.add(new PieChartCountryEntry("other", otherSum, getColour(), otherCountryString));
         }
 
 
@@ -78,6 +85,7 @@ public class StatsService {
         stats.add(totalPins.toString());
         stats.add(totalCountries.toString());
         stats.add(newCountryEntries);
+        stats.add(otherCountryString);
 
         return stats;
     }
@@ -88,7 +96,7 @@ public class StatsService {
         int[] rgb = {random.nextInt(0,255),random.nextInt(0,255),random.nextInt(0,255)};
         for (int i = 0; i < 3; i++) {
             if(rgb[i] < 16){
-                colour = colour + "0";
+                colour = "0" + colour;
             }
             colour = colour + Integer.toHexString(rgb[i]);
         }

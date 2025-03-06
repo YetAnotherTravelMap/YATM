@@ -40,4 +40,8 @@ public class PieChartCountryEntry {
     public void addOne(){
         this.value++;
     }
+
+    public void setCountryName(String countryName){
+        this.countryName = countryName;
+    }
 }
