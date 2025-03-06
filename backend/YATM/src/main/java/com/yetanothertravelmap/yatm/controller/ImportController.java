@@ -2,14 +2,11 @@ package com.yetanothertravelmap.yatm.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.yetanothertravelmap.yatm.dto.JsonFile;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
+import com.yetanothertravelmap.yatm.dto.json.FeatureCollection;
 import com.yetanothertravelmap.yatm.dto.kml.Kml;
 import com.yetanothertravelmap.yatm.dto.xml.XmlTravelMap;
-import com.yetanothertravelmap.yatm.service.KmlService;
-import com.yetanothertravelmap.yatm.service.MapService;
-import com.yetanothertravelmap.yatm.service.PinService;
-import com.yetanothertravelmap.yatm.service.XmlService;
+import com.yetanothertravelmap.yatm.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,12 +24,14 @@ public class ImportController {
     private final PinService pinService;
     private final KmlService kmlService;
     private final XmlService xmlService;
+    private final JsonService jsonService;
 
-    public ImportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService) {
+    public ImportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService, JsonService jsonService) {
         this.mapService = mapService;
         this.pinService = pinService;
         this.kmlService = kmlService;
         this.xmlService = xmlService;
+        this.jsonService = jsonService;
     }
 
     @PostMapping("/{mapId}")
@@ -59,8 +58,8 @@ public class ImportController {
             if (fileType.equals("json") || fileType.equals("geojson")) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 String content = new String(file.getBytes());
-                JsonFile jsonFileWithPinRequests = objectMapper.readValue(content, JsonFile.class);
-                pinRequests = jsonFileWithPinRequests.getPinRequests();
+                FeatureCollection jsonFeatureCollection = objectMapper.readValue(content, FeatureCollection.class);
+                pinRequests = jsonService.getPinRequestsFromJsonFeatureCollection(jsonFeatureCollection);
             }else if(fileType.equals("kml")) {
                 XmlMapper xmlMapper = new XmlMapper();
                 Kml kml = xmlMapper.readValue(file.getInputStream(), Kml.class);
