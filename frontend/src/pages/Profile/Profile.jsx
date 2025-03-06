@@ -16,7 +16,23 @@ export function Profile(){
     const [stats, setStats] = useState([]);
     const [exportFormat, setExportFormat] = useState("json");
     const [hoveredIndex, setHoveredIndex] = useState(null);
+    const [otherTooltipVisible, setOtherTooltipVisible] = useState(false);
 
+    const handleMouseOver = (dataIndex) => {
+        setHoveredIndex(dataIndex);
+
+        if (stats.at(2)[dataIndex]?.title === "other") {
+            setOtherTooltipVisible(true);
+        }
+    };
+
+    const handleMouseOut = () => {
+        setHoveredIndex(null);
+    };
+
+    const closeOtherTooltip = () => {
+        setOtherTooltipVisible(false);
+    };
 
     const toggleSettingsPanel = () => {
         setSettingsVisible(!settingsVisible);
@@ -113,12 +129,20 @@ export function Profile(){
                                     fill: "#eee",
                                     textShadow: "1px 1px 2px rgba(0,0,0,1)"
                                 }}
-                                onMouseOver={(_, dataIndex) => setHoveredIndex(dataIndex)}
-                                onMouseOut={() => setHoveredIndex(null)}
+                                onMouseOver={(_, dataIndex) => handleMouseOver(dataIndex)}
+                                onMouseOut={handleMouseOut}
                             />
-                            {hoveredIndex !== null && stats.at(2)[hoveredIndex] && (
-                                <div className={classes["tooltip"]}>
-                                    {stats.at(2)[hoveredIndex].countryName}
+                            {hoveredIndex !== null && stats.at(2)[hoveredIndex]?.title !== "other" && (
+                                <div
+                                    className={classes["tooltip"]}
+                                    dangerouslySetInnerHTML={{ __html: stats.at(2)[hoveredIndex].countryName.replace(/\n/g, "<br>") }}
+                                />
+                            )}
+
+                            {otherTooltipVisible && (
+                                <div className={classes["tooltip-other"]}>
+                                    <button onClick={closeOtherTooltip} className={classes["close-button"]}>✖</button>
+                                    <div dangerouslySetInnerHTML={{ __html: stats.at(2).find(entry => entry.title === "other")?.countryName.replace(/\n/g, "<br>") }} />
                                 </div>
                             )}
                         </div>

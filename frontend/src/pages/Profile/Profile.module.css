@@ -190,7 +190,7 @@ input[type="file"] {
 
 .tooltip {
     position: absolute;
-    top: 150px; /* Adjust as needed */
+    top: 150px;
     left: 50%;
     transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.75);
@@ -199,5 +199,34 @@ input[type="file"] {
     border-radius: 5px;
     font-size: 14px;
     white-space: nowrap;
-    pointer-events: none; /* Prevents interaction issues */
+    pointer-events: none;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.tooltip-other {
+    position: fixed;
+    top: 50%;
+    left: 8%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    max-width: 400px;
+    max-height: 20em;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    text-align: left;
+    z-index: 1000;
 }
