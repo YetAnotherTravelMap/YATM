@@ -25,7 +25,7 @@ export function Map() {
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false); // State for filter menu toggle
     const { authAxios } = useAuth();
 
-    const mainCategories = ["Favourite", "Been", "Want2Go"];
+    const [mainCategories, setMainCategories] = useState(["Favourite", "Been", "Want2Go"]);
 
     const fetchUserPins = async () => {
         setLoading(true);
@@ -38,6 +38,7 @@ export function Map() {
         iconsResponse.data.forEach(icon => {
             iconsMap[icon.id] = icon;
         });
+
         const populatedPins = pinsResponse.data.map(pin => {
             const iconDetails = iconsMap[pin.iconId];
             return {
@@ -47,6 +48,10 @@ export function Map() {
                 }
             };
         });
+
+        if (populatedPins.some(pin => pin.mainCategory === "Imported")){
+            setMainCategories(prev => prev.includes("Imported") ? prev : [...prev, "Imported"]);
+        }
         setCategories(categoriesResponse.data);
         setPins(populatedPins);
         setLoading(false);

@@ -10,9 +10,9 @@
 
 /* Header Menu*/
 .profile-page {
-    display: grid;
-    grid-template-rows: 1fr 5fr 5fr 5fr;
-    height: 100vh;
+    display: flex;
+    flex-direction: column; /* Stack elements naturally */
+    min-height: 100vh; /* Extend background to full page height */
     background-color: #e8fff8;
     font-family: Arial, sans-serif;
 }
@@ -36,7 +36,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 100px;
+    padding: 50px;
 }
 
 .profile-info {
@@ -101,7 +101,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 100px;
+    /*padding: 50px;*/
 }
 
 .stat-container {
@@ -170,16 +170,6 @@ input[type="file"] {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Close button */
-.close-settings-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
 
 .chart-container {
     position: relative;
@@ -190,14 +180,41 @@ input[type="file"] {
 
 .tooltip {
     position: absolute;
-    top: 150px; /* Adjust as needed */
-    left: 50%;
-    transform: translateX(-50%);
+    top: 150px;
     background-color: rgba(0, 0, 0, 0.75);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 14px;
     white-space: nowrap;
-    pointer-events: none; /* Prevents interaction issues */
+    pointer-events: none;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.tooltip-other {
+    position: fixed;
+    top: 50%;
+    left: 8%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    max-width: 400px;
+    max-height: 20em;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    text-align: left;
+    z-index: 1000;
 }
