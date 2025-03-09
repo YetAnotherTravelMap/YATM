@@ -15,14 +15,14 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
     const isInPinCreationState = panelState === PinPanelState.PIN_CREATION
     const isInvisible = panelState === PinPanelState.INVISIBLE
 
-    const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
+    const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [null]);
     const [isTempMarkerVisible, setIsTempMarkerVisible] = useState(isInPinCreationState);
     const [country, setCountry] = useState(isInPinUpdateState ? pinDetailsToUpdate.country : null);
     const [countryCode, setCountryCode] = useState(isInPinUpdateState ? pinDetailsToUpdate.countryCode : null);
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
 
 
@@ -76,7 +76,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
 
         setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
         setIcon(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     }, [panelState, authAxios, pinDetailsToUpdate]);
