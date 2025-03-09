@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class StatsService {
+    private Random random = new Random();
     private final PinRepository pinRepository;
     private final MapRepository mapRepository;
     private final UserRepository userRepository;
@@ -61,8 +62,10 @@ public class StatsService {
         ArrayList<PieChartCountryEntry> newCountryEntries = new ArrayList<>();
         String otherCountryString = "";
 
+        countryEntries.sort((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()));
+
         for (int i = 0; i < countryEntries.size(); i++) {
-            if((double) countryEntries.get(i).getValue() / totalPins < (.0625)){
+            if((double) countryEntries.get(i).getValue() / totalPins < (.05)){
                 otherSum += countryEntries.get(i).getValue();
 
                 if(countryEntries.get(i).getCountryName().equals("CÃ´te dâ€™Ivoire")){ //Special case for Côte d'Ivoire because of character issues in database
@@ -91,12 +94,11 @@ public class StatsService {
     }
 
     public String getColour(){
-        Random random = new Random();
         String colour = "#";
         int[] rgb = {random.nextInt(0,255),random.nextInt(0,255),random.nextInt(0,255)};
         for (int i = 0; i < 3; i++) {
             if(rgb[i] < 16){
-                colour = "0" + colour;
+                colour = colour + "0";
             }
             colour = colour + Integer.toHexString(rgb[i]);
         }
