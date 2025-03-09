@@ -10,9 +10,9 @@
 
 /* Header Menu*/
 .profile-page {
-    display: grid;
-    grid-template-rows: 1fr 5fr 5fr 5fr;
-    height: 100vh;
+    display: flex;
+    flex-direction: column; /* Stack elements naturally */
+    min-height: 100vh; /* Extend background to full page height */
     background-color: #e8fff8;
     font-family: Arial, sans-serif;
 }
@@ -36,7 +36,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 100px;
+    padding: 50px;
 }
 
 .profile-info {
@@ -101,7 +101,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    padding: 100px;
+    /*padding: 50px;*/
 }
 
 .stat-container {
