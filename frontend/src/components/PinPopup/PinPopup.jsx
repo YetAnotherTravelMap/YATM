@@ -19,6 +19,7 @@ function PinPopup({pin, onDeleteRequest, onEditRequest, canEditPin}) {
 
     return (<>
         <h2>{pin.name}</h2>
+        <div>{pin.country}</div>
         <br/>
 
         <h3>Categories: </h3>
@@ -51,6 +52,7 @@ PinPopup.propTypes = {
         categories: PropTypes.array,
         name: PropTypes.string,
         description: PropTypes.string,
+        country: PropTypes.string
     }).isRequired,
     onDeleteRequest: PropTypes.func.isRequired,
     onEditRequest: PropTypes.func.isRequired,

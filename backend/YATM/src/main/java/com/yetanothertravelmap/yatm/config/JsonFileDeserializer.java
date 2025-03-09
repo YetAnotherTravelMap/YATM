@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.yetanothertravelmap.yatm.dto.JsonFile;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
+import com.yetanothertravelmap.yatm.model.GeocodingRecord;
+import com.yetanothertravelmap.yatm.service.GeocodingService;
 import org.springframework.boot.jackson.JsonComponent;
 
 import java.io.IOException;
@@ -36,6 +38,8 @@ public class JsonFileDeserializer extends JsonDeserializer<JsonFile> {
                 pin.setMainCategory(mainCategory);
                 String description = properties.has("description") ? properties.get("description").asText() : "";
                 pin.setDescription(description);
+                String country = properties.has("country") ? properties.get("country").asText() : "";
+                pin.setCountry(country);
                 String countryCode = properties.has("country_code") ? properties.get("country_code").asText() : "";
                 pin.setCountryCode(countryCode);
 
@@ -60,6 +64,14 @@ public class JsonFileDeserializer extends JsonDeserializer<JsonFile> {
                 }else {
                     Random rand = new Random();
                     pin.setIconId((long) (rand.nextInt(9)+1));
+                }
+
+                // Use default values for null attributes
+                if(pin.getIconName() == null || pin.getIconImageBytes() == null || pin.getIconHeight() == 0 || pin.getIconWidth() == 0) {
+                    pin.setIconId(1L);
+                }
+                if(pin.getMainCategory() == null){
+                    pin.setMainCategory("Imported");
                 }
 
                 pinRequests.add(pin);

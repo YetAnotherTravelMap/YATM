@@ -1,6 +1,8 @@
 import classes from "./IconSelector.module.css"
 import PropTypes from "prop-types";
 import {useState} from "react";
+import Resizer from "react-image-file-resizer";
+
 
 const IconSelectorState = {
     ICON_DISPLAY: 1,
@@ -27,26 +29,21 @@ function IconSelector({icon, setIcon, icons}) {
             }
             img.src = dataURL
         })
-        const getScaledDimensions = dimensions => {
-            const {width, height} = dimensions;
-            const maxWidth = 35;
-            const maxHeight = 63;
-            const widthScale = maxWidth / width;
-            const heightScale = maxHeight / height;
-            const scale =  Math.min(widthScale, heightScale);
-            return {width: Math.max(Math.round(width*scale), 10), height: Math.max(Math.round(height*scale), 10)};
-        }
 
-        const fileAsDataURL = URL.createObjectURL(file)
-        const dimensions = await getHeightAndWidthFromDataUrl(fileAsDataURL)
-        const {width, height} = getScaledDimensions(dimensions)
-        console.log(width, height);
+        const resizeFile = (file) =>
+            new Promise((resolve) => {
+                Resizer.imageFileResizer(file,35,63,"PNG",100,0,
+                    (uri) => {
+                        resolve(uri);
+                    },
+                    "base64"
+                );
+            });
 
-
-
+        const image = await resizeFile(file);
+        const {width, height} = await getHeightAndWidthFromDataUrl(image)
         setIcon({id: -1, image: file, iconName: file.name, width: width, height: height});
         setSelectorState(IconSelectorState.ICON_DISPLAY)
-        console.log(dimensions, file);
     }
 
     return (<div className={classes["main_container"]}>
@@ -91,13 +88,13 @@ IconSelector.propTypes = {
     icon: PropTypes.shape({
         id: PropTypes.number,
         iconName: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired
+        image: PropTypes.any.isRequired,
     }),
     setIcon: PropTypes.func.isRequired,
     icons: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number,
         iconName: PropTypes.string.isRequired,
-        image: PropTypes.string.isRequired
+        image: PropTypes.any.isRequired,
     }))
 }
 

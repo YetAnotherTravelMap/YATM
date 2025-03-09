@@ -32,15 +32,14 @@ public class PinService {
         return pinRepository.findByMap_MapId(mapId);
     }
 
-    public boolean createPin(PinRequest pinRequest, Long mapId) {
+    public Pin createPin(PinRequest pinRequest, Long mapId) {
         Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
         if (mapOptional.isEmpty()) {
-            return false;
+            return null;
         }
 
         Pin newPin = createPinFromPinRequest(pinRequest, mapOptional.get());
-        pinRepository.save(newPin);
-        return true;
+        return pinRepository.save(newPin);
     }
 
     public boolean createMultiplePins(List<PinRequest> pinRequests, Long mapId) {
@@ -58,7 +57,7 @@ public class PinService {
         return true;
     }
 
-    public boolean updatePin(PinRequest pinRequest) {
+    public Pin updatePin(PinRequest pinRequest) {
         Optional<Pin> pinOptional = pinRepository.findByPinId(pinRequest.getId());
         if (pinOptional.isPresent()) {
             Pin pin = pinOptional.get();
@@ -74,11 +73,11 @@ public class PinService {
             pin.setCategories(subCategories);
             pin.setIcon(getOrCreateNewIcon(pinRequest, pin.getMap()));
 
-            pinRepository.save(pin);
+            Pin updatedPin = pinRepository.save(pin);
             categoryService.deleteUnusedCategories();
-            return true;
+            return updatedPin;
         }
-        return false;
+        return null;
     }
 
     public boolean deletePin(Long mapId, Long pinId) {
@@ -97,6 +96,7 @@ public class PinService {
         newPin.setName(pinRequest.getName());
         newPin.setLatitude(pinRequest.getLatitude());
         newPin.setLongitude(pinRequest.getLongitude());
+        newPin.setCountry(pinRequest.getCountry());
         newPin.setCountryCode(pinRequest.getCountryCode());
         newPin.setDescription(pinRequest.getDescription());
         newPin.setMainCategory(pinRequest.getMainCategory());

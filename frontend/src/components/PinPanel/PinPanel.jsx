@@ -7,22 +7,22 @@ import PinPanelState from "./PinPanelState.js";
 import {useMapEvents} from "react-leaflet";
 import PropTypes from "prop-types";
 import IconSelector from "../IconSelector/IconSelector.jsx";
-import pinPanelState from "./PinPanelState.js";
 
 
-function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdate}) {
+function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, updatePin}) {
 
     const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT && !!pinDetailsToUpdate
     const isInPinCreationState = panelState === PinPanelState.PIN_CREATION
     const isInvisible = panelState === PinPanelState.INVISIBLE
 
-    const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [44, -77]);
+    const [tempMarkerPos, setTempMarkerPos] = useState(isInPinUpdateState ? [pinDetailsToUpdate.latitude, pinDetailsToUpdate.longitude] : [null]);
     const [isTempMarkerVisible, setIsTempMarkerVisible] = useState(isInPinCreationState);
+    const [country, setCountry] = useState(isInPinUpdateState ? pinDetailsToUpdate.country : null);
     const [countryCode, setCountryCode] = useState(isInPinUpdateState ? pinDetailsToUpdate.countryCode : null);
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
 
 
@@ -45,7 +45,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                 const latSpan = bounds.getNorth() - bounds.getSouth();
                 const adjustedLat = lat - (latSpan  * 0.25) ;
                 map.setView([adjustedLat, lng]);
-                map.clo
             }else{
                 resetPanel()
             }
@@ -56,15 +55,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         const userResponse = await authAxios.get('/api/user');
         const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
         setSubCategories(categoriesResponse.data.map(category => category.name));
-        console.log(categoriesResponse.data);
     };
 
     const fetchIcons = async () => {
         const userResponse = await authAxios.get('/api/user');
         const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
         setIcons(iconsResponse.data);
-        console.log(icon);
-        console.log(iconsResponse.data);
     };
 
     useEffect(() => {
@@ -80,7 +76,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
 
         setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
+        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
         setIcon(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     }, [panelState, authAxios, pinDetailsToUpdate]);
@@ -94,9 +90,9 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
                     lon: lon,
                 }
             });
-            setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road)
+            setName(response.data[0].name || response.data[0].address.neighbourhood || response.data[0].address.road || response.data[0].address.country)
+            setCountry(response.data[0].address.country)
             setCountryCode(response.data[0].address.country_code)
-            console.log(response.data);
         };
         fetchPinLocationName();
     }, [tempMarkerPos, authAxios]);
@@ -108,7 +104,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }else if (panelState === PinPanelState.PIN_EDIT) {
             await handlePinUpdate();
         }
-        notifyPinUpdate()
         fetchCategories()
         fetchIcons()
     }
@@ -119,6 +114,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         formData.append("name", name);
         formData.append("latitude", tempMarkerPos[0])
         formData.append("longitude", tempMarkerPos[1])
+        formData.append("country", country)
         formData.append("countryCode", countryCode)
         formData.append("mainCategory", mainCategory)
         formData.append("subCategories", selectedSubCategories);
@@ -132,11 +128,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }
 
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+        const createdPin = await authAxios.post(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         });
+        createPin(createdPin.data);
         resetPanel()
     }
 
@@ -156,11 +153,12 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, notifyPinUpdat
         }
 
         const userResponse = await authAxios.get('/api/user');
-        await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
+        const updatedPin = await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`, formData, {
             headers: {
                 "Content-Type": "multipart/form-data",
             }
         });
+        updatePin(updatedPin.data);
         resetPanel()
     }
 
@@ -240,8 +238,12 @@ PinPanel.propTypes = {
         categories: PropTypes.array,
         name: PropTypes.string,
         description: PropTypes.string,
+        country: PropTypes.string,
+        countryCode: PropTypes.string,
+        icon: PropTypes.any
     }),
-    notifyPinUpdate: PropTypes.func.isRequired
+    createPin: PropTypes.func.isRequired,
+    updatePin: PropTypes.func.isRequired
 }
 
 export default PinPanel;

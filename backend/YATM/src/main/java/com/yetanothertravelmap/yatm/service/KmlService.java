@@ -6,10 +6,13 @@ import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.kml.*;
 import com.yetanothertravelmap.yatm.model.Category;
+import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import com.yetanothertravelmap.yatm.model.Icon;
 import com.yetanothertravelmap.yatm.model.Pin;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -17,6 +20,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class KmlService {
+
+    private final GeocodingService geocodingService;
+
+    public KmlService(GeocodingService geocodingService) {
+        this.geocodingService = geocodingService;
+    }
 
     public Kml getKmlFromPins(Set<Pin> pins) {
         Kml kml = new Kml();
@@ -35,9 +44,15 @@ public class KmlService {
 
     public List<PinRequest> getPinRequestsFromKml(Kml kml) {
         List<PinRequest> pins = new ArrayList<>();
+
+        if(kml.getDocument().getPlacemarks() == null) {
+            return pins;
+        }
+
         for (Placemark placemark : kml.getDocument().getPlacemarks()) {
             PinRequest pin = new PinRequest();
             pin.setName(placemark.getName());
+            pin.setDescription(placemark.getDescription());
 
             // Extract coordinates
             String[] coords = placemark.getPoint().getCoordinates().split(",");
@@ -45,39 +60,62 @@ public class KmlService {
             pin.setLatitude(Double.parseDouble(coords[1]));
 
             // Extract extended data
-            for (Data data : placemark.getExtendedData().getDataList()) {
-                switch (data.getName()) {
-                    case "main_category":
-                        pin.setMainCategory(data.getValue());
-                        break;
-                    case "description":
-                        pin.setDescription(data.getValue());
-                        break;
-                    case "country_code":
-                        pin.setCountryCode(data.getValue());
-                        break;
-                    case "categories":
-                        String[] categories = data.getValue().split("\\|\\|");
-                        List<String> filteredCategories = Arrays.stream(categories).filter(s -> !s.isEmpty()).toList();
-                        pin.setSubCategories(filteredCategories);
-                        break;
-                    case "icon_name":
-                        pin.setIconName(data.getValue());
-                        break;
-                    case "icon_width":
-                        pin.setIconWidth(Integer.parseInt(data.getValue()));
-                        break;
-                    case "icon_height":
-                        pin.setIconHeight(Integer.parseInt(data.getValue()));
-                        break;
-                    case "icon_image":
-                        byte[] image = Base64.getDecoder().decode(data.getValue());
-                        pin.setIconImageBytes(image);
-                        break;
+            if(placemark.getExtendedData() != null && placemark.getExtendedData().getDataList() != null) {
+                for (Data data : placemark.getExtendedData().getDataList()) {
+                    switch (data.getName()) {
+                        case "main_category":
+                            pin.setMainCategory(data.getValue());
+                            break;
+                        case "description":
+                            if (pin.getDescription() == null) pin.setDescription(data.getValue());
+                            break;
+                        case "country":
+                            pin.setCountry(data.getValue());
+                            break;
+                        case "country_code":
+                            pin.setCountryCode(data.getValue());
+                            break;
+                        case "categories":
+                        case "flags":
+                            String regex = data.getName().equals("categories") ? "\\|\\|" : ",";
+                            String[] categories = data.getValue().split(regex);
+                            List<String> filteredCategories = Arrays.stream(categories).filter(s -> !s.isEmpty()).toList();
+                            if (pin.getSubCategories() == null) {
+                                pin.setSubCategories(filteredCategories);
+                            }else{
+                                pin.addSubCategories(filteredCategories);
+                            }
+                            break;
+                        case "icon_name":
+                            pin.setIconName(data.getValue());
+                            break;
+                        case "icon_width":
+                            pin.setIconWidth(Integer.parseInt(data.getValue()));
+                            break;
+                        case "icon_height":
+                            pin.setIconHeight(Integer.parseInt(data.getValue()));
+                            break;
+                        case "icon_image":
+                            byte[] image = Base64.getDecoder().decode(data.getValue().strip());
+                            pin.setIconImageBytes(image);
+                            break;
+                    }
                 }
             }
+
+            // Use default values for null attributes
             if(pin.getIconName() == null || pin.getIconImageBytes() == null || pin.getIconHeight() == 0 || pin.getIconWidth() == 0) {
                 pin.setIconId(1L);
+            }
+            if(pin.getMainCategory() == null){
+                pin.setMainCategory("Imported");
+            }
+            if(pin.getCountryCode() == null || pin.getCountry() == null){
+                GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(pin.getLatitude().toString(), pin.getLongitude().toString()).blockFirst();
+                if(geocodingRecord != null){
+                    pin.setCountry(geocodingRecord.address().country());
+                    pin.setCountryCode(geocodingRecord.address().country_code());
+                }
             }
             pins.add(pin);
         }
@@ -87,12 +125,13 @@ public class KmlService {
     private Placemark toPlacemark(Pin pin) {
         Placemark placemark = new Placemark();
         placemark.setName(pin.getName());
+        placemark.setDescription(pin.getDescription());
 
         // ExtendedData
         ExtendedData extendedData = new ExtendedData();
         List<Data> dataList = new ArrayList<>();
         dataList.add(createData("main_category", pin.getMainCategory()));
-        dataList.add(createData("description", pin.getDescription()));
+        dataList.add(createData("country", pin.getCountry()));
         dataList.add(createData("country_code", pin.getCountryCode()));
 
         // Convert categories to a pipe-delimited string

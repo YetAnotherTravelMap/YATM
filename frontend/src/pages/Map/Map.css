@@ -8,6 +8,11 @@
     height: 100vh;
 }
 
+.leaflet-div-icon {
+    background: none !important;
+    border: none !important;
+}
+
 /* Circular button for filter menu */
 .filter-button {
     background-color: #0E5738FF;
@@ -31,6 +36,8 @@
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
+    max-height: 30em;
+    overflow-y: auto;
     max-width: 250px;
 }
 

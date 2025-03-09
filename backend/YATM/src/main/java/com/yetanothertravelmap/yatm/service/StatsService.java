@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class StatsService {
+    private Random random = new Random();
     private final PinRepository pinRepository;
     private final MapRepository mapRepository;
     private final UserRepository userRepository;
@@ -46,7 +47,7 @@ public class StatsService {
             for (Pin pin : pins.get()) {
                 if(!countryList.contains(pin.getCountryCode())){
                     countryList.add(pin.getCountryCode());
-                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), "temp"));
+                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), pin.getCountry()));
                     totalCountries++;
                 }
                 else{
@@ -59,10 +60,19 @@ public class StatsService {
         int otherSum = 0;
 
         ArrayList<PieChartCountryEntry> newCountryEntries = new ArrayList<>();
+        String otherCountryString = "";
+
+        countryEntries.sort((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()));
 
         for (int i = 0; i < countryEntries.size(); i++) {
-            if((double) countryEntries.get(i).getValue() /totalPins < (.0625)){
+            if((double) countryEntries.get(i).getValue() / totalPins < (.05)){
                 otherSum += countryEntries.get(i).getValue();
+
+                if(countryEntries.get(i).getCountryName().equals("CÃ´te dâ€™Ivoire")){ //Special case for Côte d'Ivoire because of character issues in database
+                    countryEntries.get(i).setCountryName("Côte d'Ivoire");
+                }
+
+                otherCountryString += countryEntries.get(i).getCountryName() + " " + (double) Math.round((100*(((double) countryEntries.get(i).getValue())/totalPins)) * 1000d) / 1000d + "%\n";
             }
             else{
                 newCountryEntries.add(countryEntries.get(i));
@@ -70,7 +80,7 @@ public class StatsService {
         }
 
         if(otherSum > 0){
-            newCountryEntries.add(new PieChartCountryEntry("other", otherSum, getColour(), "Other"));
+            newCountryEntries.add(new PieChartCountryEntry("other", otherSum, getColour(), otherCountryString));
         }
 
 
@@ -78,12 +88,12 @@ public class StatsService {
         stats.add(totalPins.toString());
         stats.add(totalCountries.toString());
         stats.add(newCountryEntries);
+        stats.add(otherCountryString);
 
         return stats;
     }
 
     public String getColour(){
-        Random random = new Random();
         String colour = "#";
         int[] rgb = {random.nextInt(0,255),random.nextInt(0,255),random.nextInt(0,255)};
         for (int i = 0; i < 3; i++) {

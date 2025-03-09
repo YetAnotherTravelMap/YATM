@@ -1,7 +1,7 @@
 import "./Map.css";
 import "leaflet/dist/leaflet.css";
 
-import { MapContainer, Marker, Popup } from "react-leaflet";
+import { MapContainer } from "react-leaflet";
 import { MapLibreTileLayer } from "../../components/MapLibreTileLayer/MapLibreTileLayer.ts";
 import mapStyle from "../../assets/MapStyles/WorldNavigationMap_Esri_S.json";
 import SearchBox from "../../components/SearchBox/SearchBox.jsx";
@@ -9,30 +9,52 @@ import Control from "react-leaflet-custom-control";
 import ProfilePanel from "../../components/ProfilePanel/ProfilePanel.jsx";
 import { useState, useEffect } from "react";
 import PinPanel from "../../components/PinPanel/PinPanel.jsx";
-import PinPopup from "../../components/PinPopup/PinPopup.jsx";
 import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
-import { Icon } from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay.jsx";
+import PinCluster from "../../components/PinCluster/PinCluster.jsx";
 
 export function Map() {
     const [pinPanelState, setPinPanelState] = useState(PinPanelState.INVISIBLE);
     const [pinDetailsToUpdate, setPinDetailsToUpdate] = useState(null);
     const [pins, setPins] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedMainCategories, setSelectedMainCategories] = useState([]);
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false); // State for filter menu toggle
     const { authAxios } = useAuth();
 
-    const mainCategories = ["Favourite", "Been", "Want2Go"];
+    const [mainCategories, setMainCategories] = useState(["Favourite", "Been", "Want2Go"]);
 
     const fetchUserPins = async () => {
+        setLoading(true);
         const userResponse = await authAxios.get("/api/user");
         const pinsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/pins`);
+        const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
         const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+
+        const iconsMap = {};
+        iconsResponse.data.forEach(icon => {
+            iconsMap[icon.id] = icon;
+        });
+
+        const populatedPins = pinsResponse.data.map(pin => {
+            const iconDetails = iconsMap[pin.iconId];
+            return {
+                ...pin,
+                icon: {
+                    ...iconDetails
+                }
+            };
+        });
+
+        if (populatedPins.some(pin => pin.mainCategory === "Imported")){
+            setMainCategories(prev => prev.includes("Imported") ? prev : [...prev, "Imported"]);
+        }
         setCategories(categoriesResponse.data);
-        setPins(pinsResponse.data);
+        setPins(populatedPins);
+        setLoading(false);
     };
 
     const handleMainCategoryChange = (category) => {
@@ -70,10 +92,11 @@ export function Map() {
     async function handlePinDelete(pin) {
         const userResponse = await authAxios.get("/api/user");
         await authAxios.delete(`/api/maps/${userResponse.data.mapIdArray[0]}/pins/${pin.pinId}`);
-        await fetchUserPins();
+        setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId))])
     }
 
-    return (
+    return (<>
+        {loading && <LoadingOverlay/>}
         <MapContainer
             center={[45.384, -75.697]}
             zoom={5}
@@ -86,6 +109,7 @@ export function Map() {
             maxZoom={19}
             bounceAtZoomLimits={false}
             maxBoundsViscosity={1}
+            preferCanvas={true}
         >
             <Control prepend position="topleft">
                 <SearchBox />
@@ -117,7 +141,7 @@ export function Map() {
                             </label>
                         ))}
 
-                        <h4>Subcategories</h4>
+                        {categories.length > 0 && <h4>Subcategories</h4>}
                         {categories.map((category) => (
                             <label key={category.id} className="category-label">
                                 <input
@@ -137,7 +161,18 @@ export function Map() {
                     panelState={pinPanelState}
                     setPanelState={setPinPanelState}
                     pinDetailsToUpdate={pinDetailsToUpdate}
-                    notifyPinUpdate={fetchUserPins}
+                    createPin={async (pin) => {
+                        setPins(pins => [...pins, pin])
+                        const userResponse = await authAxios.get("/api/user");
+                        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+                        setCategories(categoriesResponse.data);
+                    }}
+                    updatePin={async (pin) => {
+                        setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId)), pin])
+                        const userResponse = await authAxios.get("/api/user");
+                        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
+                        setCategories(categoriesResponse.data);
+                    }}
                 />
             </Control>
 
@@ -145,34 +180,8 @@ export function Map() {
                 attribution="Esri, TomTom, Garmin, FAO, NOAA, USGS, &copy; OpenStreetMap contributors, and the GIS User Community"
                 url={mapStyle}
             />
+            <PinCluster pins={filteredPins} canEditPin={pinPanelState !== PinPanelState.PIN_CREATION} handlePinUpdate={handlePinUpdate} handlePinDelete={handlePinDelete} />
 
-            <MarkerClusterGroup chunkedLoading>
-                {filteredPins.map((pin) => {
-                    const markerIcon = pin.icon
-                        ? new Icon({
-                            iconUrl: `data:image/png;base64,${pin.icon.image}`,
-                            iconSize: [pin.icon.width, pin.icon.height],
-                        })
-                        : null;
-
-                    return (
-                        <Marker
-                            key={pin.pinId}
-                            position={[pin.latitude, pin.longitude]}
-                            {...(markerIcon && { icon: markerIcon })}
-                        >
-                            <Popup>
-                                <PinPopup
-                                    pin={pin}
-                                    canEditPin={pinPanelState !== PinPanelState.PIN_CREATION}
-                                    onEditRequest={() => handlePinUpdate(pin)}
-                                    onDeleteRequest={() => handlePinDelete(pin)}
-                                />
-                            </Popup>
-                        </Marker>
-                    );
-                })}
-            </MarkerClusterGroup>
         </MapContainer>
-    );
+    </>);
 }
