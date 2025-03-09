@@ -170,16 +170,6 @@ input[type="file"] {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Close button */
-.close-settings-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    background: none;
-    border: none;
-    cursor: pointer;
-}
 
 .chart-container {
     position: relative;
@@ -191,8 +181,6 @@ input[type="file"] {
 .tooltip {
     position: absolute;
     top: 150px;
-    left: 50%;
-    transform: translateX(-50%);
     background-color: rgba(0, 0, 0, 0.75);
     color: white;
     padding: 5px 10px;
