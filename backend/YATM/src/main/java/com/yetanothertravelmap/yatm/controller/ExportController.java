@@ -3,14 +3,11 @@ package com.yetanothertravelmap.yatm.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.yetanothertravelmap.yatm.dto.JsonFile;
+import com.yetanothertravelmap.yatm.dto.json.FeatureCollection;
 import com.yetanothertravelmap.yatm.dto.kml.Kml;
 import com.yetanothertravelmap.yatm.dto.xml.XmlTravelMap;
 import com.yetanothertravelmap.yatm.model.Pin;
-import com.yetanothertravelmap.yatm.service.KmlService;
-import com.yetanothertravelmap.yatm.service.MapService;
-import com.yetanothertravelmap.yatm.service.PinService;
-import com.yetanothertravelmap.yatm.service.XmlService;
+import com.yetanothertravelmap.yatm.service.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,23 +31,25 @@ public class ExportController {
     private final PinService pinService;
     private final KmlService kmlService;
     private final XmlService xmlService;
+    private final JsonService jsonService;
 
-    public ExportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService) {
+    public ExportController(MapService mapService, PinService pinService, KmlService kmlService, XmlService xmlService, JsonService jsonService) {
         this.mapService = mapService;
         this.pinService = pinService;
         this.kmlService = kmlService;
         this.xmlService = xmlService;
+        this.jsonService = jsonService;
     }
 
     @GetMapping("/{mapId}/json")
-    public ResponseEntity<JsonFile> getJsonFile(@PathVariable Long mapId, Principal principal) {
+    public ResponseEntity<FeatureCollection> getJsonFile(@PathVariable Long mapId, Principal principal) throws JsonProcessingException {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
-        JsonFile json = new JsonFile(pins);
-        return ResponseEntity.ok(json);
+        FeatureCollection jsonFeatureCollection = jsonService.getJsonFeatureCollectionFromPins(pins);
+        return ResponseEntity.ok(jsonFeatureCollection);
     }
 
     @GetMapping("/{mapId}/kml")
