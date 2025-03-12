@@ -9,13 +9,12 @@ import com.yetanothertravelmap.yatm.repository.PinRepository;
 import com.yetanothertravelmap.yatm.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.awt.*;
 import java.util.*;
 import java.util.List;
 
 @Service
 public class StatsService {
-    private Random random = new Random();
+    private final Random random = new Random();
     private final PinRepository pinRepository;
     private final MapRepository mapRepository;
     private final UserRepository userRepository;
@@ -45,13 +44,13 @@ public class StatsService {
             totalPins += pins.get().size();
 
             for (Pin pin : pins.get()) {
-                if(!countryList.contains(pin.getCountryCode())){
-                    countryList.add(pin.getCountryCode());
-                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode(), 1, getColour(), pin.getCountry()));
+                if(!countryList.contains(pin.getCountryCode().toUpperCase())){
+                    countryList.add(pin.getCountryCode().toUpperCase());
+                    countryEntries.add(new PieChartCountryEntry(pin.getCountryCode().toUpperCase(), 1, getColour(), pin.getCountry()));
                     totalCountries++;
                 }
                 else{
-                    int index = countryList.indexOf(pin.getCountryCode());
+                    int index = countryList.indexOf(pin.getCountryCode().toUpperCase());
                     countryEntries.get(index).addOne();
                 }
             }
