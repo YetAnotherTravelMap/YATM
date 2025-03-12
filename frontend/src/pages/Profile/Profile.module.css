@@ -36,7 +36,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 50px;
+    padding: 100px;
 }
 
 .profile-info {
@@ -101,7 +101,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    /*padding: 50px;*/
+    padding: 50px;
 }
 
 .stat-container {
@@ -147,19 +147,6 @@ input[type="file"] {
     margin-top: 10px;
 }
 
-/* Fullscreen overlay */
-.settings {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensure it's on top of other content */
-}
 
 .settings-content {
     background-color: white;

@@ -22,7 +22,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
 
     const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
+    const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
 
 
@@ -76,7 +76,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
 
         setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
-        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
+        setName(isInPinUpdateState ? pinDetailsToUpdate.name : "");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
         setIcon(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     }, [panelState, authAxios, pinDetailsToUpdate]);
