@@ -1,11 +1,13 @@
 .selected-option {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     background-color: #555555;
     color: white;
     padding: 0 12px;
     border-radius: 25px;
     margin: 3px;
+    min-height: 21px;
 }
 
 .selected-option-close-btn {
@@ -18,4 +20,25 @@
 
 .selected-option-close-btn:hover {
     opacity: 0.7;
+}
+
+.icon-button {
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    border: none;
+    transition: opacity 0.3s ease;
+    height: 25px;
+}
+.icon-button:hover {
+    opacity: 0.7;
+}
+.icon {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+.remove-icon{
+    width: 24px;
+    height: 24px;
 }

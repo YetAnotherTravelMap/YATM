@@ -46,11 +46,21 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
 
     return (
         <>
-            <div>
+            <div className={classes["category-tag-container"]}>
                 {selectedOptions.map(option => (
                     <CategoryTag key={option} value={option} onClose={() => removeOption(option)}/>
                 ))}
-                {!isInputVisible && <CategoryTag key="+" value={" + "} onClick={() => setIsInputVisible(true)}/>}
+                {!isInputVisible &&
+                    <div className={classes["add-button-container"]}>
+                        <button onClick={() => setIsInputVisible(true)} className={classes["icon-button"]}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                 className={classes["add-icon"]} viewBox="0 0 16 16">
+                                <path
+                                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                            </svg>
+                        </button>
+                    </div>
+                }
             </div>
             {isInputVisible && (<div className={classes["multi-select-input-container"]}>
                     <input

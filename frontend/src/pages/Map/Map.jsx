@@ -79,20 +79,7 @@ export function Map() {
         setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId))])
     }
 
-    async function handleCategoryEdit(category) {
-        const newCategoryName = prompt("Enter new category name: ");
-        if (newCategoryName === null || newCategoryName === "") {
-            return
-        }
-
-        const userResponse = await authAxios.get("/api/user");
-        const categoryUpdateResponse = await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/categories/${category.id}`, {
-                categoryId: category.id,
-                categoryNewName: newCategoryName,
-        });
-
-        if (categoryUpdateResponse.status !== 200) return;
-
+    async function handleCategoryEdit(category, newCategoryName) {
         setCategories(prevCategories =>
             prevCategories.map(c =>
                 c.id === category.id ? { ...c, name: newCategoryName } : c

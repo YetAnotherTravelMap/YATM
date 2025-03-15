@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import classes from "./CategoryFilter.module.css"
 import {useState} from "react";
+import CategoryNameEditor from "../CategoryNameEditor/CategoryNameEditor.jsx";
 
 function CategoryFilter({ mainCategories, selectedMainCategories, setSelectedMainCategories, categories, selectedCategories, setSelectedCategories, handleCategoryEdit}) {
 
     const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false); // State for filter menu toggle
+    const [categoryToEdit, setCategoryToEdit] = useState(null);
 
     const handleMainCategoryChange = (category) => {
         setSelectedMainCategories((prev) =>
@@ -61,7 +63,7 @@ function CategoryFilter({ mainCategories, selectedMainCategories, setSelectedMai
                             </label>
                             { handleCategoryEdit &&
                                 <button className={`${classes["edit-icon-button"]}`}
-                                        onClick={() => handleCategoryEdit(category)}>
+                                        onClick={() => setCategoryToEdit(category)}>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                          className={`${classes["edit-icon"]}`}>
                                         <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z"/>
@@ -72,6 +74,7 @@ function CategoryFilter({ mainCategories, selectedMainCategories, setSelectedMai
                     ))}
                 </div>
             )}
+            { categoryToEdit && <CategoryNameEditor category={categoryToEdit} handleEdit={handleCategoryEdit} closeEditor={() => setCategoryToEdit(null)} />}
         </>
     );
 }
