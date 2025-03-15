@@ -29,6 +29,7 @@
     color: #505050;
     border: none;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 /* Top Section */
@@ -73,6 +74,7 @@
 .cog-icon{
     width: 30px;
     height: 30px;
+    margin-right: 3px;
 }
 
 .user-details {
