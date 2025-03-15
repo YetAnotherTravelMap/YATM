@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.json.*;
+import com.yetanothertravelmap.yatm.enums.MainCategory;
 import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import com.yetanothertravelmap.yatm.model.Pin;
@@ -48,11 +49,19 @@ public class JsonService {
 
             Properties props = feature.getProperties();
             pinRequest.setName(props.getName() != null ? props.getName() : "Unnamed Pin");
-            pinRequest.setMainCategory(props.getMainCategory() != null ? props.getMainCategory() : "Imported");
             pinRequest.setDescription(props.getDescription() != null ? props.getDescription() : "");
             pinRequest.setCountry(props.getCountry() != null ? props.getCountry() : "");
             pinRequest.setCountryCode(props.getCountryCode() != null ? props.getCountryCode() : "");
-            pinRequest.setSubCategories(props.getCategories() != null ? props.getCategories() : List.of());
+            pinRequest.setSubCategories(props.getCategories() != null ? props.getCategories().stream().map(c -> c + " (Imp)").toList() : List.of());
+
+            if (props.getMainCategory() == null){
+                pinRequest.setMainCategory("Imported");
+            }else if (!MainCategory.isValidCategory(props.getMainCategory())) {
+                pinRequest.setMainCategory("Imported");
+                pinRequest.addSubCategories(List.of(props.getMainCategory() + " (Imp)"));
+            }else {
+                pinRequest.setMainCategory(props.getMainCategory());
+            }
 
             if (props.getIcon() != null) {
                 Icon icon = props.getIcon();

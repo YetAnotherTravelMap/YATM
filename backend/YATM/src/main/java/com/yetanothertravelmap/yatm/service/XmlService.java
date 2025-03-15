@@ -2,6 +2,7 @@ package com.yetanothertravelmap.yatm.service;
 
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.xml.*;
+import com.yetanothertravelmap.yatm.enums.MainCategory;
 import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import com.yetanothertravelmap.yatm.model.Pin;
@@ -40,14 +41,27 @@ public class XmlService {
         for (com.yetanothertravelmap.yatm.dto.xml.Pin xmlPin : xmlTravelMap.getPins().getPinList()) {
             PinRequest pinRequest = new PinRequest();
             pinRequest.setName(xmlPin.getName());
-            pinRequest.setMainCategory(xmlPin.getMainCategory());
             pinRequest.setDescription(xmlPin.getDescription());
             pinRequest.setCountry(xmlPin.getCountry());
             pinRequest.setCountryCode(xmlPin.getCountryCode());
 
             // Categories
-            List<String> categories = xmlPin.getCategories().getCategoryList();
+            List<String> categories = Optional.ofNullable(xmlPin.getCategories())
+                    .map(Categories::getCategoryList)
+                    .orElse(Collections.emptyList())
+                    .stream().map(c -> c + " (Imp)").toList();
             pinRequest.setSubCategories(categories);
+
+            // Main Category
+//            pinRequest.setMainCategory(xmlPin.getMainCategory());
+            if (xmlPin.getMainCategory() == null){
+                pinRequest.setMainCategory("Imported");
+            }else if (!MainCategory.isValidCategory(xmlPin.getMainCategory())) {
+                pinRequest.setMainCategory("Imported");
+                pinRequest.addSubCategories(List.of(xmlPin.getMainCategory() + " (Imp)"));
+            }else {
+                pinRequest.setMainCategory(xmlPin.getMainCategory());
+            }
 
             // Icon
             Icon icon = xmlPin.getIcon();
@@ -66,8 +80,8 @@ public class XmlService {
                     pinRequest.getIconHeight() == 0 || pinRequest.getIconWidth() == 0) {
                 pinRequest.setIconId(1L);
             }
-            if(pinRequest.getMainCategory() == null){
-                pinRequest.setMainCategory("Imported");
+            if(pinRequest.getDescription() == null){
+                pinRequest.setDescription("");
             }
             if(pinRequest.getCountryCode() == null || pinRequest.getCountry() == null){
                 GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(pinRequest.getLatitude().toString(), pinRequest.getLongitude().toString()).blockFirst();

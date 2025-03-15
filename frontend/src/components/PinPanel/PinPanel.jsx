@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import IconSelector from "../IconSelector/IconSelector.jsx";
 
 
-function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, updatePin}) {
+function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, updatePin, subCategories}) {
 
     const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT && !!pinDetailsToUpdate
     const isInPinCreationState = panelState === PinPanelState.PIN_CREATION
@@ -20,13 +20,13 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
     const [country, setCountry] = useState(isInPinUpdateState ? pinDetailsToUpdate.country : null);
     const [countryCode, setCountryCode] = useState(isInPinUpdateState ? pinDetailsToUpdate.countryCode : null);
 
-    const [mainCategory, setMainCategory] = useState(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
+    const mainCategoryName = !isInPinUpdateState || !["Been", "Favourite", "Want2Go"].includes(pinDetailsToUpdate.mainCategory) ? "Been" : pinDetailsToUpdate.mainCategory;
+    const [mainCategory, setMainCategory] = useState(mainCategoryName);
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
     const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
 
 
-    const [subCategories, setSubCategories] = useState([]);
     const [icons, setIcons] = useState([]);
     const [icon, setIcon] = useState(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
     const {authAxios} = useAuth();
@@ -51,12 +51,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
         },
     });
 
-    const fetchCategories = async () => {
-        const userResponse = await authAxios.get('/api/user');
-        const categoriesResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
-        setSubCategories(categoriesResponse.data.map(category => category.name));
-    };
-
     const fetchIcons = async () => {
         const userResponse = await authAxios.get('/api/user');
         const iconsResponse = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/icons`);
@@ -64,7 +58,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
     };
 
     useEffect(() => {
-        fetchCategories();
         fetchIcons();
     }, [authAxios]);
 
@@ -74,7 +67,8 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
         }
         const isInPinUpdateState = panelState === PinPanelState.PIN_EDIT
 
-        setMainCategory(isInPinUpdateState ? pinDetailsToUpdate.mainCategory : "Been");
+        const mainCategoryName = !isInPinUpdateState || !["Been", "Favourite", "Want2Go"].includes(pinDetailsToUpdate.mainCategory) ? "Been" : pinDetailsToUpdate.mainCategory;
+        setMainCategory(mainCategoryName);
         setSelectedSubCategories(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
         setName(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
         setDescription(isInPinUpdateState ? pinDetailsToUpdate.description : "");
@@ -104,7 +98,6 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
         }else if (panelState === PinPanelState.PIN_EDIT) {
             await handlePinUpdate();
         }
-        fetchCategories()
         fetchIcons()
     }
 
@@ -165,7 +158,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
     function resetPanel() {
         setIsTempMarkerVisible(false)
         setName("")
-        setMainCategory("been");
+        setMainCategory("Been");
         setSelectedSubCategories([]);
         setDescription("")
         setIcon(icons[0])
@@ -198,7 +191,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
 
                     <label htmlFor="subCategory" className={classes["pin-creation-panel-label"]}>Subcategory:</label>
                     <MultiSelect
-                        allOptions={subCategories}
+                        allOptions={subCategories.map(c => c.name)}
                         selectedOptions={selectedSubCategories}
                         setSelectedOptions={setSelectedSubCategories}
                         optionTypeName="Sub-category"
@@ -244,6 +237,7 @@ PinPanel.propTypes = {
         countryCode: PropTypes.string,
         icon: PropTypes.any
     }),
+    subCategories: PropTypes.array,
     createPin: PropTypes.func.isRequired,
     updatePin: PropTypes.func.isRequired
 }

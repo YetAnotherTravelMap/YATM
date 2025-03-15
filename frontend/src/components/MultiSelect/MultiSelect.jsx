@@ -22,10 +22,12 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
         }
     }
 
-    function selectSuggestion(suggestion) {
-        if (suggestion.trim() === "") {
+    function selectSuggestion(newSuggestions) {
+        const suggestion = newSuggestions.trim()
+        if (suggestion === "") {
             return
         }
+        closeInputField()
         setInputValue("")
         setSuggestions(prevSuggestions => prevSuggestions.filter(s => s !== suggestion));
         setSelectedOptions(prevOptions => {

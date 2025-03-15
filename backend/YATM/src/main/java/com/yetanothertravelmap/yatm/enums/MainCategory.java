@@ -11,4 +11,13 @@ public enum MainCategory {
     private MainCategory(String name) {
         this.name = name;
     }
+
+    public static boolean isValidCategory(String value) {
+        for (MainCategory category : MainCategory.values()) {
+            if (category.name.equalsIgnoreCase(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

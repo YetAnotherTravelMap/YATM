@@ -19,6 +19,7 @@ public class GeocodingService {
                     .queryParam("format", "json")
                     .queryParam("q", searchString)
                     .build())
+                .header("Accept-Language", "en-CA")
                 .retrieve().bodyToFlux(GeocodingRecord.class);
     }
 
@@ -29,6 +30,7 @@ public class GeocodingService {
                         .queryParam("lat", lat)
                         .queryParam("lon", lon)
                         .build())
+                .header("Accept-Language", "en-CA")
                 .retrieve().bodyToFlux(GeocodingRecord.class);
     }
 }

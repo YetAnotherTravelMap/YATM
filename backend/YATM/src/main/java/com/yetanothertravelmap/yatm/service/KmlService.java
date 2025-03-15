@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.kml.*;
+import com.yetanothertravelmap.yatm.enums.MainCategory;
 import com.yetanothertravelmap.yatm.model.Category;
 import com.yetanothertravelmap.yatm.model.GeocodingRecord;
 import com.yetanothertravelmap.yatm.model.Icon;
@@ -62,24 +63,36 @@ public class KmlService {
             // Extract extended data
             if(placemark.getExtendedData() != null && placemark.getExtendedData().getDataList() != null) {
                 for (Data data : placemark.getExtendedData().getDataList()) {
+                    String value = data.getValue();
                     switch (data.getName()) {
                         case "main_category":
-                            pin.setMainCategory(data.getValue());
+                            if(value == null){
+                                pin.setMainCategory("Imported");
+                            } else if (!MainCategory.isValidCategory(value)) {
+                                pin.setMainCategory("Imported");
+                                if (pin.getSubCategories() == null) {
+                                    pin.setSubCategories(List.of(value + " (Imp)"));
+                                }else{
+                                    pin.addSubCategories(List.of(value + " (Imp)"));
+                                }
+                            } else {
+                                pin.setMainCategory(value);
+                            }
                             break;
                         case "description":
-                            if (pin.getDescription() == null) pin.setDescription(data.getValue());
+                            if (pin.getDescription() == null) pin.setDescription(value);
                             break;
                         case "country":
-                            pin.setCountry(data.getValue());
+                            pin.setCountry(value);
                             break;
                         case "country_code":
-                            pin.setCountryCode(data.getValue());
+                            pin.setCountryCode(value);
                             break;
                         case "categories":
                         case "flags":
                             String regex = data.getName().equals("categories") ? "\\|\\|" : ",";
-                            String[] categories = data.getValue().split(regex);
-                            List<String> filteredCategories = Arrays.stream(categories).filter(s -> !s.isEmpty()).toList();
+                            String[] categories = value.split(regex);
+                            List<String> filteredCategories = Arrays.stream(categories).filter(s -> !s.isEmpty()).map(c -> c + " (Imp)").toList();
                             if (pin.getSubCategories() == null) {
                                 pin.setSubCategories(filteredCategories);
                             }else{
@@ -87,16 +100,16 @@ public class KmlService {
                             }
                             break;
                         case "icon_name":
-                            pin.setIconName(data.getValue());
+                            pin.setIconName(value);
                             break;
                         case "icon_width":
-                            pin.setIconWidth(Integer.parseInt(data.getValue()));
+                            pin.setIconWidth(Integer.parseInt(value));
                             break;
                         case "icon_height":
-                            pin.setIconHeight(Integer.parseInt(data.getValue()));
+                            pin.setIconHeight(Integer.parseInt(value));
                             break;
                         case "icon_image":
-                            byte[] image = Base64.getDecoder().decode(data.getValue().strip());
+                            byte[] image = Base64.getDecoder().decode(value.strip());
                             pin.setIconImageBytes(image);
                             break;
                     }

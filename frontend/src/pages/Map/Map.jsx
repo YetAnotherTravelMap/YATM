@@ -13,6 +13,7 @@ import PinPanelState from "../../components/PinPanel/PinPanelState.js";
 import useAuth from "../../hooks/UseAuth.jsx";
 import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay.jsx";
 import PinCluster from "../../components/PinCluster/PinCluster.jsx";
+import CategoryFilter from "../../components/CategoryFilter/CategoryFilter.jsx";
 
 export function Map() {
     const [pinPanelState, setPinPanelState] = useState(PinPanelState.INVISIBLE);
@@ -22,7 +23,6 @@ export function Map() {
     const [categories, setCategories] = useState([]);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [selectedMainCategories, setSelectedMainCategories] = useState([]);
-    const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false); // State for filter menu toggle
     const { authAxios } = useAuth();
 
     const [mainCategories, setMainCategories] = useState(["Favourite", "Been", "Want2Go"]);
@@ -57,22 +57,6 @@ export function Map() {
         setLoading(false);
     };
 
-    const handleMainCategoryChange = (category) => {
-        setSelectedMainCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((cat) => cat !== category)
-                : [...prev, category]
-        );
-    };
-
-    const handleCategoryChange = (category) => {
-        setSelectedCategories((prev) =>
-            prev.includes(category)
-                ? prev.filter((cat) => cat !== category)
-                : [...prev, category]
-        );
-    };
-
     const filteredPins = pins.filter((pin) =>
         (selectedMainCategories.length === 0 || selectedMainCategories.includes(pin.mainCategory)) &&
         (selectedCategories.length === 0 || pin.categories.some((cat) => selectedCategories.includes(cat.name)))
@@ -93,6 +77,36 @@ export function Map() {
         const userResponse = await authAxios.get("/api/user");
         await authAxios.delete(`/api/maps/${userResponse.data.mapIdArray[0]}/pins/${pin.pinId}`);
         setPins(pins => [...(pins.filter(p => p.pinId !== pin.pinId))])
+    }
+
+    async function handleCategoryEdit(category) {
+        const newCategoryName = prompt("Enter new category name: ");
+        if (newCategoryName === null || newCategoryName === "") {
+            return
+        }
+
+        const userResponse = await authAxios.get("/api/user");
+        const categoryUpdateResponse = await authAxios.put(`/api/maps/${userResponse.data.mapIdArray[0]}/categories/${category.id}`, {
+                categoryId: category.id,
+                categoryNewName: newCategoryName,
+        });
+
+        if (categoryUpdateResponse.status !== 200) return;
+
+        setCategories(prevCategories =>
+            prevCategories.map(c =>
+                c.id === category.id ? { ...c, name: newCategoryName } : c
+            )
+        );
+
+        setPins(prevPins =>
+            prevPins.map(pin => ({
+                ...pin,
+                categories: pin.categories.map(c =>
+                    c.id === category.id ? { ...c, name: newCategoryName } : c
+                )
+            }))
+        );
     }
 
     return (<>
@@ -118,49 +132,22 @@ export function Map() {
                 <ProfilePanel />
             </Control>
             <Control prepend position="bottomleft">
-                {/* Circular Button for Filter Menu */}
-                <button
-                    className="filter-button"
-                    onClick={() => setIsFilterMenuOpen(!isFilterMenuOpen)}
-                >
-                    &#x2630;
-                </button>
-
-                {isFilterMenuOpen && (
-                    <div className="category-menu">
-                        <h4>Main Categories</h4>
-                        {mainCategories.map((category) => (
-                            <label key={category} className="category-label">
-                                <input
-                                    type="checkbox"
-                                    value={category}
-                                    checked={selectedMainCategories.includes(category)}
-                                    onChange={() => handleMainCategoryChange(category)}
-                                />
-                                {category}
-                            </label>
-                        ))}
-
-                        {categories.length > 0 && <h4>Subcategories</h4>}
-                        {categories.map((category) => (
-                            <label key={category.id} className="category-label">
-                                <input
-                                    type="checkbox"
-                                    value={category.name}
-                                    checked={selectedCategories.includes(category.name)}
-                                    onChange={() => handleCategoryChange(category.name)}
-                                />
-                                {category.name}
-                            </label>
-                        ))}
-                    </div>
-                )}
+                <CategoryFilter
+                    mainCategories={mainCategories}
+                    selectedMainCategories={selectedMainCategories}
+                    setSelectedMainCategories={setSelectedMainCategories}
+                    categories={categories}
+                    selectedCategories={selectedCategories}
+                    setSelectedCategories={setSelectedCategories}
+                    handleCategoryEdit={pinPanelState === PinPanelState.INVISIBLE ? handleCategoryEdit : undefined}
+                />
             </Control>
             <Control prepend position="bottomright">
                 <PinPanel
                     panelState={pinPanelState}
                     setPanelState={setPinPanelState}
                     pinDetailsToUpdate={pinDetailsToUpdate}
+                    subCategories={categories}
                     createPin={async (pin) => {
                         setPins(pins => [...pins, pin])
                         const userResponse = await authAxios.get("/api/user");

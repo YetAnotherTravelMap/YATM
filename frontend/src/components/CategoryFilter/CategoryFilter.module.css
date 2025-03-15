@@ -1,0 +1,72 @@
+/* Circular button for filter menu */
+.filter-button {
+    background-color: #0E5738FF;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 24px;
+}
+
+/* Filter menu container */
+.category-menu {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    max-height: 30em;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    max-width: 250px;
+}
+
+/* Space between checkbox and label */
+.category-label {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adds space between the checkbox and label */
+    margin-bottom: 8px;
+}
+
+.category-menu h4 {
+    margin: 0 0 10px;
+    font-weight: bold;
+}
+
+.category-items-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.edit-icon-button {
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+    transition: opacity 0.3s ease;
+    height: 18px;
+    margin-left: 15px;
+    display: inline-block;
+    padding: 0;
+    line-height:0
+}
+
+.edit-icon{
+    fill: rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+}
+
+.edit-icon:hover {
+    fill: #818181;
+}

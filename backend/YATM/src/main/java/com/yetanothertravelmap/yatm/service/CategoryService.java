@@ -33,6 +33,17 @@ public class CategoryService {
         return category;
     }
 
+    public Category updateCategoryName(Long mapId, Long categoryId, String categoryNewName) {
+        Optional<Category> optionalCategory = categoryRepository.findByIdAndMap_MapId(categoryId, mapId);
+        if (optionalCategory.isPresent()) {
+            Category category = optionalCategory.get();
+            category.setName(categoryNewName);
+            categoryRepository.save(category);
+            return category;
+        }
+        return null;
+    }
+
     public void deleteUnusedCategories() {
         categoryRepository.deleteUnusedCategories();
     }

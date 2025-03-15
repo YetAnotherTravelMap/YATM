@@ -54,7 +54,9 @@ function PinCluster({pins, canEditPin, handlePinUpdate, handlePinDelete}) {
     const [zoom, setZoom] = useState(12);
     const map = useMap();
 
-    function updateMap() {
+    const updateMap = useCallback(() => {
+        if (!map) return; // Ensure map is available
+
         const b = map.getBounds();
         setBounds([
             b.getSouthWest().lng,
@@ -63,15 +65,16 @@ function PinCluster({pins, canEditPin, handlePinUpdate, handlePinDelete}) {
             b.getNorthEast().lat
         ]);
         setZoom(map.getZoom());
-    }
+    }, [map]);
 
     const onMove = useCallback(() => {
-        updateMap()
-    }, [map])
+        updateMap();
+    }, [updateMap]);
 
     useEffect(() => {
-        updateMap()
-    }, [map])
+        updateMap();
+    }, [updateMap]);
+
 
     useEffect(() => {
         map.on("move", onMove)
@@ -105,7 +108,7 @@ function PinCluster({pins, canEditPin, handlePinUpdate, handlePinDelete}) {
         points: pinFeatures,
         bounds: bounds,
         zoom: zoom,
-        options: {radius: 175, maxZoom: 19}
+        options: {radius: 175, maxZoom: 18}
     });
 
     return (

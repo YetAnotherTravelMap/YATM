@@ -1,5 +1,6 @@
 package com.yetanothertravelmap.yatm.controller;
 
+import com.yetanothertravelmap.yatm.dto.CategoryUpdateRequest;
 import com.yetanothertravelmap.yatm.dto.PinRequest;
 import com.yetanothertravelmap.yatm.dto.PinWithoutIconImage;
 import com.yetanothertravelmap.yatm.model.Category;
@@ -43,6 +44,20 @@ public class MapController {
         Set<Category> categories = categoryService.getCategories(mapId).orElse(new HashSet<>());
         return ResponseEntity.ok(categories);
     }
+
+    @PutMapping("/{mapId}/categories/{categoryId}")
+    public ResponseEntity<Category> updateCategoryName(@PathVariable Long mapId, @PathVariable Long categoryId, @RequestBody CategoryUpdateRequest request, Principal principal) {
+        if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        Category updatedCategory = categoryService.updateCategoryName(mapId, categoryId, request.getCategoryNewName());
+        if (updatedCategory == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.ok(updatedCategory);
+    }
+
 
     @GetMapping("/{mapId}/icons")
     public ResponseEntity<Set<Icon>> getIconsByMapId(@PathVariable Long mapId, Principal principal) {
