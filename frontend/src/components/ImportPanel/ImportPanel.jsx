@@ -1,32 +1,20 @@
 import classes from "./ImportPanel.module.css"
 import PropTypes from "prop-types";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import useAuth from "./../../hooks/UseAuth.jsx"
 import Spinner from "../Spinner/Spinner.jsx";
 
-function ImportPanel({updateStats}) {
+function ImportPanel({categories, updateStats}) {
 
     const {authAxios} = useAuth();
     const fileInputRef = useRef(null);
     const [importFile, setImportFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [categories, setCategories] = useState([]);
     const [importedMainCategoryCount, setImportedMainCategoryCount] = useState(0);
     const [categoryMappings, setCategoryMappings] = useState({});
     const [importedMainCategoryMapping, setImportedMainCategoryMapping] = useState("Been");
     const importSection = useRef(null)
-
-    const fetchCategories = async () => {
-        const userResponse = await authAxios.get("/api/user");
-        const response = await authAxios.get(`/api/maps/${userResponse.data.mapIdArray[0]}/categories`);
-        setCategories(response.data);
-        console.log(categories);
-    };
-
-    useEffect(() => {
-        fetchCategories();
-    }, [authAxios]);
 
     function resetImport() {
         setImportFile(null);
@@ -209,6 +197,7 @@ function ImportPanel({updateStats}) {
 }
 
 ImportPanel.propTypes = {
+    categories: PropTypes.array.isRequired,
     updateStats: PropTypes.func.isRequired,
 }
 

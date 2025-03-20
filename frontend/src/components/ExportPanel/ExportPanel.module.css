@@ -1,0 +1,20 @@
+.button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background-color: #198653;
+    border-radius: 5px;
+    color: white;
+    border: none;
+    cursor: pointer;
+    max-height: 35px;
+}
+
+.profile-page-button:hover {
+    background-color: #0e5738;
+}
+
+.export-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
