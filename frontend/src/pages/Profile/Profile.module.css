@@ -145,10 +145,6 @@
     background-color: #0e5738;
 }
 
-input[type="file"] {
-    margin-top: 10px;
-}
-
 /* Fullscreen overlay */
 .settings {
     position: fixed;

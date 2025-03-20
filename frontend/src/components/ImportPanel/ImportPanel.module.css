@@ -17,3 +17,96 @@
     cursor: pointer;
     max-height: 35px;
 }
+
+.header {
+    margin-bottom: 10px;
+}
+
+.error-message {
+    border-radius: 4px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    font-size: 15px;
+    color: #c63a36;
+    background-color: #fde4dc;
+    font-family: sans-serif;
+    text-align: center;
+    border: 1px solid #ffd2bd;
+    padding: 5px;
+    width: 100%;
+}
+
+.cancel-button {
+    margin-left: 10px;
+    background-color: #fdf4f4; /* Soft red background */
+    color: #da3544; /* Bootstrap danger red */
+    border: 2px solid #da3544; /* Same red as the text */
+    padding: 8px 16px;
+    transition: all 0.15s ease-in-out;
+}
+
+.flex-center-vertically {
+    display: flex;
+    align-items: center;
+}
+
+.cancel-button:hover {
+    background-color: #da3544;
+    color: #ffecec;
+}
+
+.category-count {
+    color: #da3544;
+    display: flex;
+    align-items: center;
+}
+
+.main-category-mapping-container {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.main-category-mapping-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 10px 0;
+}
+
+.category-mapping-container, .main-category-mapping-container {
+    font-size: 14px;
+}
+
+.category-mapping-row {
+    display: flex;
+    flex-direction: row;
+    /*align-items: center;*/
+    justify-content: space-evenly;
+    /*gap: 10px;*/
+    margin: 10px 0;
+    /*display: grid;*/
+    /*grid-template-columns: 1fr 1fr;*/
+
+}
+
+.category-mapping-container .category-mapping-row:first-of-type{
+    margin-top: 30px;
+}
+
+.category-label {
+    width: 80px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+.category-mapping-inputs-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 220px;
+}
+
+.category-mapping-instructions {
+    text-align: center;
+}

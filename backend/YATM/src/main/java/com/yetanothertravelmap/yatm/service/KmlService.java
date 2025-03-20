@@ -44,6 +44,10 @@ public class KmlService {
     }
 
     public List<PinRequest> getPinRequestsFromKml(Kml kml) {
+        return getPinRequestsFromKml(kml, true);
+    }
+
+    public List<PinRequest> getPinRequestsFromKml(Kml kml, Boolean fetchCountryDataWhenNecessary) {
         List<PinRequest> pins = new ArrayList<>();
 
         if(kml.getDocument().getPlacemarks() == null) {
@@ -123,7 +127,7 @@ public class KmlService {
             if(pin.getMainCategory() == null){
                 pin.setMainCategory("Imported");
             }
-            if(pin.getCountryCode() == null || pin.getCountry() == null){
+            if(fetchCountryDataWhenNecessary && (pin.getCountryCode() == null || pin.getCountry() == null)){
                 GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(pin.getLatitude().toString(), pin.getLongitude().toString()).blockFirst();
                 if(geocodingRecord != null){
                     pin.setCountry(geocodingRecord.address().country());

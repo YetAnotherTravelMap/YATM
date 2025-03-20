@@ -35,8 +35,11 @@ public class XmlService {
         return xmlTravelMap;
     }
 
+    public List<PinRequest> getPinRequestsFromXmlTravelMap(XmlTravelMap xmlTravelMap){
+        return getPinRequestsFromXmlTravelMap(xmlTravelMap, true);
+    }
 
-    public List<PinRequest> getPinRequestsFromXmlTravelMap(XmlTravelMap xmlTravelMap) {
+    public List<PinRequest> getPinRequestsFromXmlTravelMap(XmlTravelMap xmlTravelMap, Boolean fetchCountryDataWhenNecessary) {
         List<PinRequest> pinRequests = new ArrayList<>();
         for (com.yetanothertravelmap.yatm.dto.xml.Pin xmlPin : xmlTravelMap.getPins().getPinList()) {
             PinRequest pinRequest = new PinRequest();
@@ -53,7 +56,6 @@ public class XmlService {
             pinRequest.setSubCategories(categories);
 
             // Main Category
-//            pinRequest.setMainCategory(xmlPin.getMainCategory());
             if (xmlPin.getMainCategory() == null){
                 pinRequest.setMainCategory("Imported");
             }else if (!MainCategory.isValidCategory(xmlPin.getMainCategory())) {
@@ -83,7 +85,7 @@ public class XmlService {
             if(pinRequest.getDescription() == null){
                 pinRequest.setDescription("");
             }
-            if(pinRequest.getCountryCode() == null || pinRequest.getCountry() == null){
+            if(fetchCountryDataWhenNecessary && (pinRequest.getCountryCode() == null || pinRequest.getCountry() == null)){
                 GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(pinRequest.getLatitude().toString(), pinRequest.getLongitude().toString()).blockFirst();
                 if(geocodingRecord != null) {
                     pinRequest.setCountry(geocodingRecord.address().country());

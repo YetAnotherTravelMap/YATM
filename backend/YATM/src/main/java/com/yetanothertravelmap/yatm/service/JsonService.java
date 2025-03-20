@@ -35,6 +35,10 @@ public class JsonService {
     }
 
     public List<PinRequest> getPinRequestsFromJsonFeatureCollection(FeatureCollection featureCollection) throws JsonProcessingException {
+        return getPinRequestsFromJsonFeatureCollection(featureCollection, true);
+    }
+
+    public List<PinRequest> getPinRequestsFromJsonFeatureCollection(FeatureCollection featureCollection, Boolean fetchCountryDataWhenNecessary) throws JsonProcessingException {
         List<PinRequest> pinRequests = new ArrayList<>();
 
         if(featureCollection.getFeatures() == null) {
@@ -80,7 +84,7 @@ public class JsonService {
             }
 
             // Geocoding if country or country code is missing
-            if (pinRequest.getCountryCode() == null || pinRequest.getCountry() == null) {
+            if (fetchCountryDataWhenNecessary && (pinRequest.getCountryCode() == null || pinRequest.getCountry() == null)) {
                 GeocodingRecord geocodingRecord = geocodingService.getReverseGeocodingResults(
                         pinRequest.getLatitude().toString(), pinRequest.getLongitude().toString()).blockFirst();
                 if (geocodingRecord != null) {
