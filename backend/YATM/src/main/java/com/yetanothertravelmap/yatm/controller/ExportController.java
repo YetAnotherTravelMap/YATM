@@ -13,14 +13,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -42,23 +40,23 @@ public class ExportController {
     }
 
     @GetMapping("/{mapId}/json")
-    public ResponseEntity<FeatureCollection> getJsonFile(@PathVariable Long mapId, Principal principal) throws JsonProcessingException {
+    public ResponseEntity<FeatureCollection> getJsonFile(@PathVariable Long mapId, @RequestParam(required = false) List<String> subcategoriesToInclude, Principal principal) throws JsonProcessingException {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
+        Set<Pin> pins = pinService.getPinsByCategory(mapId, subcategoriesToInclude).orElse(new HashSet<>());
         FeatureCollection jsonFeatureCollection = jsonService.getJsonFeatureCollectionFromPins(pins);
         return ResponseEntity.ok(jsonFeatureCollection);
     }
 
     @GetMapping("/{mapId}/kml")
-    public ResponseEntity<ByteArrayResource> getKmlFile(@PathVariable Long mapId, Principal principal) throws JsonProcessingException {
+    public ResponseEntity<ByteArrayResource> getKmlFile(@PathVariable Long mapId, @RequestParam(required = false) List<String> subcategoriesToInclude, Principal principal) throws JsonProcessingException {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
+        Set<Pin> pins = pinService.getPinsByCategory(mapId, subcategoriesToInclude).orElse(new HashSet<>());
         Kml kml = kmlService.getKmlFromPins(pins);
 
         XmlMapper xmlMapper = new XmlMapper();
@@ -75,12 +73,12 @@ public class ExportController {
     }
 
     @GetMapping("/{mapId}/xml")
-    public ResponseEntity<ByteArrayResource> getXmlFile(@PathVariable Long mapId, Principal principal) throws JsonProcessingException {
+    public ResponseEntity<ByteArrayResource> getXmlFile(@PathVariable Long mapId, @RequestParam(required = false) List<String> subcategoriesToInclude, Principal principal) throws JsonProcessingException {
         if (!mapService.isUserAuthorizedForMap(mapId, principal.getName())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-        Set<Pin> pins = pinService.getPins(mapId).orElse(new HashSet<>());
+        Set<Pin> pins = pinService.getPinsByCategory(mapId, subcategoriesToInclude).orElse(new HashSet<>());
         XmlTravelMap xmlTravelMap = xmlService.getXmlTravelMapFromPins(pins);
 
         XmlMapper xmlMapper = new XmlMapper();

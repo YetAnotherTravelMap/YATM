@@ -8,7 +8,7 @@
 .multi-select-input {
     width: 100%;
     margin-top: 0.4em;
-    padding: 0.5em 5em 0.5em 1em;
+    padding: 0.5em 1em 0.5em 1em;
     border: 1px solid #6b6f71;
     border-radius: 5px;
     color: #000;
@@ -43,6 +43,7 @@
     max-height: 100px;
     overflow-y: auto;
     scrollbar-width: thin;
+    width: calc(100% - 25px);
 }
 
 .suggestion {

@@ -32,6 +32,13 @@ public class PinService {
         return pinRepository.findByMap_MapId(mapId);
     }
 
+    public Optional<Set<Pin>> getPinsByCategory(Long mapId, List<String> categories) {
+        if(categories == null || categories.isEmpty()) {
+            return getPins(mapId);
+        }
+        return pinRepository.findByMapIdAndCategoryNames(mapId, categories);
+    }
+
     public Pin createPin(PinRequest pinRequest, Long mapId) {
         Optional<Map> mapOptional = mapRepository.findByMapId(mapId);
         if (mapOptional.isEmpty()) {

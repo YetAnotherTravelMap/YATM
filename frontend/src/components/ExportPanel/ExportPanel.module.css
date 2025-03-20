@@ -16,5 +16,16 @@
 .export-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    min-width: 280px;
+    max-width: 400px;
+}
+
+.label {
+    margin-top: 12px;
+    margin-bottom: 2px;
+}
+
+.center-contents-container {
+    display: flex;
+    justify-content: center;
 }

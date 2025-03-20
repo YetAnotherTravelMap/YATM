@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -17,4 +18,8 @@ public interface PinRepository extends JpaRepository<Pin, Long> {
     @Modifying
     @Query("DELETE FROM Pin p WHERE p.map = :map")
     void deleteByMap(@Param("map") Map map);
+
+    @Query("SELECT DISTINCT p FROM Pin p JOIN p.categories c WHERE p.map.mapId = :mapId AND c.name IN :categoryNames")
+    Optional<Set<Pin>> findByMapIdAndCategoryNames(@Param("mapId") Long mapId, @Param("categoryNames") List<String> categoryNames);
+
 }

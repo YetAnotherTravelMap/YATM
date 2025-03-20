@@ -142,7 +142,7 @@ function ImportPanel({categories, updateStats}) {
                     <div className={classes["category-count"]}>{importedMainCategoryCount} x</div>
                     <label className={classes["category-label"]}>Imported</label>
                     <div className={classes["category-mapping-inputs-container"]}>
-                        <select onChange={(e) => setImportedMainCategoryMapping(e.target.value)} value={importedMainCategoryMapping}>
+                        <select onChange={(e) => setImportedMainCategoryMapping(e.target.value)} value={importedMainCategoryMapping} className={classes.select}>
                             <option value="Been">Been</option>
                             <option value="Favourite">Favourite</option>
                             <option value="Want2Go">Want2Go</option>
@@ -162,7 +162,7 @@ function ImportPanel({categories, updateStats}) {
                         <div className={classes["category-count"]}>{categoryMappings[category].count} x</div>
                         <div className={classes["flex-center-vertically"]}><label className={classes["category-label"]}>{category}</label></div>
                         <div className={classes["category-mapping-inputs-container"]}>
-                            <select value={categoryMappings[category].mappedCategoryName} onChange={(e) => handleMappingSelection(category, e.target.value, false)}>
+                            <select value={categoryMappings[category].mappedCategoryName} onChange={(e) => handleMappingSelection(category, e.target.value, false)} className={classes.select}>
                                 <option value="">Create new subcategory</option>
                                 <option value={category}>{category}</option>
                                 {categories.filter(c => c.name !== category).map(c => (

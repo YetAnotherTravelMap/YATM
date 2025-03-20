@@ -194,7 +194,8 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
                         allOptions={subCategories.map(c => c.name)}
                         selectedOptions={selectedSubCategories}
                         setSelectedOptions={setSelectedSubCategories}
-                        optionTypeName="Sub-category"
+                        optionTypeName="sub-category"
+                        isCreatable={true}
                     />
 
                     <label className={classes["pin-creation-panel-label"]}>Icon:</label>

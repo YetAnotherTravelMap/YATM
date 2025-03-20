@@ -74,7 +74,11 @@
 }
 
 .category-mapping-container, .main-category-mapping-container {
-    font-size: 14px;
+    font-size: 15px;
+}
+
+.select {
+   font-size: 15px;
 }
 
 .category-mapping-row {

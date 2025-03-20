@@ -92,6 +92,7 @@
     border: none;
     align-items: center;
     cursor: pointer;
+    margin-left: 10px;
 }
 
 .settings-button:hover{
@@ -101,6 +102,7 @@
 
 .stats-section {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     /*padding: 50px;*/
@@ -129,6 +131,8 @@
 
 .import-export-section {
     display: flex;
+    flex-wrap: wrap;
+    gap: 100px;
     justify-content: space-around;
     align-items: center;
     padding: 100px;

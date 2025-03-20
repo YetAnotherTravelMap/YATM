@@ -3,7 +3,7 @@ import CategoryTag from "../CategoryTag/CategoryTag.jsx";
 import classes from "./MultiSelect.module.css"
 import PropTypes from "prop-types";
 
-function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTypeName}) {
+function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTypeName, isCreatable}) {
 
     const [inputValue, setInputValue] = useState('');
     const [isInputVisible, setIsInputVisible] = useState(false);
@@ -28,7 +28,6 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
             return
         }
         closeInputField()
-        setInputValue("")
         setSuggestions(prevSuggestions => prevSuggestions.filter(s => s !== suggestion));
         setSelectedOptions(prevOptions => {
             if (!prevOptions.map(s => s.toLowerCase()).includes(suggestion.toLowerCase())) {
@@ -66,10 +65,12 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
                     <input
                         className={classes["multi-select-input"]}
                         type="text"
-                        placeholder={`Start typing to select or create ${optionTypeName}...`}
+                        placeholder={`Start typing to select${isCreatable ? " or create" : ""} ${optionTypeName}...`}
                         onChange={e => handleNewInput(e.target.value)}
                         onKeyUp={e => {
-                            if (e.key === "Enter") selectSuggestion(inputValue)
+                            if (e.key === "Enter" && (isCreatable || allOptions.map(o => o.toLowerCase()).includes(inputValue.trim().toLowerCase()))) {
+                                selectSuggestion(inputValue)
+                            }
                         }}
                         value={inputValue}
                     />
@@ -81,7 +82,7 @@ function MultiSelect({allOptions, selectedOptions, setSelectedOptions, optionTyp
                         <button key={suggestion} className={classes.suggestion} onClick={() => selectSuggestion(suggestion)}>
                             {suggestion}
                         </button>)))}
-                {inputValue.trim() !== "" && !allOptions.map(o => o.toLowerCase()).includes(inputValue.trim().toLowerCase()) && (
+                {isCreatable && inputValue.trim() !== "" && !allOptions.map(o => o.toLowerCase()).includes(inputValue.trim().toLowerCase()) && (
                     <button key={inputValue} className={classes.suggestion} onClick={() => selectSuggestion(inputValue)}>
                         {`Create "${inputValue}"`}
                     </button>)}
@@ -95,6 +96,7 @@ MultiSelect.propTypes = {
     selectedOptions: PropTypes.arrayOf(PropTypes.string).isRequired,
     setSelectedOptions: PropTypes.func.isRequired,
     optionTypeName: PropTypes.string.isRequired,
+    isCreatable: PropTypes.bool.isRequired,
 }
 
 export default MultiSelect;
