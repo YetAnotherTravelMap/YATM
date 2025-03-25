@@ -3,7 +3,6 @@ import "leaflet/dist/leaflet.css";
 
 import { MapContainer } from "react-leaflet";
 import { MapLibreTileLayer } from "../../components/MapLibreTileLayer/MapLibreTileLayer.ts";
-import mapStyle from "../../assets/MapStyles/WorldNavigationMap_Esri_S.json";
 import SearchBox from "../../components/SearchBox/SearchBox.jsx";
 import Control from "react-leaflet-custom-control";
 import ProfilePanel from "../../components/ProfilePanel/ProfilePanel.jsx";
@@ -152,7 +151,7 @@ export function Map() {
 
             <MapLibreTileLayer
                 attribution="Esri, TomTom, Garmin, FAO, NOAA, USGS, &copy; OpenStreetMap contributors, and the GIS User Community"
-                url={mapStyle}
+                url={"/MapStyles/WorldNavigationMap_Esri_S.json"}
             />
             <PinCluster pins={filteredPins} canEditPin={pinPanelState !== PinPanelState.PIN_CREATION} handlePinUpdate={handlePinUpdate} handlePinDelete={handlePinDelete} />
 
