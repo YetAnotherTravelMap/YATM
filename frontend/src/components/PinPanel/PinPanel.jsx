@@ -25,7 +25,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
     const [selectedSubCategories, setSelectedSubCategories] = useState(isInPinUpdateState ? pinDetailsToUpdate.categories.map(c => c.name) : []);
     const [name, setName] = useState(isInPinUpdateState ? pinDetailsToUpdate.name : "Default");
     const [description, setDescription] = useState(isInPinUpdateState ? pinDetailsToUpdate.description : "");
-
+    const [error, setError] = useState(null);
 
     const [icons, setIcons] = useState([]);
     const [icon, setIcon] = useState(isInPinUpdateState ? pinDetailsToUpdate.icon : icons[0]);
@@ -170,7 +170,7 @@ function PinPanel({panelState, setPanelState, pinDetailsToUpdate, createPin, upd
             <TemporaryMarker pos={tempMarkerPos} setPos={setTempMarkerPos} isVisible={isTempMarkerVisible}/>
             {!isInvisible &&
                 <div className={`${classes["pin-creation-panel-container"]} ${!isInvisible ? classes.show : ""}`}>
-
+                    {error && <div className={classes["error-message"]}>{error}</div>}
                     <h3 className={classes["pin-creation-panel-header"]}>{isInPinCreationState ? "Create New" : "Update"} Pin:</h3>
 
                     <label htmlFor="pinName" className={classes["pin-creation-panel-label"]}>Pin Name:</label>

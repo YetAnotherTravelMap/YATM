@@ -93,3 +93,17 @@
     resize: none;
     font-family: inherit;
 }
+
+.error-message {
+    border-radius: 4px;
+    margin-bottom: 15px;
+    margin-top: 15px;
+    font-size: 15px;
+    color: #c63a36;
+    background-color: #fde4dc;
+    font-family: sans-serif;
+    text-align: center;
+    border: 1px solid #ffd2bd;
+    padding: 5px;
+    width: 100%;
+}
