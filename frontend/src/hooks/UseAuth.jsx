@@ -7,6 +7,7 @@ const authContext = createContext();
 function useAuth() {
     const [authed, setAuthed] = useState(localStorage.getItem('jwt') !== null);
     const [token, setToken] = useState(localStorage.getItem('jwt'));
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL : "";
 
     const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ function useAuth() {
 
     const authAxios = useMemo(() => {
         const instance = axios.create({
-            baseURL: "/",
+            baseURL: API_BASE_URL,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -49,7 +50,7 @@ function useAuth() {
     return {
         authed, authAxios, login(username, password) {
             return new Promise((resolve, reject) => {
-                axios.post('api/auth/token', {}, { auth: { username, password }})
+                axios.post(`${API_BASE_URL}/api/auth/token`, {}, { auth: { username, password }})
                     .then(response => {
                         const newJwt = response.data;
                         setToken(newJwt);

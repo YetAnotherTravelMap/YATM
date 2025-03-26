@@ -13,7 +13,7 @@ export function Register() {
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
 
-    const { authed } = useAuth();
+    const { authAxios, authed } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,13 +38,9 @@ export function Register() {
         event.preventDefault();
 
         try {
-            const response = await fetch('/api/user', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ hash, username, email })
-            });
+            const response = await authAxios.post('/api/user', { hash, username, email });
 
-            if (!response.ok) {
+            if (response.status !== 200) {
                 if(response.status === 409) {
                     const tempErrorMessage = await response.text();
                     throw new Error(tempErrorMessage);
