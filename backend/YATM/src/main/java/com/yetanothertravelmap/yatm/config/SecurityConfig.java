@@ -40,6 +40,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors() // Enable CORS with the CorsFilter bean
+                .and()
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests( auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/user").permitAll()
