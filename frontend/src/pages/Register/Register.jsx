@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import classes from './Register.module.css';
 import {Link, useNavigate} from "react-router-dom";
 import useAuth from "../../hooks/UseAuth.jsx";
+import axios from "axios";
 
 export function Register() {
     const [username, setUsername] = useState('');
@@ -12,8 +13,9 @@ export function Register() {
     const [success, setSuccess] = useState(false);
     const [error, setError] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
+    const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ? import.meta.env.VITE_API_BASE_URL : "";
 
-    const { authAxios, authed } = useAuth();
+    const { authed } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -38,7 +40,7 @@ export function Register() {
         event.preventDefault();
 
         try {
-            const response = await authAxios.post('/api/user', { hash, username, email });
+            const response = await axios.post(`${API_BASE_URL}/api/user`, { hash, username, email });
 
             if (response.status !== 200) {
                 if(response.status === 409) {
