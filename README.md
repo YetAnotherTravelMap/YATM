@@ -1,8 +1,6 @@
 # 🌍 Yet Another Travel Map (YATM)
 
-Yet Another Travel Map (YATM) is a web application designed to help users create, manage, and share personalized travel maps with ease. Unlike traditional mapping platforms, YATM is focused on flexibility, customization, and collaboration — empowering users to visualize and organize their travel experiences in a way that truly reflects their journeys.
-
----
+Yet Another Travel Map (YATM) is a web application designed to help users manage and organize their travel information. It allows users to create, view, and edit personalized travel maps with pins for locations they’ve visited or wish to visit. The application also offers features like categorizing pins, viewing travel statistics, and importing/exporting data in multiple formats, providing a flexible and customizable tool for travel tracking and planning.
 
 ## ✨ Features
 
@@ -21,8 +19,6 @@ Yet Another Travel Map (YATM) is a web application designed to help users create
 - 📂 **Data Import/Export**  
   Import and export travel data in KML, JSON, and XML formats.
 
-
----
 
 ## 🚀 Getting Started
 
